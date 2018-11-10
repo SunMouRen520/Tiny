@@ -10,7 +10,7 @@
 
 namespace Tiny { namespace Math { 
 	/*
-		Dot product for two vectors
+		@brief Dot product for two vectors
 	*/
 	template<std::size_t size, typename T> inline T Dot(const Vector<size, T> &a, const Vector<size, T> &b) {
 		return (a * b).sum()
@@ -77,7 +77,7 @@ namespace Tiny { namespace Math {
 		void Normalize();
 
 		/*
-			Whether the vector is normalized (Float point numbers compare)
+			Whether the vector is normalized (Floating point numbers compare)
 		*/
 		bool IsNormalized() const;
 
