@@ -14,6 +14,7 @@
 #include <cstddef>
 
 namespace Tiny { namespace Math {
+
 	template<std::size_t rows, std::size_t cols, typename T> class RectangularMatrix{
 		static_assert(rows != 0 && cols != 0, "RectangularMatrix cannot have 0 elements!");
 
@@ -22,8 +23,21 @@ namespace Tiny { namespace Math {
 	public:
 		typedef T Type;
 
-		/*constructor*/
+		/*
+			@brief RectangularMatrix From data
+			@attention  User this carefully. 
+		*/
+		static RectangularMatrix<rows, cols, T>& From(T *data) {
+			return *(reinterpret_cast<RectangularMatrix<rows, cols, T>*(data));
+		}
 
+		static const RectangularMatrix<rows, cols, T>& From(const T* data) {
+			return *(reinterpret_cast<const RectangularMatrix<rows, cols, T> *)(data);
+		}
+
+
+		/*constructor*/
+		explicit RectangularMatrix() noexcept {}
 		/*copy constructor*/
 
 		/*destructor*/
@@ -39,7 +53,7 @@ namespace Tiny { namespace Math {
 		bool Invertible();
 
 	private:
-		T _data[rows][cols]; // for row-major format, get information from 
+		Vector<cols, T> _data[rows];
 
 	};
 }}
