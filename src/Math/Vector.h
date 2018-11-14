@@ -8,41 +8,14 @@
 
 #include "Tools.h"
 
-/*
-	Row vector, eg.[a b c]
-*/
 
 namespace Tiny { namespace Math { 
-	/*
-		@brief Dot product for two vectors
-	*/
-	template<std::size_t size, typename T> inline T Dot(const Vector<size, T> &a, const Vector<size, T> &b) {
-		return (a * b).sum()
-	}
 
 	/*
-		Multiply Vector with number, return a new Vector
+		@brief Row vector, eg.[a b c]
+		@param size		Vector size
+		@param T		Data type
 	*/
-	template<std::size_t size, typename T> inline Vector<size, T> operator*(T number, const Vector<size, T> &v) {
-		return v * number;
-	}
-
-	/*
-		Free-standing add operator. 
-		Reference: see the discuss about operators inside or outside class: https://stackoverflow.com/questions/4652932/why-define-operator-or-outside-a-class-and-how-to-do-it-properly
-	*/
-	template<std::size_t size, typename T> Vector<size, T> operator+(const Vector<size, T> &a, const Vector<size, T> &b) {
-		return Vector<size, T>(a) += b;
-	}
-
-	/*
-		Free-standing sub operator
-	*/
-	template<std::size_t size, typename T> Vector<size, T> operator-(const Vector<size, T> &a, const Vector<size, T> &b) {
-		return Vector<size, T>(a) -= b;
-	}
-
-
 	template<std::size_t size, typename T> class Vector {
 		static_assert(size != 0, "Vector cannot have 0 size elements!");
 
@@ -50,12 +23,6 @@ namespace Tiny { namespace Math {
 
 	public:
 		typedef T Type;
-
-		/*constructor*/
-		/*Variadic template constructor,I do not think this is a proper use. Static from() method much better
-		template<typename T, typename ...Args>
-		explicit Vector(T first, Args... args) : _data{ first, ...args } {}
-		*/
 
 		/*
 			@brief Create Vector from data.
@@ -69,35 +36,31 @@ namespace Tiny { namespace Math {
 		static const Vector<size, T>& From(const T* data) {
 			return *reinterpret_cast<const Vector<size, T>*>(data);
 		}
+
+		/*constructor*/
+		/*Variadic template constructor, seems like redundancy*/
+		template<typename ...U, typename V = typename std::enable_if<sizeof...(U)+1 == size, T>::type> constexpr Vector(T first, U... next) noexcept: _data{ first, next... }{}
+		//template<typename T, typename ...Args> Vector(T first, Args... args) : _data{ first, args... } {Normalize}
 		
-		explicit Vector(void) noexcept{}
+		
+		explicit Vector(void) noexcept;
+
+		Vector(const Vector<size, T>& another) = default;
+
 		
 		/*destructor*/
-		~Vector(){}
+		~Vector() = default;
 
-		bool Zero() const {
-			return equal(Magnitude(), T(1));
-		}
+		/*
+			@brief Check if zero vector
+		*/
+		bool Zero() const { return equals(Magnitude(), T(0)); }
 
 		/*
 			Normalized
 			@caution Only avaliable for float-point Vector.
 		*/
-		typename std::enable_if<std::is_floating_point<T>, void>::type Normalize() {
-			assert(!Zero());
-			T mag = Magnitude();
-			for(T &n : _data)
-				n /= mag;
-		}
-
-		/*const overload*/
-		typename std::enable_if<std::is_floating_point<T>, Vector<size, T>>::type Normalize() const {
-			Vector<size, T> out;
-			T mag = Magnitude();
-			for (std::size_t i = 0; i != size; i++)
-				out._data[i] = _data[i] / mag;
-			return out;
-		}
+		typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Normalize() const;
 
 		/*
 			Whether the vector is normalized
@@ -107,111 +70,126 @@ namespace Tiny { namespace Math {
 		/*
 			Vector Magnitude
 		*/
-		template<typename U = T> typename std::enable_if<std::is_floating_point<U>::value, U>::type Magnitude() const() {
-			return std::sqrt(Dot());
-		}
+		template<typename U = T> typename std::enable_if<std::is_floating_point<U>::value, U>::type Magnitude() const{ return std::sqrt(Dot()); }
 
 		/*
 			Sum of values in the vector
 		*/
-		T Sum() const() {
-			T sum(0);
-			for (const T& n : _data)
-				sum += n;
-			return sum;
-		}
+		T Sum() const;
 
 		/*
 			Dot product of vector itself
 		*/
-		T Dot() const();
+		T Dot() const;
 
 
 		/* Get raw data*/
 		T* Get() { return _data; }
 		/*const overload*/
-		constexpr const T* const Get() { return _data; }
+		/*constexpr*/ const T* Get() const { return _data; }
+
+		/*
+			Vector assign
+		*/
+		Vector<size, T>& operator = (const Vector<size, T> &other) = default;
+
+		/*
+			Vector equal
+		*/
+		bool operator==(const Vector<size, T> &other) const;
+
+		/*
+			Return true when component-wise bigger than other
+		*/
+		bool operator > (const Vector<size, T> &other) const;
 
 		/*
 			Vector Add
 		*/
-		void operator+=(const Vector<size, T> &other) {
-			for(T &n : _data)
-				n += other._data[i];
-		}
+		Vector<size, T> operator + (const Vector<size, T> &other) const { return Vector<size, T>(*this) += other; }
+		Vector<size, T>& operator+=(const Vector<size, T> &other) { for (std::size_t i = 0; i != size; i++) _data[i] += other._data[i]; return *this; }
 
 		/*
 			Vector Sub
 		*/
-		void operator-=(const Vector<size, T> &other) {
-			for(T &n : _data)
-				n -= other._data[i];
-		}
+		Vector<size, T> operator - (const Vector<size, T> &other) const { return Vector<size, T>(*this) -= other; }
+		Vector<size, T>& operator-=(const Vector<size, T> &other) { for (std::size_t i = 0; i != size; i++) _data[i] -= other._data[i]; return *this; }
+
+		/*
+			Multiply
+		*/
+		Vector<size, T> operator*(T number) const { return Vector<size, T>(*this) *= number; }
+		Vector<size, T>& operator*=(T co) { for (T &n : _data) n *= co; return *this; }
 
 		/*
 			Division by scalar
 		*/
-		void operator/=(T divisor) {
-			assert(divisor != T(0), "Invalid divisor for vector division");
-			for(T &n : _data)
-				_data[i] /= divisor;
-		}
+		Vector<size, T> operator /(T divisor) const { return Vector<size, T>(*this) /= divisor;  }
+		Vector<size, T>& operator/=(T divisor) { assert(divisor != T(0)); for (T &n : _data) n /= divisor;  return *this; }
 
 
 		/*
 			Dot product with another Vector<size, T>
 		*/
-		T operator*(const Vector<size, T> &another) const {
-			T out(_data[0] * another._data[0]);
-			for (std::size_t i = 1; i != size; i++) {
-				out += _data[i] * another._data[i];
-			}
-			return out;
-		}
-
-		/*
-			Multiply number component-wise and assign
-		*/
-		Vector<size, T> operator*=(T number) {
-			for()
-		}
-
-		/*
-			Multiply number component-wise
-		*/
-		void operator*(T number) {
-			for (std::size_t i = 0; i < size; i++)
-				_data[i] *= number
-		}
-
-		/* const overload*/
-		Vector<size, T> operator*(T number) const {
-			return Vector<size, T>(*this) * number;
-		}
+		T operator*(const Vector<size, T> &another) const;
 
 		/*
 			Overload index operation
 		*/
-		T operator[](std::size_t index) { return _data[index]; }
+		T& operator[](std::size_t index) { return _data[index]; }
 		/* const overload*/
-		const T& operator[](std::size_t index) const {
-			assert(index < size);
-			return _data[index];
-		}
+		const T& operator[](std::size_t index) const { assert(index < size); return _data[index]; }
 
 	private:
 		T _data[size];
 	};
 
-	template<std::size_t size, typename T> inline T Vector<size, T>::Sum() const {
-		T out(_data[0]);
-		for (std::size_t i = 1; i != size; i++)
-			out += _data[i];
+	template<std::size_t size, typename T >
+	typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Vector<size, T>::Normalize() const {
+		Vector<size, T> out;
+		T mag = Magnitude();
+		for (std::size_t i = 0; i != size; i++)
+			out._data[i] = _data[i] / mag;
 		return out;
 	}
 
+	template<std::size_t size, typename T > inline T Vector<size, T>::Sum() const {
+		T sum(0);
+		for (const T& n : _data)
+			sum += n;
+		return sum;
+	}
+
+	template<std::size_t size, typename T > inline bool Vector<size, T>::operator==(const Vector<size, T> &another) const {
+		for (std::size_t i = 0; i != size; i++)
+			if (!equals(_data[i], another._data[i]))
+				return false;
+		return true;
+	}
+
+	template<std::size_t size, typename T > inline T Vector<size, T>::operator*(const Vector<size, T> &another) const{
+		T out(_data[0] * another._data[0]);
+		for (std::size_t i = 1; i != size; i++) {
+			out += _data[i] * another._data[i];
+		}
+		return out;
+	}
+
+	template<std:: size_t size, typename T > inline Vector<size, T>::Vector(void) noexcept{
+		for (auto &n : _data)
+			n = T(0);
+	}
+
 	template<std::size_t size, typename T> inline T Vector<size, T>::Dot() const {
-		return Dot(*this, *this);
+		return (*this) * (*this);
+	}
+
+	template<std::size_t size, typename T> inline bool Vector<size, T>::operator > (const Vector<size, T>& other) const {
+		for (std::size_t i = 0; i != size; i++) {
+			if (_data[i] <= other._data[i])
+				return false;
+		}
+		return true;
 	}
 
 	/*
@@ -223,6 +201,32 @@ namespace Tiny { namespace Math {
 	*/
 	template<std::size_t size, typename T> inline bool Vector<size, T>::IsNormalized() const{
 		return std::abs(Dot() - T(1)) < 2 * std::numeric_limits<T>::epsilon();
+	}
+
+
+	/*
+		Free-standing operators. 
+		Reference: see the discuss about operators inside or outside class: https://stackoverflow.com/questions/4652932/why-define-operator-or-outside-a-class-and-how-to-do-it-properly
+	*/
+	/*
+		Multiply Vector with number, return a new Vector
+	*/
+	template<std::size_t size, typename T> inline Vector<size, T> operator*(T number, const Vector<size, T> &v) {
+		return v * number;
+	}
+
+	/*
+		Free-standing add operator
+	*/
+	template<std::size_t size, typename T> Vector<size, T> operator+(const Vector<size, T> &a, const Vector<size, T> &b) {
+		return Vector<size, T>(a) += b;
+	}
+
+	/*
+		Free-standing sub operator
+	*/
+	template<std::size_t size, typename T> Vector<size, T> operator-(const Vector<size, T> &a, const Vector<size, T> &b) {
+		return Vector<size, T>(a) -= b;
 	}
 }}
 

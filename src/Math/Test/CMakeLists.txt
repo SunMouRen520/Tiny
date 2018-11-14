@@ -1,0 +1,3 @@
+package_add_test(VectorTest VectorTest.cpp)
+package_add_test(Vector2Test Vector2Test.cpp)
+package_add_test(Vector3Test Vector3Test.cpp)
