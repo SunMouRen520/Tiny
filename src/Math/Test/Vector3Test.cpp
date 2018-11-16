@@ -3,7 +3,7 @@
 
 using namespace Tiny::Math;
 
-typedef Vector3<float> Vec3;
+using Vec3 = Vector3<float>;
 
 TEST(Vector3Test, constructors) {
 	Vec3 a;

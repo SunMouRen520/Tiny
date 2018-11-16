@@ -24,6 +24,10 @@ namespace Tiny { namespace Math {
 	public:
 		typedef T Type;
 
+		enum : std::size_t {
+			Size = size
+		};
+
 		/*
 			@brief Create Vector from data.
 			@attention Use this carefully. No check with data at all.
@@ -39,9 +43,15 @@ namespace Tiny { namespace Math {
 
 		/*constructor*/
 		/*Variadic template constructor, seems like redundancy*/
-		template<typename ...U, typename V = typename std::enable_if<sizeof...(U)+1 == size, T>::type> constexpr Vector(T first, U... next) noexcept: _data{ first, next... }{}
-		//template<typename T, typename ...Args> Vector(T first, Args... args) : _data{ first, args... } {Normalize}
-		
+		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == size, T>::type* = nullptr> constexpr /*explicit*/ Vector(T first, U... next) noexcept: _data{ first, next... }{
+			static_assert(sizeof...(U)+1 == size, "invalid parameter length in variadic template constructor");
+		}
+
+
+		explicit Vector(const T source[size]) {
+			for (std::size_t i = 0; i != size; i++)
+				_data[i] = source[i];
+		}
 		
 		explicit Vector(void) noexcept;
 
@@ -92,6 +102,7 @@ namespace Tiny { namespace Math {
 			Vector assign
 		*/
 		Vector<size, T>& operator = (const Vector<size, T> &other) = default;
+
 
 		/*
 			Vector equal

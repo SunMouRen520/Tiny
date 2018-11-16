@@ -15,7 +15,7 @@ namespace Tiny { namespace Math {
 		*/
 		Vector3() :Vector<3, T>() {}
 		constexpr Vector3(T x, T y, T z) noexcept : Vector<3, T>(x, y, z) {}
-		constexpr Vector3(const T source[3]) noexcept : Vector<3, T>(source) {}
+		//constexpr Vector3(const T source[3]) noexcept : Vector<3, T>(source) {}
 
 		Vector3(const Vector<3, T>& other) :Vector<3, T>(other) {}
 		Vector3& operator =(const Vector3<T>& other) = default;

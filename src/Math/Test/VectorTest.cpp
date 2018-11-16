@@ -4,9 +4,9 @@
 
 using namespace Tiny::Math;
 
-typedef Vector<2, float> Vec2;
-typedef Vector<3, float> Vec3;
-typedef Vector<4, float> Vec4;
+using Vec2 = Vector<2, float>;
+using Vec3 = Vector<3, float>;
+using Vec4 = Vector<4, float>;
 
 TEST(VectorTest, constructor) {
 	Vec4 e;
@@ -14,7 +14,7 @@ TEST(VectorTest, constructor) {
 	EXPECT_EQ(e, empty);
 
 	Vec4 a(1.0f, 2.0f, 3.0f, 4.0f);
-	Vec4 b = { 1.0f, 2.0f, 3.0f, 4.0f };
+	Vec4 b { 1.0f, 2.0f, 3.0f, 4.0f };
 	EXPECT_EQ(a, b);
 
 	float c[4] = { 1.0f, 2.0f, 3.0f, 4.0f };

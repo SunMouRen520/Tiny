@@ -6,6 +6,8 @@ using namespace Tiny::Math;
 
 typedef Vector2<float> Vec2;
 
+using Vec2 = Vector2<float>;
+
 
 TEST(Vector2Test, constructors) {
 	Vec2 a;

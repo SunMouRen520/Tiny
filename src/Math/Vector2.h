@@ -14,7 +14,7 @@ namespace Tiny { namespace Math {
 			@brief Constructors
 		*/
 		Vector2() : Vector<2, T>() {}
-		constexpr Vector2(const T source[2]) noexcept :Vector<2, T>(source) {}
+		//constexpr Vector2(const T source[2]) noexcept :Vector<2, T>(source) {}
 		constexpr Vector2(T x, T y) noexcept : Vector<2, T>(x, y) {}
 
 		constexpr Vector2(const Vector<2, T>& other) noexcept : Vector<2, T>(other) {}
