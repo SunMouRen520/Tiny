@@ -16,6 +16,8 @@
 				I.	A = { row1, row2 ... rowm }, B = { col1, col2 ... colp }
 					One specific val C (i x j) = A(rowi) * B(colj)  //vector inner product
 
+					1.	Based on upper view, One col C(j) = A * B(colj).
+
 				II.	A = { col1, col2 ... coln }, B = {row1, row2 ... rown }
 					The hole result matrix C(m x p) = A(col1) x B(row1) + A(col2) x B(row2) + .... + A(coln) x B(rown) //vector outer product
 

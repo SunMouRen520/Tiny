@@ -44,7 +44,7 @@ namespace Tiny { namespace Math {
 		/*constructor*/
 		/*Variadic template constructor, seems like redundancy*/
 		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == size, T>::type* = nullptr> constexpr /*explicit*/ Vector(T first, U... next) noexcept: _data{ first, next... }{
-			static_assert(sizeof...(U)+1 == size, "invalid parameter length in variadic template constructor");
+			//static_assert(sizeof...(U)+1 == size, "invalid parameter length in variadic template constructor");
 		}
 
 
