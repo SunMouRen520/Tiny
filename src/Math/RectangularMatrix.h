@@ -1,5 +1,5 @@
 /*
-	Information stores in row-major format, which is opposite to OpenGL for practicing
+	Information stores in row-major format, which is opposite to OpenGL convention.
 
 		| 1 1 1 | 
 	M = | 2 2 2 | 
@@ -128,12 +128,12 @@ namespace Tiny { namespace Math {
 		/*constructor*/
 		explicit RectangularMatrix() noexcept { }
 		/*this is just a convinent */
-		RectangularMatrix(const T source[rows * cols]){
+		RectangularMatrix(const T *source){
 			for (std::size_t i = 0; i < rows; i++) 
 				for (std::size_t j = 0; j < cols; j++) 
 					_data[i][j] = source[(i * cols) + j];
 		}
-		//using SFIANE on the right of template default arguments just awful. Nullptr just much more better.
+		//using SFIANE on the right of template default arguments are awful. Nullptr just much more better.
 		//template<typename ...U, typename T = typename std::enable_if<sizeof...(U)+1 == rows, Vector<cols, T>>::type> RectangularMatrix(T first, U... next) :_data{ first, next... } {}
 
 		/*

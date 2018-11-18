@@ -2,6 +2,8 @@
 #define TINY_MATH_MATRIX_H
 
 #include "RectangularMatrix.h"
+#include "Tools.h"
+
 /*
 	Square Matrix Properties:
 		1.	Triangular matrix: 
@@ -63,7 +65,33 @@ namespace Tiny { namespace Math {
 			Size = size
 		};
 
-		/*don't need any constructors here*/
+		/*
+			@brief Get the idendity matirx.
+		*/
+		static Matrix<size, T> Identity() {
+			Matrix<size, T> out;
+			for (std::size_t i = 0; i != size; i++)
+				out[i][i] = 1;
+			return out;
+		}
+
+		/*
+			constructors TODO:
+			For now, there are just two constructors: The default and Row vectors version.
+			Apparently, we need more convinent constructors , such as:
+			1.	convert from different size Matrix, 
+			2.	constrcut from c style array list
+			3.	convert to c style array list
+			etc.
+			But for now, i can't find a nice way to handle this.....
+		*/
+		explicit Matrix():RectangularMatrix<size, size, T>(){}
+
+		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == rows, T>::type* = nullptr> Matrix(const Vector<cols, T>& first, const U&... next) : RectangularMatrix<size, size, T>(first, next...){}
+
+		/*default copy constructor*/
+		Matrix(const Matrix<size, T>& other) = default;
+
 
 		/*
 			@brief construct from other size matrix.
@@ -90,10 +118,48 @@ namespace Tiny { namespace Math {
 			Matrix A is orthogonal if (A t) = (A ^ -1).
 		*/
 		bool Orthogonal() const;
+
+		/*
+			@brief Get sub-matrix without row i and col j.
+		*/
+		Matrix<size - 1, T> ij(std::size_t i, std::size_t j) const;
+
 	};
 
-	template<std::size_t size, typename T> T Matrix<size, T>::Determinant() const {
+	template<std::size_t size, typename T> bool Matrix<size, T>::Orthogonal() const {
+		//Is normalized?
+		for (std::size_t row = 0; row != size; row++)
+			if (!(*this)[row].IsNormalized())
+				return false;
+		//Is orghogonal?
+		for (std::size_t i = 0; i != size; i++) 
+			for (std::size_t j = i; j != size; j++) 
+				if (!equals((*this)[i] * (*this)[j], T(0)))
+					return false;
 		
+		return true;
+	}
+
+	template<std::size_t size, typename T> T Matrix<size, T>::Determinant() const {
+		if (size == 1)
+			return (*this)[0][0];
+		if (size == 2)
+			return (*this)[0][0] * (*this)[1][1] - (*this)[0][1] * (*this)[1][0];
+
+		T out(0);
+		for (std::size_t col = 0; col != size; col++) {
+			out += ((col & 1) ? -1 : 1) * (*this)[0][col] * (*this).ij(0, col).Determinant();
+		}
+		return out;
+	}
+
+	template<std::size_t size, typename T> Matrix<size - 1, T> Matrix<size, T>::ij(std::size_t i, std::size_t j) const {
+		Matrix<size - 1, T> out;
+		for (std::size_t row = 0; row != (rows - 1);row++) 
+			for (std::size_t col = 0; col != (cols - 1);cols++) 
+				out[row][col] = (*this)[row  + (row >= i)][col + (col >= j)];
+
+		return out;
 	}
 
 	template<typename T> using Matrix33 = Matrix<3, T>;

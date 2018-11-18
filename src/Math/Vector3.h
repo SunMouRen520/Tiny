@@ -21,11 +21,6 @@ namespace Tiny { namespace Math {
 		Vector3& operator =(const Vector3<T>& other) = default;
 
 		/*
-			@default desctuctor
-		*/
-		~Vector3() = default;
-
-		/*
 			@brief index first component
 		*/
 		T& x() { return (*this)[0]; }

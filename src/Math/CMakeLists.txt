@@ -1,4 +1,5 @@
 set(MATH_HEADERS
+    Angle.h
     Vector.h
     Vector2.h
     Vector3.h
