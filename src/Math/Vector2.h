@@ -26,34 +26,62 @@ namespace Tiny { namespace Math {
 		/*
 			@brief index fist component
 		*/
-		T& x() { return (*this)[0]; }
+		T& X() { return (*this)[0]; }
 		/*const overload*/
-		const T& x() const { return (*this)[0]; }
+		const T& X() const { return (*this)[0]; }
 
 		/*
 			@brief index second component
 		*/
-		T& y() { return (*this)[1]; }
+		T& Y() { return (*this)[1]; }
 		/*const overload*/
-		const T& y() const { return (*this)[1]; }
+		const T& Y() const { return (*this)[1]; }
 
 		/*
 			@brief Vector2 in direction of X-Axis with length
 		*/
-		static Vector2<T> xAxis(T length) ;
-
+		static Vector2<T> XAxis(T length) ;
 		/*
 			@brief Vector2 in direction of Y-Axis with length
 		*/
-		static Vector2<T> yAxis(T length);
+		static Vector2<T> YAxis(T length);
+
+		/*
+			@brief	Project current vector to param other
+			@return	The projected vector on other
+		*/
+		Vector2<T> Project(const Vector2<T>& other);
 	};
 
-	template<typename T> Vector2<T> Vector2<T>::xAxis(T length) {
+	template<typename T> Vector2<T> Vector2<T>::XAxis(T length) {
 		return Vector2<T>(length, T(0));
 	}
 
-	template<typename T> Vector2<T> Vector2<T>::yAxis(T length){
+	template<typename T> Vector2<T> Vector2<T>::YAxis(T length){
 		return Vector2<T>(T(0), length);
+	}
+
+	template<typename T> Vector2<T>	Vector2<T>::Project(const Vector2<T>& other) {
+		return other * ((*this) * other / (other.Magnitude() * other.Magnitude()))
+	}
+	/*
+		@brief Get the inner angle between two vectors, no direction involved.
+		@return Radian in [0, M_PI]
+	*/
+	template<typename T> Rad<T> inner_angle(const Vector2<T>& a, const Vector2<T>& b) {
+		return Rad<T>(T(std::acos(a * b / (a.Magnitude() * b.Magnitude())));
+	}
+
+	/*
+		@brief Get the counter-clock wise angle between two vectors 
+		@return Radian in [0, 2 * M_PI]
+	*/
+	template<typename T> Rad<T> angle(const Vector2<T>& a, const Vector2<T>& b) {
+		Vector2<T> norm_a = a.Normalize();
+		Vector2<T> norm_b = b.Normalize();
+		T inner = norm_a.x * norm_b.x + norm_a.y * norm_b.y;
+		T det = norm_a.x * norm_b.y - norm_a.y * norm_b.x;
+		return std::atan2(det, inner);
 	}
 }
 }

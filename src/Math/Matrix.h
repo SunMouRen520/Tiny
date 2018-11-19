@@ -87,7 +87,7 @@ namespace Tiny { namespace Math {
 		*/
 		explicit Matrix():RectangularMatrix<size, size, T>(){}
 
-		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == rows, T>::type* = nullptr> Matrix(const Vector<cols, T>& first, const U&... next) : RectangularMatrix<size, size, T>(first, next...){}
+		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == size, T>::type* = nullptr> Matrix(const Vector<size, T>& first, const U&... next) : RectangularMatrix<size, size, T>(first, next...){}
 
 		/*default copy constructor*/
 		Matrix(const Matrix<size, T>& other) = default;
@@ -104,9 +104,9 @@ namespace Tiny { namespace Math {
 					Matrix<size, T>{typename Implementation::GenerateSequence<size>::Type(), other}
 				how to understand?
 		*/
-		template<std::size_t other_size, typename std::enable_if<false, T>::type * = nullptr> explicit Matrix(const Matrix<other_size, T>& other) {
-			
-		}
+		//template<std::size_t other_size, typename std::enable_if<false, T>::type * = nullptr> explicit Matrix(const Matrix<other_size, T>& other) {
+		//	
+		//}
 
 		/*
 			@brief Get the determinant
@@ -155,8 +155,8 @@ namespace Tiny { namespace Math {
 
 	template<std::size_t size, typename T> Matrix<size - 1, T> Matrix<size, T>::ij(std::size_t i, std::size_t j) const {
 		Matrix<size - 1, T> out;
-		for (std::size_t row = 0; row != (rows - 1);row++) 
-			for (std::size_t col = 0; col != (cols - 1);cols++) 
+		for (std::size_t row = 0; row != (size - 1) ; row++) 
+			for (std::size_t col = 0; col != (size - 1) ; col++) 
 				out[row][col] = (*this)[row  + (row >= i)][col + (col >= j)];
 
 		return out;

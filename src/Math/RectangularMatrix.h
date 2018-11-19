@@ -288,7 +288,8 @@ namespace Tiny { namespace Math {
 
 
 	/*
-		@brief outer operator
+		TODO: what's the meaning of this operator?
+		@brief outer operator. 
 		@tparam		col		col is the colmun-vector with form (M x 1)
 		@tparam		row		row is the row-vector with form (1 X N)
 		@return		RectangularMatirx with form (M x N)

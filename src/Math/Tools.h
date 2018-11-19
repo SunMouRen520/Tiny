@@ -5,6 +5,9 @@
 #include <limits>
 
 namespace Tiny { namespace Math {
+	/* @brief	PI */
+	constexpr float M_PI = (float)3.14159265358979323846;  
+
 	template<typename T>
 	//typename std::enable_if<std::is_floating_point<T>::value, bool>::type 
 	bool equals(T a, T b) {

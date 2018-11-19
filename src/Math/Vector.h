@@ -7,7 +7,7 @@
 #include <cassert>
 
 #include "Tools.h"
-
+#include "Angle.h"
 
 namespace Tiny { namespace Math { 
 
@@ -15,6 +15,14 @@ namespace Tiny { namespace Math {
 		@brief Row vector, eg.[a b c]
 		@param size		Vector size
 		@param T		Data type
+
+		Vector propertied:
+			For Vector a and b:
+			1.	Inner product: a * b = a.Mag() * b.Mag() * cos(theta)
+			2.	Cross product: a x b = a.Mag() * b.mag() * sin(theta)
+				a.	For 2D, this is the area.
+				b.	For 3D, thish is the volume.
+			
 	*/
 	template<std::size_t size, typename T> class Vector {
 		static_assert(size != 0, "Vector cannot have 0 size elements!");
@@ -216,29 +224,36 @@ namespace Tiny { namespace Math {
 
 
 	/*
+		
+	*/
+	template<std::size_t size, typename T> Vector<size, T> Cross()
+
+	/*
 		Free-standing operators. 
 		Reference: see the discuss about operators inside or outside class: https://stackoverflow.com/questions/4652932/why-define-operator-or-outside-a-class-and-how-to-do-it-properly
 	*/
 	/*
-		Multiply Vector with number, return a new Vector
+		@brief Multiply Vector with number, return a new Vector
 	*/
 	template<std::size_t size, typename T> inline Vector<size, T> operator*(T number, const Vector<size, T> &v) {
 		return v * number;
 	}
 
 	/*
-		Free-standing add operator
+		@brief Free-standing add operator
 	*/
-	template<std::size_t size, typename T> Vector<size, T> operator+(const Vector<size, T> &a, const Vector<size, T> &b) {
+	template<std::size_t size, typename T> Vector<size, T> operator+(const Vector<size, T>& a, const Vector<size, T>& b) {
 		return Vector<size, T>(a) += b;
 	}
 
 	/*
-		Free-standing sub operator
+		@brief Free-standing sub operator
 	*/
-	template<std::size_t size, typename T> Vector<size, T> operator-(const Vector<size, T> &a, const Vector<size, T> &b) {
+	template<std::size_t size, typename T> Vector<size, T> operator-(const Vector<size, T>& a, const Vector<size, T>& b) {
 		return Vector<size, T>(a) -= b;
 	}
+
+
 }}
 
 

@@ -23,52 +23,52 @@ namespace Tiny { namespace Math {
 		/*
 			@brief index first component
 		*/
-		T& x() { return (*this)[0]; }
-		const T& x() const { return (*this)[0]; }
+		T& X() { return (*this)[0]; }
+		const T& X() const { return (*this)[0]; }
 
 		/*
 			@brief index second component
 		*/
-		T& y(){ return (*this)[1]; }
-		const T& y() const { return (*this)[1]; }
+		T& Y(){ return (*this)[1]; }
+		const T& Y() const { return (*this)[1]; }
 		/*
 			@brief index third component
 		*/
-		T& z() { return (*this)[2]; }
-		const T& z() const { return (*this)[2]; }
+		T& Z() { return (*this)[2]; }
+		const T& Z() const { return (*this)[2]; }
 
 
 		/*
 			@brief index first component
 		*/
-		T& r() { return (*this)[0]; }
-		const T& r() const { return (*this)[0]; }
+		T& R() { return (*this)[0]; }
+		const T& R() const { return (*this)[0]; }
 
 		/*
 			@brief index second component
 		*/
-		T& g() { return (*this)[1]; }
-		const T& g() const { return (*this)[1]; }
+		T& G() { return (*this)[1]; }
+		const T& G() const { return (*this)[1]; }
 		/*
 			@brief index third component
 		*/
-		T& b() { return (*this)[2]; }
-		const T& b() const { return (*this)[2]; }
+		T& B() { return (*this)[2]; }
+		const T& B() const { return (*this)[2]; }
 
 		/*
 			@brief Vector3 in direction of X-Axis with length,
 		*/
-		static Vector3<T> xAxis(T length) { return{ length, T(0), T(0) }; }
+		static Vector3<T> XAxis(T length) { return{ length, T(0), T(0) }; }
 
 		/*
 			@brief Vector3 in direction of Y-Axis with length
 		*/
-		static Vector3<T> yAxis(T length) { return{ T(0), length, T(0) }; }
+		static Vector3<T> YAxis(T length) { return{ T(0), length, T(0) }; }
 
 		/*
 			@brief Vector3 in direction of Z-Axis with length
 		*/
-		static Vector3<T> zAxis(T length) { return{ T(0), T(0), length }; }
+		static Vector3<T> ZAxis(T length) { return{ T(0), T(0), length }; }
 	};
 }}
 
