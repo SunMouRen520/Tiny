@@ -3,11 +3,15 @@
 
 #include "Vector.h"
 
-/*
-	@brief Two-component Vector
-	@param T		Data type
-*/
 namespace Tiny { namespace Math {
+	/*
+		@brief Two-component Vector
+		@param T		Data type
+
+		TODO:
+			1.	Need some facilities to convert between different dimensions easily.
+	*/
+
 	template<typename T> class Vector2 : public Vector<2, T> {
 	public:
 		/*
@@ -49,8 +53,16 @@ namespace Tiny { namespace Math {
 		/*
 			@brief	Project current vector to param other
 			@return	The projected vector on other
+
+			This interface is mathematically wrong. Project should be done with Matirx3.
 		*/
-		Vector2<T> Project(const Vector2<T>& other);
+		//Vector2<T> Project(const Vector2<T>& other);
+
+		/*
+			@brief Get a 2d vector which is perpendicular to this.
+			The direction of perpendicular vector is counter-clockwise 90 degree.
+		*/
+		Vector2<T> Perpendicular() const { return{ -Y(), X() }; }
 	};
 
 	template<typename T> Vector2<T> Vector2<T>::XAxis(T length) {
@@ -61,26 +73,26 @@ namespace Tiny { namespace Math {
 		return Vector2<T>(T(0), length);
 	}
 
-	template<typename T> Vector2<T>	Vector2<T>::Project(const Vector2<T>& other) {
-		return other * ((*this) * other / (other.Magnitude() * other.Magnitude()))
-	}
+	//template<typename T> Vector2<T>	Vector2<T>::Project(const Vector2<T>& other) {
+	//	return other * ((*this) * other / (other.Magnitude() * other.Magnitude()))
+	//}
 	/*
 		@brief Get the inner angle between two vectors, no direction involved.
 		@return Radian in [0, M_PI]
 	*/
 	template<typename T> Rad<T> inner_angle(const Vector2<T>& a, const Vector2<T>& b) {
-		return Rad<T>(T(std::acos(a * b / (a.Magnitude() * b.Magnitude())));
+		return Rad<T>(T(std::acos(a * b / (a.Magnitude() * b.Magnitude()))));
 	}
 
 	/*
-		@brief Get the counter-clock wise angle between two vectors 
-		@return Radian in [0, 2 * M_PI]
+		@brief Get the counter-clock wise angle from vector a to vector b
+		@return Radian in [-M_PI, M_PI]
 	*/
 	template<typename T> Rad<T> angle(const Vector2<T>& a, const Vector2<T>& b) {
 		Vector2<T> norm_a = a.Normalize();
 		Vector2<T> norm_b = b.Normalize();
-		T inner = norm_a.x * norm_b.x + norm_a.y * norm_b.y;
-		T det = norm_a.x * norm_b.y - norm_a.y * norm_b.x;
+		T inner = norm_a.X() * norm_b.X() + norm_a.Y() * norm_b.Y();
+		T det = norm_a.X() * norm_b.Y() - norm_a.Y() * norm_b.X();
 		return std::atan2(det, inner);
 	}
 }

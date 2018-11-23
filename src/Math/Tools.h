@@ -6,7 +6,7 @@
 
 namespace Tiny { namespace Math {
 	/* @brief	PI */
-	constexpr float M_PI = (float)3.14159265358979323846;  
+	constexpr float M_PI = 3.14159265358979323846f;  
 
 	template<typename T>
 	//typename std::enable_if<std::is_floating_point<T>::value, bool>::type 

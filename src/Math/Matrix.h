@@ -68,12 +68,12 @@ namespace Tiny { namespace Math {
 		/*
 			@brief Get the idendity matirx.
 		*/
-		static Matrix<size, T> Identity() {
-			Matrix<size, T> out;
-			for (std::size_t i = 0; i != size; i++)
-				out[i][i] = 1;
-			return out;
-		}
+		static Matrix<size, T> Identity(); 
+
+		/*
+			@brief Set all entries as value
+		*/
+		static Matrix<size, T> Uniform(T value);
 
 		/*
 			constructors TODO:
@@ -120,11 +120,35 @@ namespace Tiny { namespace Math {
 		bool Orthogonal() const;
 
 		/*
+			@brief Invertible
+		*/
+		bool Invertible() const;
+
+		/*
 			@brief Get sub-matrix without row i and col j.
 		*/
 		Matrix<size - 1, T> ij(std::size_t i, std::size_t j) const;
 
 	};
+
+	template<std::size_t size, typename T> Matrix<size, T> Matrix<size, T>::Identity() {
+		Matrix<size, T> out;
+		for (std::size_t i = 0; i != size; i++)
+			out[i][i] = 1;
+		return out;
+	}
+
+	template<std::size_t size, typename T> Matrix<size, T> Matrix<size, T>::Uniform(T value) {
+		Matrix<size, T> out;
+		for (std::size_t i = 0; i != size; i++)
+			for (std::size_t j = 0; j != size; j++)
+				out[i][j] = value;
+		return out;
+	}
+
+	template<std::size_t size, typename T> bool Matrix<size, T>::Invertible() const {
+		return Determinant() != 0;
+	}
 
 	template<std::size_t size, typename T> bool Matrix<size, T>::Orthogonal() const {
 		//Is normalized?
@@ -133,7 +157,7 @@ namespace Tiny { namespace Math {
 				return false;
 		//Is orghogonal?
 		for (std::size_t i = 0; i != size; i++) 
-			for (std::size_t j = i; j != size; j++) 
+			for (std::size_t j = i + 1; j != size; j++) 
 				if (!equals((*this)[i] * (*this)[j], T(0)))
 					return false;
 		
@@ -141,16 +165,17 @@ namespace Tiny { namespace Math {
 	}
 
 	template<std::size_t size, typename T> T Matrix<size, T>::Determinant() const {
-		if (size == 1)
-			return (*this)[0][0];
-		if (size == 2)
-			return (*this)[0][0] * (*this)[1][1] - (*this)[0][1] * (*this)[1][0];
+		return Implementation::Determinant(*this);
+		//if (size == 1)
+		//	return (*this)[0][0];
+		//if (size == 2)
+		//	return (*this)[0][0] * (*this)[1][1] - (*this)[0][1] * (*this)[1][0];
 
-		T out(0);
-		for (std::size_t col = 0; col != size; col++) {
-			out += ((col & 1) ? -1 : 1) * (*this)[0][col] * (*this).ij(0, col).Determinant();
-		}
-		return out;
+		//T out(0);
+		//for (std::size_t col = 0; col != size; col++) {
+		//	out += ((col & 1) ? -1 : 1) * (*this)[0][col] * (*this).ij(0, col).Determinant();
+		//}
+		//return out;
 	}
 
 	template<std::size_t size, typename T> Matrix<size - 1, T> Matrix<size, T>::ij(std::size_t i, std::size_t j) const {
@@ -162,6 +187,26 @@ namespace Tiny { namespace Math {
 		return out;
 	}
 
+	namespace Implementation {
+		template<std::size_t size, typename T> T Determinant(const Matrix<size, T>& m) {
+			T out(0);
+			for (std::size_t col = 0; col != size; col++) {
+				out += ((col & 1) ? -1 : 1) * m[0][col] * Determinant(m.ij(0, col));
+			}
+
+			return out;
+		}
+
+		template<typename T> T Determinant(const Matrix<2, T>& m) {
+			return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+		}
+
+		template<typename T> T Determinant(const Matrix<1, T>& m) {
+			return m[0][0];
+		}
+	}
+
+	template<typename T> using Matrix22 = Matrix<2, T>;
 	template<typename T> using Matrix33 = Matrix<3, T>;
 	template<typename T> using Matrix44 = Matrix<4, T>;
 } }

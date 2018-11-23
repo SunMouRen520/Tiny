@@ -1,7 +1,7 @@
 #ifndef TINY_MATH_VECTOR3_H
 #define TINY_MATH_VECTOR3_H
 
-#include "Vector.h"
+#include "Vector2.h"
 
 namespace Tiny { namespace Math {
 	/*
@@ -56,6 +56,12 @@ namespace Tiny { namespace Math {
 		const T& B() const { return (*this)[2]; }
 
 		/*
+			@brief Get the xy component 
+		*/
+		Vector2<T>& XY() { return (Vector2<T>&)Vector<2, T>::From(Vector<3,T>::Get()); }
+		Vector2<T> XY() const { return (Vector2<T>)Vector<2, T>::From(Vector<3, T>::Get()); }
+
+		/*
 			@brief Vector3 in direction of X-Axis with length,
 		*/
 		static Vector3<T> XAxis(T length) { return{ length, T(0), T(0) }; }
@@ -70,6 +76,13 @@ namespace Tiny { namespace Math {
 		*/
 		static Vector3<T> ZAxis(T length) { return{ T(0), T(0), length }; }
 	};
+
+	/*
+		@brief Cross product of two vector, right-hand rule.
+	*/
+	template<typename T> Vector3<T> Cross(const Vector3<T>& a, const Vector3<T>& b) {
+		return Vector3<T>(a.Y() * b.Z() - a.Z() * b.Y(), a.Z() * b.X() - a.X() * b.Z(), a.X() * b.Y() - a.Y() * b.X());
+	}
 }}
 
 #endif

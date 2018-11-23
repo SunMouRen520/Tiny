@@ -75,31 +75,30 @@ namespace Tiny { namespace Math {
 		bool Zero() const { return equals(Magnitude(), T(0)); }
 
 		/*
-			Normalized
+			@brief Normalized
 			@caution Only avaliable for float-point Vector.
 		*/
 		typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Normalize() const;
 
 		/*
-			Whether the vector is normalized
+			@brief Whether the vector is normalized
 		*/
 		bool IsNormalized() const;
 
 		/*
-			Vector Magnitude
+			@brief Vector Magnitude
 		*/
 		template<typename U = T> typename std::enable_if<std::is_floating_point<U>::value, U>::type Magnitude() const{ return std::sqrt(Dot()); }
 
 		/*
-			Sum of values in the vector
+			@brief Sum of values in the vector
 		*/
 		T Sum() const;
 
 		/*
-			Dot product of vector itself
+			@brief Dot product of vector itself
 		*/
 		T Dot() const;
-
 
 		/* Get raw data*/
 		T* Get() { return _data; }
@@ -107,53 +106,59 @@ namespace Tiny { namespace Math {
 		/*constexpr*/ const T* Get() const { return _data; }
 
 		/*
-			Vector assign
+			@brief	Vector assign
 		*/
 		Vector<size, T>& operator = (const Vector<size, T> &other) = default;
 
 
 		/*
-			Vector equal
+			@brief	Vector equal
 		*/
 		bool operator==(const Vector<size, T> &other) const;
 
 		/*
-			Return true when component-wise bigger than other
+			@brief	Return true when component-wise bigger than other
 		*/
 		bool operator > (const Vector<size, T> &other) const;
 
 		/*
-			Vector Add
+			@brief	Reverse
+		*/
+		Vector<size, T> operator-() const { Vector<size, T> out; for (std::size_t i = 0; i != size; i++) out._data[i] = _data[i]; return out; }
+
+
+		/*
+			@brief	Vector Add
 		*/
 		Vector<size, T> operator + (const Vector<size, T> &other) const { return Vector<size, T>(*this) += other; }
 		Vector<size, T>& operator+=(const Vector<size, T> &other) { for (std::size_t i = 0; i != size; i++) _data[i] += other._data[i]; return *this; }
 
 		/*
-			Vector Sub
+			@brief	Vector Sub
 		*/
 		Vector<size, T> operator - (const Vector<size, T> &other) const { return Vector<size, T>(*this) -= other; }
 		Vector<size, T>& operator-=(const Vector<size, T> &other) { for (std::size_t i = 0; i != size; i++) _data[i] -= other._data[i]; return *this; }
 
 		/*
-			Multiply
+			@brief	Multiply
 		*/
 		Vector<size, T> operator*(T number) const { return Vector<size, T>(*this) *= number; }
 		Vector<size, T>& operator*=(T co) { for (T &n : _data) n *= co; return *this; }
 
 		/*
-			Division by scalar
+			@brief	Division by scalar
 		*/
 		Vector<size, T> operator /(T divisor) const { return Vector<size, T>(*this) /= divisor;  }
 		Vector<size, T>& operator/=(T divisor) { assert(divisor != T(0)); for (T &n : _data) n /= divisor;  return *this; }
 
 
 		/*
-			Dot product with another Vector<size, T>
+			@brief	Dot product with another Vector<size, T>
 		*/
 		T operator*(const Vector<size, T> &another) const;
 
 		/*
-			Overload index operation
+			@brief	Overload index operation
 		*/
 		T& operator[](std::size_t index) { return _data[index]; }
 		/* const overload*/
@@ -222,11 +227,6 @@ namespace Tiny { namespace Math {
 		return std::abs(Dot() - T(1)) < 2 * std::numeric_limits<T>::epsilon();
 	}
 
-
-	/*
-		
-	*/
-	template<std::size_t size, typename T> Vector<size, T> Cross()
 
 	/*
 		Free-standing operators. 

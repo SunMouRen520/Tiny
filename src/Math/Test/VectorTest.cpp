@@ -55,6 +55,8 @@ TEST(VectorTest, Operators) {
 	Vec4 bigger(10.1f, -0.2f, 0.0f, 4.0f);
 
 	EXPECT_TRUE(bigger > smaller);
+
+	EXPECT_EQ(-smaller, Vec4(-1.0f, 1.0f, 2.0f, -3.0f));
 }
 
 TEST(VectorTest, Interfaces) {

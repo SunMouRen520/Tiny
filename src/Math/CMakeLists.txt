@@ -9,6 +9,7 @@ set(MATH_HEADERS
     Matrix3.h
     Matrix4.h
     Tools.h
+    MathForward.h
 )
 
 add_custom_target(Math SOURCES ${MATH_HEADERS})
