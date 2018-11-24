@@ -108,7 +108,7 @@ namespace Tiny { namespace Math {
 			@param	near	The near clipping plane of orghographic view volume.
 			@param	far		The far	clipping plane of orghographic view volume.
 		*/
-		static Matrix4<T> Orthograpic(const Vec2& rect, const T& near, const T& far);
+		static Matrix4<T> Orthographic(const Vec2& rect, const T& near, const T& far);
 
 		/*
 			@brief	Map from view frustum to orthographic view volume, with view direction -z.
@@ -213,7 +213,7 @@ namespace Tiny { namespace Math {
 		return Perspective(Vec2(width, height), near, far);
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Orthograpic(const Vec2& rect, const T& near, const T& far) {
+	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& near, const T& far) {
 		const Vec2 xyScale = 2 / rect;
 		const T v22 = 2 / (near - far);
 		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (near + far) / (far - near);
