@@ -135,7 +135,7 @@ namespace Tiny { namespace Math {
 	/*
 		convinent function for Vec2 times Matrix3
 		TODO:
-			This will be removed when different dimension convention ability is provied for vectors
+			This will be removed when different dimension convert facility is provied for vectors
 	*/
 	template<typename T> Vector2<T> operator*(const Vector2<T>& v, const Matrix3<T>& m) {
 		Vector3<T> affine_v(v.X(), v.Y(), T(1));

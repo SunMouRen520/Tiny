@@ -253,6 +253,13 @@ namespace Tiny { namespace Math {
 		return Vector<size, T>(a) -= b;
 	}
 
+	/*
+		@brief Free-sstanding div operator
+	*/
+	template<std::size_t size, typename T> Vector<size, T> operator/(const T& a, const Vector<size, T>& b) {
+		return {a / b.X(), a / b.Y()};
+	}
+
 
 }}
 

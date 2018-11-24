@@ -80,17 +80,17 @@ namespace Tiny { namespace Math {
 		static Matrix4<T> RotationZ(const Rad<T>& rad);
 
 		/*
-			@brief	Perspective projection. Map from view frustum to canonical view volume, view direction is -z.
-			@param	rect	rect.x is the horizontal vector of near clipping plane 
-							rect.y is the vertical vector of near clipping plane
+			@brief	Perspective projection. Map from view frustum to canonical view volume, with view direction -z.
+			@param	rect	rect.x is the horizontal length of near clipping plane 
+							rect.y is the vertical length of near clipping plane
 			@param	near	The near clipping plane distance
 			@param	fat		The far clipping plane distance
 		*/
-		static Matrix4<T> Perspective(const Vec2& rect, T near, T far);
+		static Matrix4<T> Perspective(const Vec2& rect, const T& near, const T& far);
 
 		/*
-			@brief	Perspective projection. Map from view frustum to canonical view volume, view direction is -z.
-			@param	fieldOfView		Horizontal field of view angle
+			@brief	Perspective projection. Map from view frustum to canonical view volume, with view direction -z.
+			@param	fieldOfView		Horizontal field of view angle in Rad (0, M_PI)
 			@param	aspectRatio		Horizontal : vertical aspect ratio
 			@param	near			The near clipping plane distance
 			@param	far				The far clipping plane distance
@@ -99,27 +99,24 @@ namespace Tiny { namespace Math {
 				1.	fieldOfView = 2 * atan(rect.x / (2 * near))
 				2.	aspectRatio = rect.x / rect.y 
 		*/
-		static Matrix4<T> Perspective(T fieldOfView, T aspectRatio, T near, T far);
+		static Matrix4<T> Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& near, const T& far);
 
 		/*
-			@brief	Orthographic projection. Map from orthographic view volume to canonical view volume, view direction is -z.
+			@brief	Orthographic projection. Map from orthographic view volume to canonical view volume, with view direction -z.
 			@param	rect	rect.x is the horizontal length of orthographic view volume
 							rect.y is the vertical length of orthographic view volume
 			@param	near	The near clipping plane of orghographic view volume.
 			@param	far		The far	clipping plane of orghographic view volume.
 		*/
-		static Matrix4<T> Orthograpic(const Vec2& rect, T near, T far);
+		static Matrix4<T> Orthograpic(const Vec2& rect, const T& near, const T& far);
 
 		/*
-			@brief	Map from view frustum to orthographic view volume, view direction is -z.
-			@ref	Params are same as Perspective(rect, near, far)
+			@brief	Map from view frustum to orthographic view volume, with view direction -z.
+			@param	near	near clipping plane
+			@param	far		far clipping plane
 		*/
-		static Matrix4<T> PerspectiveToOrthographic(const Vec2& rect, T near, T far);
-		/*
-			@brief	Map from view frustum to orthographic view volume, view direction is -z.
-			@ref	Params are same as Perspective(fieldOfView, apsecRatio, near, far)
-		*/
-		static Matrix4<T> PerspectiveToOrthographic(T fieldOfView, T aspectRatio, T near, T far);
+		static Matrix4<T> PerspectiveToOrthographic(const T& near, const T& far);
+	
 	};
 
 	template<typename T> Matrix4<T> Matrix4<T>::Scale(const Vec3& scale) {
@@ -192,15 +189,45 @@ namespace Tiny { namespace Math {
 		const T cosR= std::cos(val), sinR = std::sin(val);
 		const T nx2 = std::pow(n.X(), 2), ny2 = std::pow(n.Y(), 2), nz2 = std::pow(n.Z(), 2);
 		const T index = 1 - cosR, nxy = n.X() * n.Y(), nxz = n.X() * n.Z(), nyz = n.Y() * n.Z();
-		return{ {nx2 * index + cosR, nxy * index + n.Z() * sinR, nxz * index - n.Y() * sinR, T(0)},
-				{nxy * index - n.Z() * sinR, ny2 * index + cosR, nyz * index + n.Z() * sinR, T(0)},
-				{nxz * index + n.Y() * sinR, nyz * index - n.X() * sinR, nz2 * index + cosR, T(0)}.
-				{T(0), T(0), T(0), T(1)} };
+		return{ {nx2 * index + cosR			, nxy * index + n.Z() * sinR, nxz * index - n.Y() * sinR, T(0)},
+				{nxy * index - n.Z() * sinR	, ny2 * index + cosR		, nyz * index + n.Z() * sinR, T(0)},
+				{nxz * index + n.Y() * sinR	, nyz * index - n.X() * sinR, nz2 * index + cosR		, T(0)}.
+				{T(0)						, T(0)						, T(0)						, T(1)} };
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, T near, T far) {
-		const T left = -rect.X() / 2, right = rect.X() / 2, up = rect.Y() / 2, bottom = -rect.Y() / 2;
-		TOBECONTINUE
+	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, const T& near, const T& far) {
+		assert(near < 0 && far < 0 && near > far);
+		const Vec2 xyScale = 2 * near / rect;
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (near + far) / (near - far), v32 = 2 * far * near / (far - near);
+		return{	{T(v00)	, T(0)	, T(0)	, T(0)},
+				{T(0)	, T(v11), T(0)	, T(0)},
+				{T(0)	, T(0)	, T(v22), T(1)},
+				{T(0)	, T(0)	, T(v32), T(0)}}
+	}
+
+	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& near, const T& far) {
+		assert(fieldOfView > Rad<T>(0) && fieldOfView < Rad<T>(M_PI));
+		assert(aspectRatio > 0);
+		const T width = 2 * std::abs(near) * std::tan(fieldOfView / 2);
+		const T height = width / aspectRatio;
+		return Perspective(Vec2(width, height), near, far);
+	}
+
+	template<typename T> Matrix4<T> Matrix4<T>::Orthograpic(const Vec2& rect, const T& near, const T& far) {
+		const Vec2 xyScale = 2 / rect;
+		const T v22 = 2 / (near - far);
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (near + far) / (far - near);
+		return{ {v00	, T(0)	, T(0), T(0)},
+				{T(0)	, v11	, T(0), T(0)},
+				{T(0)	, T(0)	, v22 , T(0)},
+				{T(0)	, T(0)	, v32 , T(1)} };
+	}
+
+	template<typename T> Matrix4<T> Matrix4<T>::PerspectiveToOrthographic(const T& n, const T& f) {
+		return{ {n		, T(0)	, T(0)	, T(0)},
+				{T(0)	, n		, T(0)	, T(0)},
+				{T(0)	, T(0)	, n + f	, T(1)},
+				{T(0)	, T(0)	, -f * n, T(0)}};
 	}
 } }
 
