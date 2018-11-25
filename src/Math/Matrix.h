@@ -1,16 +1,10 @@
-#ifndef TINY_MATH_MATRIX_H
-#define TINY_MATH_MATRIX_H
-
-#include "RectangularMatrix.h"
-#include "Tools.h"
-
 /*
 	Square Matrix Properties:
-		1.	Triangular matrix: 
+		1.	Triangular matrix:
 			i.	Lower triangular: A square matrix which all values above the main diagonal are 0.
 			ii.	Upper triangular: opposite to the lower triangular matrix .
 
-		2. Determinant: 
+		2. Determinant:
 			detA = a(11)detA(11) - a(12)detA(12) ... +(-1)^(1 + n)a(1n)detA(1n).  --Formular 1
 			a(1n) is the nth value in first row and A(1n) is the A sub-matrix without row 1 and column n.
 
@@ -26,19 +20,19 @@
 			V.		det(A t) = detA
 			VI.		det(AB) = detA * detB
 			VII.	Cramer's Rule:
-						For any invertible n x n matrix A and any b in R(n), let A(i)(b) be the matrix obtained 
+						For any invertible n x n matrix A and any b in R(n), let A(i)(b) be the matrix obtained
 						from A by replacing column i by the vector b.
 						Then the unique solution x of Ax = b has entries given by:
 								x(i) = detA(i)(b) / detA
-			
+
 			VIII.	Inverse Formula:
-					
+
 					A ^ -1 = (C t) / detA. where C is the cofactor matrix of A.
 
 			IX.		If A is in R2, |detA| is the area of parallelogram.
 					If A is in R3, |detA| is the volume of parallelepiped.
 
-			X.		R2 -> R2 be the linear transform determinated by 2x2 matrix A. If S is a parallelogram in R2, then 
+			X.		R2 -> R2 be the linear transform determinated by 2x2 matrix A. If S is a parallelogram in R2, then
 						{area of T(S)} = detA x {area of S}
 
 		3.	Eigenvectors and Eigenvalues;
@@ -51,13 +45,39 @@
 					2.	detA is not 0.
 
 			V.		too be continue...
-			
+
 */
+
+#ifndef TINY_MATH_MATRIX_H
+#define TINY_MATH_MATRIX_H
+
+#include "RectangularMatrix.h"
+#include "Tools.h"
 
 namespace Tiny { namespace Math {
 	/*
 		@brief Square Matrix base class.
 	*/
+	template<std::size_t, typename> class Matrix;
+	namespace Implementation {
+		template<typename T> static T Determinant(const Matrix<2, T>& m) {
+			return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+		}
+
+		template<typename T> static T Determinant(const Matrix<1, T>& m) {
+			return m[0][0];
+		}
+
+		template<std::size_t size, typename T> static T Determinant(const Matrix<size, T>& m) {
+			T out(0);
+			for (std::size_t col = 0; col != size; col++) {
+				out += ((col & 1) ? -1 : 1) * m[0][col] * Determinant<float>(m.ij(0, col));
+			}
+
+			return out;
+		}
+	}
+
 	template<std::size_t size, typename T> class Matrix : public RectangularMatrix<size, size, T> {
 
 	public:
@@ -68,7 +88,7 @@ namespace Tiny { namespace Math {
 		/*
 			@brief Get the idendity matirx.
 		*/
-		static Matrix<size, T> Identity(); 
+		static Matrix<size, T> Identity();
 
 		/*
 			@brief Set all entries as value
@@ -79,7 +99,7 @@ namespace Tiny { namespace Math {
 			constructors TODO:
 			For now, there are just two constructors: The default and Row vectors version.
 			Apparently, we need more convinent constructors , such as:
-			1.	convert from different size Matrix, 
+			1.	convert from different size Matrix,
 			2.	constrcut from c style array list
 			3.	convert to c style array list
 			etc.
@@ -99,13 +119,13 @@ namespace Tiny { namespace Math {
 			else, the result matrix is expanded to identity(ones on diagonal, zeros elsewhere).
 
 			TODO:
-				this function is intended to be undefined. 
+				this function is intended to be undefined.
 				in magnum, this is implement by this:
 					Matrix<size, T>{typename Implementation::GenerateSequence<size>::Type(), other}
 				how to understand?
 		*/
 		//template<std::size_t other_size, typename std::enable_if<false, T>::type * = nullptr> explicit Matrix(const Matrix<other_size, T>& other) {
-		//	
+		//
 		//}
 
 		/*
@@ -156,11 +176,11 @@ namespace Tiny { namespace Math {
 			if (!(*this)[row].IsNormalized())
 				return false;
 		//Is orghogonal?
-		for (std::size_t i = 0; i != size; i++) 
-			for (std::size_t j = i + 1; j != size; j++) 
+		for (std::size_t i = 0; i != size; i++)
+			for (std::size_t j = i + 1; j != size; j++)
 				if (!equals((*this)[i] * (*this)[j], T(0)))
 					return false;
-		
+
 		return true;
 	}
 
@@ -180,35 +200,12 @@ namespace Tiny { namespace Math {
 
 	template<std::size_t size, typename T> Matrix<size - 1, T> Matrix<size, T>::ij(std::size_t i, std::size_t j) const {
 		Matrix<size - 1, T> out;
-		for (std::size_t row = 0; row != (size - 1) ; row++) 
-			for (std::size_t col = 0; col != (size - 1) ; col++) 
+		for (std::size_t row = 0; row != (size - 1) ; row++)
+			for (std::size_t col = 0; col != (size - 1) ; col++)
 				out[row][col] = (*this)[row  + (row >= i)][col + (col >= j)];
 
 		return out;
 	}
-
-	namespace Implementation {
-		template<std::size_t size, typename T> T Determinant(const Matrix<size, T>& m) {
-			T out(0);
-			for (std::size_t col = 0; col != size; col++) {
-				out += ((col & 1) ? -1 : 1) * m[0][col] * Determinant(m.ij(0, col));
-			}
-
-			return out;
-		}
-
-		template<typename T> T Determinant(const Matrix<2, T>& m) {
-			return m[0][0] * m[1][1] - m[0][1] * m[1][0];
-		}
-
-		template<typename T> T Determinant(const Matrix<1, T>& m) {
-			return m[0][0];
-		}
-	}
-
-	template<typename T> using Matrix22 = Matrix<2, T>;
-	template<typename T> using Matrix33 = Matrix<3, T>;
-	template<typename T> using Matrix44 = Matrix<4, T>;
 } }
 
 #endif

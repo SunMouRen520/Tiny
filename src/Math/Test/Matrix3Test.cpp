@@ -1,4 +1,4 @@
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 #include "Matrix3.h"
 #include <iostream>
 
@@ -8,7 +8,7 @@ using Matrix3f = Matrix3<float>;
 using Vec2f = Vector2<float>;
 using Vec3f = Vector3<float>;
 
-namespace Tiny { namespace Math { 
+namespace Tiny { namespace Math {
 	std::ostream &operator<<(std::ostream& os, const Matrix3f& m) {
 		os << "| " << m[0][0] << ",\t" << m[0][1] << ",\t" << m[0][2] << " |" << std::endl
 			<< "| " << m[1][0] << ",\t" << m[1][1] << ",\t" << m[1][2] << " |" << std::endl
@@ -49,7 +49,7 @@ TEST(Matrix3Test, shear) {
 	Vec3f v(1.0f, 2.0f, 1.0f);
 	Matrix3f shear = Matrix3f::Shear(Vec2f(5.0f, 4.0f));
 	EXPECT_EQ(v * shear, Vec3f(11.0f, 6.0f, 1.0f));
-	
+
 	Vec3f v2(0.5f, 10.0f, 1.0f);
 	Matrix3f shear2 = Matrix3f::Shear(Vec2f(4.4f, 5.5f));
 	EXPECT_EQ(v2 * shear2, Vec3f(44.5f, 12.75f, 1.0f));
@@ -78,7 +78,7 @@ TEST(Matrix3Test, Rotate) {
 	EXPECT_EQ(v1 * r1, Vec3f(0.0f, 1.0f, 0.0f));
 	EXPECT_EQ(v2 * r2, Vec3f(-10.0f, -10.0f, 0.0f));
 
-	EXPECT_EQ(v2 * r1, Vec3f(10.0f, -10.0f, 0.0f));
+	EXPECT_EQ(v2 * r1, Vec3f(-10.0f, 10.0f, 0.0f));
 	EXPECT_EQ(v1 * r3, Vec3f(0.0f, -1.0f, 0.0f));
 }
 
@@ -137,7 +137,7 @@ TEST(Matrix3Test, ScaleAlongVector) {
 	EXPECT_EQ(v1 * scale2, Vec2f(10.0f, 10.0f));
 
 	Vec2f v2_scale3 = v2 * scale3;
-	
+
 	Vec2f raw_vector_along = (v2 * vector_scale_3) * vector_scale_3;
 	Vec2f raw_vector_perpen = v2 - raw_vector_along;
 	EXPECT_EQ(v2_scale3, raw_vector_along * k + raw_vector_perpen);

@@ -22,6 +22,7 @@ namespace Tiny { namespace Math {
 		constexpr Vector2(T x, T y) noexcept : Vector<2, T>(x, y) {}
 
 		constexpr Vector2(const Vector<2, T>& other) noexcept : Vector<2, T>(other) {}
+		constexpr Vector2(const Vector2<T>& other) = default;
 		Vector2& operator=(const Vector2<T>& other) = default;
 
 		/*@berif destructor*/

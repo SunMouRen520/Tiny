@@ -9,10 +9,10 @@ namespace Tiny { namespace Math {
 	/*
 		@bried MeasurementUnit provide the common operations for unit of measurement.
 		TODO:
-			1.	
+			1.
 	*/
-	template<template<typename> typename Derived, typename T> class MeasurementUnit {
-		template<template<typename> typename, typename> friend class MeasurementUnit;
+	template<template<typename> class Derived, typename T> class MeasurementUnit {
+		template<template<typename> class, typename> friend class MeasurementUnit;
 	public:
 		/*
 			@brief constructors

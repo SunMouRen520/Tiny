@@ -1,4 +1,4 @@
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 #include "Vector2.h"
 #include "Tools.h"
 
@@ -17,7 +17,7 @@ TEST(Vector2Test, constructors) {
 
 	EXPECT_EQ(a, b);
 
-	Vec2 c({ 3.0f, -5.0f });
+	Vec2 c( 3.0f, -5.0f );
 	Vec2 d(3.0f, -5.0f);
 	EXPECT_EQ(c, d);
 
@@ -33,7 +33,7 @@ TEST(Vector2Test, interfaces) {
 	EXPECT_EQ(a.X(), 3.0f);
 	EXPECT_EQ(a.Y(), -4.5f);
 	//a.x = 5; //should be wrong
-	
+
 	Vec2 b(1.0f, 2.0f);
 	b.X() = 3.3f;
 	b.Y() = -1.5f;
@@ -47,22 +47,23 @@ using Radf = Rad<float>;
 TEST(Vector2Test, angle) {
 	Vec2 v1(1.0f, 0.0f);
 	Vec2 v2(0.0f, 1.0f);
-	EXPECT_TRUE(equals(M_PI / 2.0f, (float)inner_angle(v1, v2)));
+	EXPECT_TRUE(equals(float(M_PI / 2.0f), (float)inner_angle(v1, v2)));
 
 	Vec2 v3(-0.5f, (float)std::sqrt(3) / 2.0f);
 	EXPECT_TRUE(equals((float)((M_PI * 2.0f) / 3.0f), (float)inner_angle(v1, v3)));
 
 	Vec2 v4(0.0f, -1.0f);
-	EXPECT_TRUE(equals(-M_PI / 2.0f, (float)angle(v1, v4)));
+	EXPECT_TRUE(equals(float(-M_PI / 2.0f), (float)angle(v1, v4)));
 
-	Vec2 v5(std::sqrt(2.0f) / 2.0f, -std::sqrt(2.0f) / 2.0f);
+	Vec2 v5(float(std::sqrt(2.0f) / 2.0f), -std::sqrt(2.0f) / 2.0f);
 
-	EXPECT_TRUE(equals(-M_PI * 3.0f/ 4.0f, (float)angle(v2, v5)));
+	EXPECT_TRUE(equals(float(-M_PI * 3.0f/ 4.0f), (float)angle(v2, v5)));
 }
 
 TEST(Vector2Test, perpendicular) {
 	Vec2 v1(1.0f, 0.0f);
-	EXPECT_EQ(v1.Perpendicular(), Vec2(0.0f, -1.0f));
+	Vec2 v11 = v1.Perpendicular();
+	EXPECT_EQ(v11, Vec2(0.0f, 1.0f));
 	EXPECT_TRUE(equals(0.0f, v1.Perpendicular() * v1));
 }
 

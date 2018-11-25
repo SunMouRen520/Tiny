@@ -9,7 +9,7 @@ namespace Tiny { namespace Math {
 	/*
 		@brief	3D Transformation matrix
 		TODO:
-			1.	Incompletge transformation support. Must provide the following:
+			1.	Incompletge transformation support:
 				a.	Complex for 2D rotation and Quaternion for 3D rotation
 				b.	Normal Transformtion facility.
 				c.	For complete transformation reference, see: https://doc.magnum.graphics/magnum/transformations.html
@@ -81,10 +81,12 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Perspective projection. Map from view frustum to canonical view volume, with view direction -z.
-			@param	rect	rect.x is the horizontal length of near clipping plane 
+			@param	rect	rect.x is the horizontal length of near clipping plane
 							rect.y is the vertical length of near clipping plane
 			@param	near	The near clipping plane distance
 			@param	fat		The far clipping plane distance
+
+			TODO: what if far is infinity?
 		*/
 		static Matrix4<T> Perspective(const Vec2& rect, const T& near, const T& far);
 
@@ -97,7 +99,7 @@ namespace Tiny { namespace Math {
 
 			This is the same as Perspective(rect, near, far) when:
 				1.	fieldOfView = 2 * atan(rect.x / (2 * near))
-				2.	aspectRatio = rect.x / rect.y 
+				2.	aspectRatio = rect.x / rect.y
 		*/
 		static Matrix4<T> Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& near, const T& far);
 
@@ -116,14 +118,14 @@ namespace Tiny { namespace Math {
 			@param	far		far clipping plane
 		*/
 		static Matrix4<T> PerspectiveToOrthographic(const T& near, const T& far);
-	
+
 	};
 
 	template<typename T> Matrix4<T> Matrix4<T>::Scale(const Vec3& scale) {
 		return{ {scale.X(), T(0), T(0), T(0)},
 				{T(0), scale.Y(), T(0), T(0)},
 				{T(0), T(0), scale.Z(), T(0)},
-				{T(0), T(0), T(0), T(0)}};
+				{T(0), T(0), T(0), T(1)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::ScaleAlongVector(const Vec3& n, const T& k) {
@@ -139,17 +141,17 @@ namespace Tiny { namespace Math {
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Shear(const Vec3& shear) {
-		return{ { shear.X(), T(0), T(0), T(0)},
-				{T(0), shear.Y(), T(0), T(0)},
-				{T(0), T(0), shear.Z(), T(0)},
-				{T(0), T(0), T(0), T(0)}};
+		return{ { T(1)		, shear.X()	, shear.X()	, T(0)},
+				{shear.Y()	, T(1)		, shear.Y()	, T(0)},
+				{shear.Z()	, shear.Z()	, T(1)		, T(0)},
+				{T(0)		, T(0)		, T(0)		, T(1)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Transpose(const Vec3& tran) {
-		return{ { tran.X(), T(0), T(0), T(0)},
-				{T(0), tran.Y(), T(0), T(0)},
-				{T(0), T(0), tran.Z(), T(0)},
-				{T(0), T(0), T(0), T(0)}};
+		return{ {T(1), T(0), T(0), T(0)},
+				{T(0), T(1), T(0), T(0)},
+				{T(0), T(0), T(1), T(0)},
+				{tran.X(), tran.Y(), tran.Z(), T(1)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::RotationX(const Rad<T>& rad) {
@@ -166,9 +168,9 @@ namespace Tiny { namespace Math {
 		const T val = static_cast<float>(rad);
 		const T sin_val = std::sin(val);
 		const T cos_val = std::cos(val);
-		return{ {cos_val, T(0), sin_val, T(0)},
+		return{ {cos_val, T(0), -sin_val, T(0)},
 				{T(0), T(1), T(0), T(0)},
-				{-sin_val, T(0), cos_val, T(0)},
+				{sin_val, T(0), cos_val, T(0)},
 				{T(0), T(0), T(0), T(1)}};
 	}
 
@@ -190,32 +192,32 @@ namespace Tiny { namespace Math {
 		const T nx2 = std::pow(n.X(), 2), ny2 = std::pow(n.Y(), 2), nz2 = std::pow(n.Z(), 2);
 		const T index = 1 - cosR, nxy = n.X() * n.Y(), nxz = n.X() * n.Z(), nyz = n.Y() * n.Z();
 		return{ {nx2 * index + cosR			, nxy * index + n.Z() * sinR, nxz * index - n.Y() * sinR, T(0)},
-				{nxy * index - n.Z() * sinR	, ny2 * index + cosR		, nyz * index + n.Z() * sinR, T(0)},
-				{nxz * index + n.Y() * sinR	, nyz * index - n.X() * sinR, nz2 * index + cosR		, T(0)}.
+				{nxy * index - n.Z() * sinR	, ny2 * index + cosR		, nyz * index + n.X() * sinR, T(0)},
+				{nxz * index + n.Y() * sinR	, nyz * index - n.X() * sinR, nz2 * index + cosR		, T(0)},
 				{T(0)						, T(0)						, T(0)						, T(1)} };
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, const T& near, const T& far) {
-		assert(near < 0 && far < 0 && near > far);
-		const Vec2 xyScale = 2 * near / rect;
-		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (near + far) / (near - far), v32 = 2 * far * near / (far - near);
+	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, const T& n, const T& f) {
+		assert(n <=0 && f <= 0 && n > f);
+		const Vec2 xyScale = T(2) * n / rect;
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (n + f) / (n - f), v32 = T(2) * f * n / (f - n);
 		return{	{T(v00)	, T(0)	, T(0)	, T(0)},
 				{T(0)	, T(v11), T(0)	, T(0)},
-				{T(0)	, T(0)	, T(v22), T(1)},
-				{T(0)	, T(0)	, T(v32), T(0)}}
+				{T(0)	, T(0)	, T(v22), T(-1)},
+				{T(0)	, T(0)	, T(v32), T(0)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& near, const T& far) {
 		assert(fieldOfView > Rad<T>(0) && fieldOfView < Rad<T>(M_PI));
 		assert(aspectRatio > 0);
-		const T width = 2 * std::abs(near) * std::tan(fieldOfView / 2);
+		const T width = T(2) * std::abs(near) * std::tan(T(fieldOfView) / T(2));
 		const T height = width / aspectRatio;
 		return Perspective(Vec2(width, height), near, far);
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& near, const T& far) {
-		const Vec2 xyScale = 2 / rect;
-		const T v22 = 2 / (near - far);
+		const Vec2 xyScale = T(2) / rect;
+		const T v22 = T(2) / (near - far);
 		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (near + far) / (far - near);
 		return{ {v00	, T(0)	, T(0), T(0)},
 				{T(0)	, v11	, T(0), T(0)},
@@ -228,6 +230,10 @@ namespace Tiny { namespace Math {
 				{T(0)	, n		, T(0)	, T(0)},
 				{T(0)	, T(0)	, n + f	, T(1)},
 				{T(0)	, T(0)	, -f * n, T(0)}};
+	}
+
+	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){
+		return (Vector4<T>(v) * m).XYZ();
 	}
 } }
 

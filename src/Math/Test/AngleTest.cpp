@@ -1,4 +1,4 @@
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 #include "Angle.h"
 
 using namespace Tiny::Math;
@@ -49,7 +49,7 @@ TEST(AngleTest, typeConvertion) {
 
 	Degf d2(360.0f);
 	Radf r2(d2);
-	EXPECT_TRUE(equals(float(r2), 2.0f * M_PI));
+	EXPECT_TRUE(equals(float(r2), float(2.0f * M_PI)));
 }
 
 TEST(AngleTest, rad_operators) {
@@ -78,8 +78,8 @@ TEST(AngleTest, rad_operators) {
 
 	EXPECT_TRUE(equals(float(r1 + r2), d1 + d2));
 	EXPECT_TRUE(equals(float(r1 - r2), d3));
-	EXPECT_TRUE(equals(float(r1 * r2), d1 * d2));
-	EXPECT_TRUE(equals(float(r1 / r2), d1 / d2));
+	EXPECT_TRUE(equals(float(r1 * r2), float(d1 * d2)));
+	EXPECT_TRUE(equals(float(r1 / r2), float(d1 / d2)));
 }
 
 TEST(AngleTest, deg_operators) {

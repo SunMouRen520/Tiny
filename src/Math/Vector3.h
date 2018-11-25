@@ -14,7 +14,7 @@ namespace Tiny { namespace Math {
 			@brief constructors
 		*/
 		Vector3() :Vector<3, T>() {}
-		constexpr Vector3(T x, T y, T z) noexcept : Vector<3, T>(x, y, z) {}
+		constexpr Vector3(const T& x, const T& y, const T& z) noexcept : Vector<3, T>(x, y, z) {}
 		//constexpr Vector3(const T source[3]) noexcept : Vector<3, T>(source) {}
 
 		Vector3(const Vector<3, T>& other) :Vector<3, T>(other) {}
@@ -56,7 +56,7 @@ namespace Tiny { namespace Math {
 		const T& B() const { return (*this)[2]; }
 
 		/*
-			@brief Get the xy component 
+			@brief Get the xy component
 		*/
 		Vector2<T>& XY() { return (Vector2<T>&)Vector<2, T>::From(Vector<3,T>::Get()); }
 		Vector2<T> XY() const { return (Vector2<T>)Vector<2, T>::From(Vector<3, T>::Get()); }

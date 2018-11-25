@@ -19,13 +19,20 @@ template<typename T> using Matrix44 = Matrix<4, T>;
 template<typename> class Matrix3;
 template<typename> class Matrix4;
 
+using Matrix3f = Matrix3<float>;
+using Matrix4f = Matrix4<float>;
+
 template<typename> class Vector;
 template<typename> class Vector2;
 template<typename> class Vector3;
 template<typename> class Vector4;
 
-template<typename template<typename>, typename> class Rad;
-template<typename template<typename>, typename> class Deg;
+using Vec2f = Vector2<float>;
+using Vec3f = Vector3<float>;
+using Vec4f = Vector4<float>;
+
+template<template<typename> class, typename> class Rad;
+template<template<typename> class, typename> class Deg;
 
 
 #endif //TINY_MATH_MATHFORWARD_H

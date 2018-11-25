@@ -2,14 +2,15 @@
 #define Tiny_MATH_VECTOR_H
 
 
-#include <cstddef>
+#include <cstddef> //TODO:Check if we realy need this include
 #include <cstdlib>
+#include <cmath>
 #include <cassert>
 
 #include "Tools.h"
 #include "Angle.h"
 
-namespace Tiny { namespace Math { 
+namespace Tiny { namespace Math {
 
 	/*
 		@brief Row vector, eg.[a b c]
@@ -22,7 +23,7 @@ namespace Tiny { namespace Math {
 			2.	Cross product: a x b = a.Mag() * b.mag() * sin(theta)
 				a.	For 2D, this is the area.
 				b.	For 3D, thish is the volume.
-			
+
 	*/
 	template<std::size_t size, typename T> class Vector {
 		static_assert(size != 0, "Vector cannot have 0 size elements!");
@@ -60,12 +61,12 @@ namespace Tiny { namespace Math {
 			for (std::size_t i = 0; i != size; i++)
 				_data[i] = source[i];
 		}
-		
+
 		explicit Vector(void) noexcept;
 
 		Vector(const Vector<size, T>& another) = default;
 
-		
+
 		/*destructor*/
 		~Vector() = default;
 
@@ -124,7 +125,7 @@ namespace Tiny { namespace Math {
 		/*
 			@brief	Reverse
 		*/
-		Vector<size, T> operator-() const { Vector<size, T> out; for (std::size_t i = 0; i != size; i++) out._data[i] = _data[i]; return out; }
+		Vector<size, T> operator-() const { Vector<size, T> out; for (std::size_t i = 0; i != size; i++) out._data[i] = -_data[i]; return out; }
 
 
 		/*
@@ -185,9 +186,10 @@ namespace Tiny { namespace Math {
 	}
 
 	template<std::size_t size, typename T > inline bool Vector<size, T>::operator==(const Vector<size, T> &another) const {
-		for (std::size_t i = 0; i != size; i++)
+		for (std::size_t i = 0; i != size; i++){
 			if (!equals(_data[i], another._data[i]))
 				return false;
+		}
 		return true;
 	}
 
@@ -219,7 +221,7 @@ namespace Tiny { namespace Math {
 	/*
 		@caution  We can't use equals(in Tools.h) here. Because the result type of std::sqrt(Dot()) can be quite different with T.
 		So here is another algorithm:
-			Consider magnitude of vector val M in range[1 - epsilon, 1 + epsilon] as 1, 
+			Consider magnitude of vector val M in range[1 - epsilon, 1 + epsilon] as 1,
 			Dot() result is [1 - 2 * epsilon + epsilon^2, 1 + 2 * epsilon + epsilon ^2], we can omit epsilon^2 here.
 			So we take std::abs(Dot() - T(1)) < 2 * epsilon as normalized vector.
 	*/
@@ -229,7 +231,7 @@ namespace Tiny { namespace Math {
 
 
 	/*
-		Free-standing operators. 
+		Free-standing operators.
 		Reference: see the discuss about operators inside or outside class: https://stackoverflow.com/questions/4652932/why-define-operator-or-outside-a-class-and-how-to-do-it-properly
 	*/
 	/*
@@ -257,12 +259,10 @@ namespace Tiny { namespace Math {
 		@brief Free-sstanding div operator
 	*/
 	template<std::size_t size, typename T> Vector<size, T> operator/(const T& a, const Vector<size, T>& b) {
-		return {a / b.X(), a / b.Y()};
+		return {a / b[0], a / b[1]};
 	}
-
 
 }}
 
 
 #endif
-

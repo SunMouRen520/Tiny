@@ -1,4 +1,4 @@
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 #include "Vector4.h"
 
 using namespace Tiny::Math;
@@ -9,7 +9,8 @@ TEST(Vector4Test, Constructor) {
 	Vec4f zero(0.0f, 0.0f, 0.0f, 0.0f);
 	EXPECT_EQ(v, zero);
 
-	Vec4f one(1.0f, 1.0f, 1.0f, 1.0f);
+	// Vec4f one(1.0f, 1.0f, 1.0f, 1.0f);
+	Vec4f one = {1.0f, 1.0f, 1.0f, 1.0f};
 	Vec4f copy(one);
 	EXPECT_EQ(copy, one);
 }

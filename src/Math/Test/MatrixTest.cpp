@@ -1,14 +1,13 @@
-#include "gtest\gtest.h"
+#include "gtest/gtest.h"
 #include "Matrix.h"
-
 
 using namespace Tiny::Math;
 
 using Vec2f = Vector<2, float>;
 using Vec3f = Vector<3, float>;
 
-using Matrix2f = Matrix22<float>;
-using Matrix3f = Matrix33<float>;
+using Matrix2f = Matrix<2, float>;
+using Matrix3f = Matrix<3, float>;
 
 template<std::size_t size> static void CheckEqual(const Matrix<size, float>& m, const float (&data)[size][size]) {
 	for (std::size_t i = 0; i != size; i++)
@@ -44,10 +43,10 @@ TEST(MatrixTest, Constructor) {
 TEST(MatrixTest, orthnogal) {
 	Matrix3f iden = Matrix3f::Identity();
 	EXPECT_TRUE(iden.Orthogonal());
-	
+
 	const float v1 = std::sqrt(2.0f) / 2.0f;
 	Matrix3f crafed(Vec3f(v1, v1, 0.0f),
-					Vec3f(-v1, v1, 0.0f), 
+					Vec3f(-v1, v1, 0.0f),
 					Vec3f(0.0f, 0.0f, 1.0f));
 	EXPECT_TRUE(crafed.Orthogonal());
 }
