@@ -1,21 +1,28 @@
 cmake_minimum_required(VERSION 3.12.4)
 
+find_package(IronBranch REQUIRED)
+# message(${IronBranch_INCLUDE_DIRS})
+
 set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+include_directories(${IronBranch_INCLUDE_DIRS})
+link_directories(${IronBranch_LINK_DIRS})
 project(Tiny)
+
+#we only have GLFW for now.
+option(BUILDING_GLFW "Build with GLFW" ON)
 
 option(PACKAGE_TESTS "Build the tests" OFF)
 if(PACKAGE_TESTS)
-
+    message("Tiny Test is ON")
     #setup testing
-    macro(package_add_test TESTNAME)
-        add_executable(${TESTNAME} ${ARGN})
-        target_link_libraries(${TESTNAME} gtest gmock gtest_main)
+    macro(package_add_test TESTNAME fold file)
+        add_executable(${TESTNAME} ${file})
+        target_link_libraries(${TESTNAME} gtest gmock gtest_main fmtd)
         add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
-        set_target_properties(${TESTNAME} PROPERTIES FOLDER Tiny/Math/Test)
-        #SET_TESTS_PROPERTIES(${TESTNAME} PROPERTIES DEPENDS ${TESTNAME})
+        set_target_properties(${TESTNAME} PROPERTIES FOLDER ${fold})
         target_include_directories(${TESTNAME} PRIVATE ${PROJECT_SOURCE_DIR}/extern/googletest/googletest/include)
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../)
     endmacro()
@@ -31,7 +38,6 @@ if(PACKAGE_TESTS)
     enable_testing()
 endif()
 
-message("TEST is " ${PACKAGE_TESTS})
 
 #enable folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
