@@ -11,9 +11,7 @@ set(MATH_HEADERS
     Tools.h
     MathForward.h
 )
-
-add_custom_target(Math SOURCES ${MATH_HEADERS})
-set_target_properties(Math PROPERTIES FOLDER "Tiny/Math")
+IDE(Math "${MATH_HEADERS}" "Tiny/Math")
 
 if(PACKAGE_TESTS)
     add_subdirectory(Test)
