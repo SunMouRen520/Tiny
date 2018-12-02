@@ -60,22 +60,28 @@ namespace Tiny { namespace Math {
 	*/
 	template<std::size_t, typename> class Matrix;
 	namespace Implementation {
-		template<typename T> static T Determinant(const Matrix<2, T>& m) {
-			return m[0][0] * m[1][1] - m[0][1] * m[1][0];
-		}
+		template<std::size_t size, typename T> struct Determinant{
+			T operator()(const Matrix<size, T>& m){
+				T out(0);
+				for (std::size_t col = 0; col != size; col++) {
+					out += ((col & 1) ? -1 : 1) * m[0][col] * m.ij(0, col).Determinant();
+				}
 
-		template<typename T> static T Determinant(const Matrix<1, T>& m) {
-			return m[0][0];
-		}
-
-		template<std::size_t size, typename T> static T Determinant(const Matrix<size, T>& m) {
-			T out(0);
-			for (std::size_t col = 0; col != size; col++) {
-				out += ((col & 1) ? -1 : 1) * m[0][col] * Determinant<float>(m.ij(0, col));
+				return out;
 			}
+		};
 
-			return out;
-		}
+		template<typename T> struct Determinant<2, T> {
+			T operator()(const Matrix<2, T>& m){
+				return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+			}
+		};
+
+		template<typename T> struct Determinant<1, T>{
+			T operator()(const Matrix<1, T>& m) {
+				return m[0][0];
+			}
+		};
 	}
 
 	template<std::size_t size, typename T> class Matrix : public RectangularMatrix<size, size, T> {
@@ -185,7 +191,7 @@ namespace Tiny { namespace Math {
 	}
 
 	template<std::size_t size, typename T> T Matrix<size, T>::Determinant() const {
-		return Implementation::Determinant(*this);
+		return Implementation::Determinant<size, T>()(*this);
 		//if (size == 1)
 		//	return (*this)[0][0];
 		//if (size == 2)

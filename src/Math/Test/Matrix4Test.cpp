@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "Matrix4.h"
 #include "Tools.h"
-#include "Utility/Log.h"
+// #include "Utility/Log.h"
 #include <ostream>
 
 using namespace Tiny::Math;
@@ -42,7 +42,7 @@ TEST(Matrix4Test, Constructor) {
 
 	Mat4f m2(m1);
 	EXPECT_EQ(m1, m2);
-	IronBranch::Utility::Log::E("HolyShit, Finally i can do some logging now!\n");
+	// IronBranch::Utility::Log::E("HolyShit, Finally i can do some logging now!\n");
 }
 
 TEST(Matrix4Test, Scale) {
