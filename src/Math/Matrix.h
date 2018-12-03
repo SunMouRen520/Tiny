@@ -51,8 +51,8 @@
 #ifndef TINY_MATH_MATRIX_H
 #define TINY_MATH_MATRIX_H
 
-#include "RectangularMatrix.h"
-#include "Tools.h"
+#include "Math/RectangularMatrix.h"
+#include "Math/Tools.h"
 
 namespace Tiny { namespace Math {
 	/*

@@ -7,8 +7,8 @@
 #include <cmath>
 #include <cassert>
 
-#include "Tools.h"
-#include "Angle.h"
+#include "Math/Tools.h"
+#include "Math/Angle.h"
 
 namespace Tiny { namespace Math {
 

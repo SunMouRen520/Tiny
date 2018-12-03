@@ -90,7 +90,7 @@
 
 #include <cstddef>
 #include <type_traits>
-#include "Vector.h"
+#include "Math/Vector.h"
 
 namespace Tiny { namespace Math {
 	/*

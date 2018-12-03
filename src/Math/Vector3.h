@@ -1,7 +1,7 @@
 #ifndef TINY_MATH_VECTOR3_H
 #define TINY_MATH_VECTOR3_H
 
-#include "Vector2.h"
+#include "Math/Vector2.h"
 
 namespace Tiny { namespace Math {
 	/*

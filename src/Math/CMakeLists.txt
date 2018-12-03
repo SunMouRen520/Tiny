@@ -10,8 +10,14 @@ set(MATH_HEADERS
     Matrix4.h
     Tools.h
     MathForward.h
+
 )
-IDE(Math "${MATH_HEADERS}" "Tiny/Math")
+
+
+add_library(Math ${MATH_HEADERS} dummy.cpp)
+set_target_properties(Math PROPERTIES FOLDER "Tiny/Math")
+
+# IDE(Math "${MATH_HEADERS}" "Tiny/Math")
 
 if(PACKAGE_TESTS)
     add_subdirectory(Test)

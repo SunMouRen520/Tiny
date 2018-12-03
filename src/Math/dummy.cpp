@@ -1,0 +1,1 @@
+//dirty trick to create error-free project in msvc easily.

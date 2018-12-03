@@ -1,10 +1,10 @@
 #ifndef TINY_MATH_MATRIX3_H
 #define TINY_MATH_MATRIX3_H
 
-#include "Matrix.h"
-#include "Vector3.h"
-#include "Vector2.h"
-#include "Angle.h"
+#include "Math/Matrix.h"
+#include "Math/Vector3.h"
+#include "Math/Vector2.h"
+#include "Math/Angle.h"
 
 namespace Tiny { namespace Math {
 	/*

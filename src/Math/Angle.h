@@ -1,7 +1,7 @@
 #ifndef TINY_MATH_ANGLE_H
 #define TINY_MATH_ANGLE_H
 
-#include "Tools.h"
+#include "Math/Tools.h"
 
 namespace Tiny { namespace Math {
 	template<typename T> class Rad;
