@@ -1,22 +1,20 @@
 cmake_minimum_required(VERSION 3.12.4)
 
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+#here we define compile target for MSVC and android.
+#2018/12/3, appearantly we do nothing android at all for now. so we set MSVC default ON.
+set(BUILD_TARGET_MSVC ON)
+set(BUILD_TARGET_ANDROID OFF)
 
 find_package(IronBranch REQUIRED)
-
-message("IronBranch Include Directires: ${IronBranch_INCLUDE_DIRS}")
-message("IronBranch Link Directires: ${IronBranch_LINK_DIRS}")
-include_directories(${IronBranch_INCLUDE_DIRS})
-link_directories(${IronBranch_LINK_DIRS})
 
 #include cmake utilities
 include(support/CMakeUtility.cmake)
 
 project(Tiny)
-
 
 #we only have GLFW for now.
 option(BUILDING_GLFW "Build with GLFW" ON)
@@ -31,7 +29,9 @@ if(PACKAGE_TESTS)
         target_link_libraries(${TESTNAME} gtest gmock gtest_main fmtd)
         add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER ${fold})
+        #this is ugly
         target_include_directories(${TESTNAME} PRIVATE ${PROJECT_SOURCE_DIR}/extern/googletest/googletest/include)
+         #this is ugly
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../)
     endmacro()
 
@@ -50,8 +50,8 @@ endif()
 #enable folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#smelly
-include_directories(src/)
+#smelly, for including directories persistence
+include_directories(src)
 
 add_subdirectory(src)
 
