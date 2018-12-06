@@ -1,3 +1,20 @@
+#[[
+    TODO:
+    Source files under src directory should be re-organized.
+    Currently the structure is
+    Tiny
+        src
+            DebugTool
+            Graphics
+    Should be refacted to
+    Tiny
+        src
+            Tiny
+                DebugTool
+                Graphics
+    In this way, we can keep the head include path fixed in develop environment and deploy environment.
+]]
+
 cmake_minimum_required(VERSION 3.12.4)
 
 set(CMAKE_CXX_STANDARD 11)
