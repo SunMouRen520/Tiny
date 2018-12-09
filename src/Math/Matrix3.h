@@ -7,6 +7,13 @@
 #include "Math/Angle.h"
 
 namespace Tiny { namespace Math {
+	namespace Implementation {
+		template<typename M1, typename M2>
+		void CopyFrom(M1& to, const M2& from) {
+			for (int i = 0; i < M1::Size; i++)
+				to[i] = from[i];
+		}
+	}
 	/*
 		@brief 2D transformation matrix
 		TODO:
@@ -24,6 +31,9 @@ namespace Tiny { namespace Math {
 		Matrix3(const Vec3& row1, const Vec3& row2, const Vec3& row3) :Matrix<3, T>(row1, row2, row3) {}
 
 		Matrix3(const Matrix3& other) = default;
+
+		Matrix3(const Matrix<3, T>& other) { Implementation::CopyFrom(*this, other); }
+		Matrix3& operator = (const RectangularMatrix<3, 3, T>& other) { Implementation::CopyFrom(*this, other); return *this; }
 
 		/*
 			@brief	Convinent function to construct scale matrix.
