@@ -1,4 +1,4 @@
-package_add_test(VectorTest  "Tiny/Math/Test" VectorTest.cpp)
+package_add_test(VectorTest  "Tiny/Math/Test" VectorTest.cpp TestTools.h)
 package_add_test(Vector2Test "Tiny/Math/Test" Vector2Test.cpp )
 package_add_test(Vector3Test "Tiny/Math/Test" Vector3Test.cpp )
 package_add_test(Vector4Test "Tiny/Math/Test" Vector4Test.cpp )

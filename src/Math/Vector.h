@@ -9,8 +9,32 @@
 
 #include "Math/Tools.h"
 #include "Math/Angle.h"
+#include "Math/Tags.h"
+
+#ifdef TINY_TEST
+#include <iostream>
+#endif
 
 namespace Tiny { namespace Math {
+	template<std::size_t , typename > class Vector;
+	namespace Implementation {
+		template<std::size_t ...seq> struct Sequence{};
+		
+		template<std::size_t N, std::size_t ...seq> struct GenerateSeq
+			: GenerateSeq<N - 1, N - 1, seq...>{};
+
+		template<std::size_t ...seq> struct GenerateSeq<0, seq...> {
+			using Type = Sequence<seq...>;
+		};
+
+		template<typename T> T Repeat(T value, std::size_t) {
+			return value;
+		}
+
+		template<std::size_t otherSize, typename T> T FetchOrZero(const Vector<otherSize, T>& other, std::size_t index) {
+			return index >= otherSize ? 0 : other[index];
+		}
+	}
 
 	/*
 		@brief Row vector, eg.[a b c]
@@ -56,16 +80,22 @@ namespace Tiny { namespace Math {
 			//static_assert(sizeof...(U)+1 == size, "invalid parameter length in variadic template constructor");
 		}
 
+		/*
+			@brief	Construct the vector with same value , delegating constructor
+		*/
+		explicit Vector(const T uniform)
+			:Vector(Implementation::GenerateSeq<size>::Type(), uniform) {}
 
-		explicit Vector(const T source[size]) {
-			for (std::size_t i = 0; i != size; i++)
-				_data[i] = source[i];
-		}
+		/*
+			@brief	Default constructor for vector, all elements iniatialize to 0.
+		*/
+		/*explicit*/ Vector(ZeroInitT = ZeroInit) noexcept :Vector(0) {}
 
-		explicit Vector(void) noexcept;
 
+		/*
+			@brief	Default copy constructor
+		*/
 		Vector(const Vector<size, T>& another) = default;
-
 
 		/*destructor*/
 		~Vector() = default;
@@ -165,6 +195,10 @@ namespace Tiny { namespace Math {
 		/* const overload*/
 		const T& operator[](std::size_t index) const { assert(index < size); return _data[index]; }
 
+	protected:
+		template<std::size_t ...seq> Vector(Implementation::Sequence<seq...>, const T& uniform)
+			:_data{ Implementation::Repeat(uniform, seq)... } {}
+
 	private:
 		T _data[size];
 	};
@@ -199,11 +233,6 @@ namespace Tiny { namespace Math {
 			out += _data[i] * another._data[i];
 		}
 		return out;
-	}
-
-	template<std:: size_t size, typename T > inline Vector<size, T>::Vector(void) noexcept{
-		for (auto &n : _data)
-			n = T(0);
 	}
 
 	template<std::size_t size, typename T> inline T Vector<size, T>::Dot() const {
@@ -262,6 +291,16 @@ namespace Tiny { namespace Math {
 		return {a / b[0], a / b[1]};
 	}
 
+#ifdef TINY_TEST
+	template<std::size_t size, typename T> std::ostream& operator<<(std::ostream& os, const Vector<size, T>& vector) {
+		os << "[";
+		for (int i = 0; i < size - 1; i++)
+			os << vector[i] << ", ";
+		
+		os << vector[size - 1] << "]" << std::endl;
+		return os;
+	}
+#endif
 }}
 
 

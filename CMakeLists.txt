@@ -40,10 +40,14 @@ option(PACKAGE_TESTS "Build the tests" OFF)
 
 if(PACKAGE_TESTS)
     message("Tiny Test is ON")
+    add_definitions(-DTINY_TEST)
+
     #setup testing
+    include(CTest)
+    enable_testing()
     macro(package_add_test TESTNAME fold file)
         add_executable(${TESTNAME} ${file})
-        target_link_libraries(${TESTNAME} gtest gmock gtest_main fmtd)
+        target_link_libraries(${TESTNAME} gtest gmock gtest_main)
         add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER ${fold})
         #this is ugly
@@ -52,15 +56,12 @@ if(PACKAGE_TESTS)
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../)
     endmacro()
 
-    include(CTest)
-
     add_subdirectory("${PROJECT_SOURCE_DIR}/extern/googletest" "extern/googletest")
     set_target_properties(gtest PROPERTIES FOLDER extern)
     set_target_properties(gtest_main PROPERTIES FOLDER extern)
     set_target_properties(gmock PROPERTIES FOLDER extern)
     set_target_properties(gmock_main PROPERTIES FOLDER extern)
 
-    enable_testing()
 endif()
 
 

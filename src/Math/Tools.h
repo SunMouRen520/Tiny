@@ -16,12 +16,9 @@ namespace Tiny { namespace Math {
 		if (a == b)
 			return true;
 
-        if (a == -b)
-            return false;
-
 		T absA = std::abs(a);
 		T absB = std::abs(b);
-		T diff = std::abs(absA - absB);
+		T diff = std::abs(a - b);
 
 		if (a == T{} || b == T{} || diff < std::numeric_limits<T>::epsilon()) {
 			return diff < std::numeric_limits<T>::epsilon();

@@ -3,17 +3,57 @@
 
 using namespace Tiny::Math;
 using Vec4f = Vector4<float>;
+using Vec3f = Vector3<float>;
+using Vec2f = Vector2<float>;
 
-TEST(Vector4Test, Constructor) {
-	Vec4f v;
-	Vec4f zero(0.0f, 0.0f, 0.0f, 0.0f);
-	EXPECT_EQ(v, zero);
-
-	// Vec4f one(1.0f, 1.0f, 1.0f, 1.0f);
-	Vec4f one = {1.0f, 1.0f, 1.0f, 1.0f};
-	Vec4f copy(one);
-	EXPECT_EQ(copy, one);
+TEST(VectorTest, DefaultConstructor) {
+	Vec4f a;
+	EXPECT_EQ(a[0], 0.f);
+	EXPECT_EQ(a[1], 0.f);
+	EXPECT_EQ(a[2], 0.f);
+	EXPECT_EQ(a[3], 0.f);
 }
+
+TEST(VectorTest, UniformConstructor) {
+	Vec4f a(3.3f);
+
+	EXPECT_EQ(a[0], 3.3f);
+	EXPECT_EQ(a[1], 3.3f);
+	EXPECT_EQ(a[2], 3.3f);
+	EXPECT_EQ(a[3], 3.3f);
+}
+
+TEST(VectorTest, ConstructConvertion) {
+	Vec4f a = { 1.f, 2.f, 3.f, 4.f};
+	EXPECT_EQ(a[0], 1.f);
+	EXPECT_EQ(a[1], 2.f);
+	EXPECT_EQ(a[2], 3.f);
+	EXPECT_EQ(a[3], 4.f);
+
+	Vec4f b(1.f, 2.f, 3.f, 4.f);
+	EXPECT_EQ(a, b);
+
+	Vec2f v2(2.2f, 2.2f);
+
+	Vec4f c(v2, 3.f, 4.f);
+	EXPECT_EQ(c, Vec4f(2.2f, 2.2f, 3.f, 4.f));
+
+	Vec3f v3(3.f, 3.f, 3.f);
+	Vec4f d(v3, 1.f);
+	EXPECT_EQ(d, Vec4f(3.f, 3.f, 3.f, 1.f));
+}
+
+TEST(VectorTest, CopyConstructor) {
+	Vec4f a = { 321.f, 8932.f, 223.f, 323.0f};
+	Vec4f b(a);
+
+	EXPECT_EQ(a, b);
+
+	Vec4f c = a;
+	EXPECT_EQ(a, c);
+	EXPECT_EQ(b, c);
+}
+
 
 TEST(Vector4Test, Interface) {
 	Vec4f a(5.5f, -100.0f, 20.5f, 11.1f);

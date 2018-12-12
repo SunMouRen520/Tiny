@@ -1,39 +1,73 @@
 #include "gtest/gtest.h"
 #include "Matrix3.h"
-#include <iostream>
+#include "TestTools.h"
 
 using namespace Tiny::Math;
+using namespace Tiny::Math::Test;
 
 using Matrix3f = Matrix3<float>;
+using Matrix4f = Matrix<4, float>;
 using Vec2f = Vector2<float>;
 using Vec3f = Vector3<float>;
+using Vec4f = Vector<4, float>;
 
-namespace Tiny { namespace Math {
-	std::ostream &operator<<(std::ostream& os, const Matrix3f& m) {
-		os << "| " << m[0][0] << ",\t" << m[0][1] << ",\t" << m[0][2] << " |" << std::endl
-			<< "| " << m[1][0] << ",\t" << m[1][1] << ",\t" << m[1][2] << " |" << std::endl
-			<< "| " << m[2][0] << ",\t" << m[2][1] << ",\t" << m[2][2] << " |" << std::endl;
-		return os;
-	}
-}
-}
-
-template<std::size_t size> static void CheckEqual(const Matrix<size, float>& m, const float(&data)[size][size]) {
-	for (std::size_t i = 0; i != size; i++)
-		for (std::size_t j = 0; j != size; j++)
-			EXPECT_EQ(m[i][j], data[i][j]);
-}
-
-TEST(Matrix3Test, Constructors) {
+static int index[] = { 0, 1, 2 };
+TEST(Matrix3Test, DefaultConstructor) {
 	Matrix3f m;
-	EXPECT_EQ(m, Matrix3f::Uniform(0.0f));
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(m[i][j], (i == j ? 1.f : 0.f));
+}
 
-	const float data[3][3] = { {0.0f, 0.1f, 0.2f}, {1.0f, 1.1f, 1.2f}, {2.0f, 2.1f, 2.2f} };
+TEST(Matrix3Test, ZeroConstructor) {
+	Matrix3f m(ZeroInit);
+	
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(m[i][j], 0.f);
+}
+
+TEST(Matrix3Test, UniformConstructor) {
+	Matrix3f a(ZeroInit);
+	Matrix3f b(0.f);
+	
+	EXPECT_EQ(a, b);
+
+	Matrix3f c(100.f);
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(c[i][j], 100.f);
+}
+
+TEST(Matrix3Test, CopyConstructor) {
 	Matrix3f m2({ {0.0f, 0.1f, 0.2f}, {1.0f, 1.1f, 1.2f}, {2.0f, 2.1f, 2.2f} });
-	CheckEqual(m2, data);
-
 	Matrix3f m3(m2);
 	EXPECT_EQ(m2, m3);
+
+	Matrix3f m4 = m2;
+	EXPECT_EQ(m4, m2);
+}
+
+TEST(Matrix3Test, ConstructorFromOtherDimension) {
+	const float data[][4] = { { 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f } };
+	Matrix4f m4{ Vec4f{1.f, 2.f, 3.f, 4.f},
+		Vec4f{1.f, 2.f, 3.f, 4.f},
+		Vec4f{1.f, 2.f, 3.f, 4.f},
+		Vec4f{1.f, 2.f, 3.f, 4.f} };
+
+
+	Matrix3f m3(m4);
+	CheckEqual(m3, &data[0][0], 4);
+
+	Matrix4f m42(m3);
+	CheckEqual(m42, &data[0][0], 4, 3);
+	for (int i = 0; i < 4; i++) {
+		EXPECT_EQ(m42[3][i], (i == 3 ? 1.f : 0.f));
+		EXPECT_EQ(m42[i][3], (i == 3 ? 1.f : 0.f));
+	}
 }
 
 TEST(Matrix3Test, Scale) {

@@ -1,8 +1,8 @@
 /*
 	Information stores in row-major format, which is opposite to OpenGL convention.
 
-		| 1 1 1 | 
-	M = | 2 2 2 | 
+		| 1 1 1 |
+	M = | 2 2 2 |
 		| 3 3 3 |
 
 	For row-major format, get the first vector is just &M[0].
@@ -25,8 +25,8 @@
 				same as matrix mul matrix, the matrix can be viewed in two form. As in Tiny, we treat all vectors in row-major.
 					V_in(n) * M(n * p)  = V_out(p)
 
-				I.	M = { row1, row2 ... rown}. 
-					V_out(p) = V_in(1) * row1 + V_in(2) * row2 + ... + V_in(n) * rown.  
+				I.	M = { row1, row2 ... rown}.
+					V_out(p) = V_in(1) * row1 + V_in(2) * row2 + ... + V_in(n) * rown.
 					In this view, we treat the result V_out as a linear combination of rows in M with vector V_in
 
 				II.	M = {col1, col2 ... colp}
@@ -46,7 +46,7 @@
 			c.	Row-Echelon Form. If a matrix:
 				I:	any rows made complete zeors are at bottom of matrix
 				II:	the first nonzero entries of the various rows form a staircase pattern: the first nonzero entry
-					of the k + 1st row is to the right of the first nonzero entry of the k th row. 
+					of the k + 1st row is to the right of the first nonzero entry of the k th row.
 					eg. | 1 2 3 4 |
 						| 0 1 2 0 |
 						| 0 0 0 5 |
@@ -63,13 +63,13 @@
 					3. all values in pivot columns except pivot is 0.
 
 				II. algorithm to rref: Gaussian elimination
-				
+
 		3.	Rank: The rank of a matrix is the number of pivots in its reduced row-echelon form. notation is R.
 			a.	For non-square matrix A(m x n). The rank R cannot be great than min(m, n).
 				I.	If m < n, there are at least (n - m) columns without pivots
-				II.	If m > n, there are at lear (m - b) zero rows 
+				II.	If m > n, there are at lear (m - b) zero rows
 
-			b.	For quare matrix A(m x m). 
+			b.	For quare matrix A(m x m).
 				I.		If R equal m, then the rref of A is I. we say the matrix is "invertible".
 				II.		If R less than m, then we say the matrix is "singular".
 				III.	The "determinant" tells the difference.
@@ -78,12 +78,12 @@
 
 		4.	Transpose: Matrix A(m x n) transpose is AT(n x m), which A(ij) = AT(ji).
 
-		5.	Null Space, Column Space, 
-			
+		5.	Null Space, Column Space,
+
 
 	TODO:
-	1. Factorization algorithms. 
-		a. LU factorization: A = LU.  
+	1. Factorization algorithms.
+		a. LU factorization: A = LU.
 */
 #ifndef Tiny_MATH_RECTANGULAR_MATRIX_H
 #define Tiny_MATH_RECTANGULAR_MATRIX_H
@@ -92,7 +92,13 @@
 #include <type_traits>
 #include "Math/Vector.h"
 
+#ifdef TINY_TEST
+#include <iostream>
+#endif
+
 namespace Tiny { namespace Math {
+
+
 	/*
 		@brief Rectangular Matrix.
 		Provide the common operators such as index, add, sub, mul, div, compare.
@@ -114,7 +120,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief RectangularMatrix From data
-			@attention  Use this carefully. 
+			@attention  Use this carefully, as we could create multiply RectangularMatrix reference but share the same data.
 		*/
 		static RectangularMatrix<rows, cols, T>& From(T *data) {
 			return *(reinterpret_cast<RectangularMatrix<rows, cols, T>*> (data));
@@ -124,23 +130,24 @@ namespace Tiny { namespace Math {
 			return *(reinterpret_cast<const RectangularMatrix<rows, cols, T>*> (data));
 		}
 
-
-		/*constructor*/
-		explicit RectangularMatrix() noexcept { }
 		/*
-			@brief Convert from c data array to 
-			@caution	TODO:Maybe this constructor should be delete. We already have Interface "From" above. this is duplicated.
+			@brief	Default constructor, all values zero clear.
 		*/
-		RectangularMatrix(const T *source){
-			for (std::size_t i = 0; i < rows; i++) 
-				for (std::size_t j = 0; j < cols; j++) 
+		RectangularMatrix(ZeroInitT = ZeroInit)
+			:RectangularMatrix(Implementation::GenerateSeq<rows>::Type(), 0){}
+
+#ifdef TINY_TEST
+		/*
+			@brief	Convert from c array. Test avaliable only.
+			@caution	Only avaliable when build for testing, maybe should be removed in future.
+		*/
+		RectangularMatrix(const T *source) {
+			for (std::size_t i = 0; i < rows; i++)
+				for (std::size_t j = 0; j < cols; j++)
 					_data[i][j] = source[(i * cols) + j];
 		}
 
-
-
-		//using SFIANE on the right of template default arguments are awful. Nullptr just much more better.
-		//template<typename ...U, typename T = typename std::enable_if<sizeof...(U)+1 == rows, Vector<cols, T>>::type> RectangularMatrix(T first, U... next) :_data{ first, next... } {}
+#endif // TINY_TEST
 
 		/*
 			@brief construct from Vector<cols, T>[rows]
@@ -164,7 +171,7 @@ namespace Tiny { namespace Math {
 		RectangularMatrix<cols, rows, T> Transpose();
 
 		/*
-			@brief Get the raw data 
+			@brief Get the raw data
 		*/
 		T* Get() { return &_data[0][0]; }
 		/*const overload*/
@@ -200,10 +207,17 @@ namespace Tiny { namespace Math {
 			@brief Multiply with number
 		*/
 		RectangularMatrix<rows, cols, T> operator * (T coe) const { return RectangularMatrix<rows, cols, T>(*this) *= coe; }
+
 		/*
 			@brief Multiply with number and assign
 		*/
 		RectangularMatrix<rows, cols, T>& operator *= (T coe);
+
+		/*
+			@brief	Multiply with another rectangular matrix.
+			@caution	Matrix multiplications are very expensive.
+		*/
+		template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type operator*=(const U& other);
 
 		/*Multiply with vector is provided as free-standing functions*/
 		/*
@@ -215,6 +229,28 @@ namespace Tiny { namespace Math {
 			@brief Matrix compare
 		*/
 		bool operator == (const RectangularMatrix<rows, cols, T>& other) const;
+
+	protected:
+		/*
+			@brief	Construct with diagonal value.
+		*/
+		template<std::size_t ...RowSeq> RectangularMatrix(Implementation::Sequence<RowSeq...>, const Vector<DiagonalSize, T>& diagonal)
+			:_data{ GenDiagonalCol(diagonal, RowSeq)...} {}
+
+		Vector<cols, T> GenDiagonalCol(const Vector<DiagonalSize, T>& diagonal, int row) {
+			return DiagonalCol(Implementation::GenerateSeq<cols>::Type(), diagonal, row);
+		}
+
+		template<std::size_t ...ColumnSeq> Vector<cols, T> DiagonalCol(Implementation::Sequence<ColumnSeq...>, const Vector<DiagonalSize, T>& diagonal, int row) {
+			return { (ColumnSeq == row ? diagonal[row] : T{})... };
+		}
+
+		/*
+			@brief	Set all _data with same value
+		*/
+		template<std::size_t ...RowSeq> RectangularMatrix(Implementation::Sequence<RowSeq...>, T val)
+			:_data{ (Vector<cols, T>(Implementation::Repeat(val, RowSeq)))... } {
+		}
 
 	private:
 		Vector<cols, T> _data[rows];
@@ -254,14 +290,14 @@ namespace Tiny { namespace Math {
 		return *this;
 	}
 
-	template<std::size_t rows, std::size_t cols, typename T> 
+	template<std::size_t rows, std::size_t cols, typename T>
 	typename std::enable_if< std::is_floating_point<T>::value, RectangularMatrix<rows, cols, T>&>::type RectangularMatrix<rows, cols, T>::operator /= (T divisor) {
 		for (std::size_t r = 0; r != rows; r++)
 			_data[r] /= divisor;
 		return *this;
 	}
 
-	template<std::size_t rows, std::size_t cols, typename T> 
+	template<std::size_t rows, std::size_t cols, typename T>
 	template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *(const U& other) {
 		RectangularMatrix<rows, U::Cols, T> out;
 		for (std::size_t i = 0; i < rows; i++) {
@@ -279,6 +315,12 @@ namespace Tiny { namespace Math {
 		}
 		return true;
 	}
+
+	template<std::size_t rows, std::size_t cols, typename T>
+	template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *=(const U& other) {
+		return (*this) * other;
+	}
+
 	/*
 		@brief Vector multiply Matrix
 		Matrix M multiply Vector V: V * M
@@ -295,7 +337,7 @@ namespace Tiny { namespace Math {
 
 	/*
 		TODO: what's the meaning of this operator?
-		@brief outer operator. 
+		@brief outer operator.
 		@tparam		col		col is the colmun-vector with form (M x 1)
 		@tparam		row		row is the row-vector with form (1 X N)
 		@return		RectangularMatirx with form (M x N)
@@ -310,6 +352,22 @@ namespace Tiny { namespace Math {
 		}
 		return out;
 	}
+
+
+
+#ifdef TINY_TEST
+	template<std::size_t row, std::size_t col, typename T> std::ostream &operator<<(std::ostream& os, const RectangularMatrix<row, col, T>& m) {
+		for (int i = 0; i < row; i++) {
+			os << "| ";
+			for (int j = 0; j < col - 1; j++) {
+				os << m[i][j] << ",\t";
+			}
+			os << m[i][col - 1];
+			os << " |" << std::endl;
+		}
+		return os;
+	}
+#endif
 }}
 
 #endif

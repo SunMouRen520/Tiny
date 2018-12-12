@@ -11,12 +11,29 @@ namespace Tiny { namespace Math {
 	template<typename T> class Vector3 : public Vector<3, T> {
 	public:
 		/*
-			@brief constructors
+			@brief Defaul zero-clear.
 		*/
-		Vector3() :Vector<3, T>() {}
-		constexpr Vector3(const T& x, const T& y, const T& z) noexcept : Vector<3, T>(x, y, z) {}
-		//constexpr Vector3(const T source[3]) noexcept : Vector<3, T>(source) {}
+		/*explicit*/ Vector3(ZeroInitT = ZeroInit) :Vector<3, T>(ZeroInit) {}
 
+		/*
+		  @brief Construct from three entries
+		*/
+		constexpr Vector3(const T& x, const T& y, const T& z) noexcept : Vector<3, T>(x, y, z) {}
+
+		/*
+		  @brief Construct from vector2 and z
+		*/
+		explicit Vector3(const Vector2<T>& xy, const T& z) noexcept : Vector<3, T>(xy.X(), xy.Y(), z) {}
+
+		/*
+		  @brief Set all entries to uniform
+		*/
+		explicit Vector3(const T& uniform) noexcept : Vector<3, T>(uniform) {}
+
+
+		/*
+		  @brief Default copy constructor
+		*/
 		Vector3(const Vector<3, T>& other) :Vector<3, T>(other) {}
 		Vector3& operator =(const Vector3<T>& other) = default;
 

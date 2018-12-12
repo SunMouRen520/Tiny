@@ -4,22 +4,46 @@
 using namespace Tiny::Math;
 
 using Vec3 = Vector3<float>;
+using Vec2 = Vector2<float>;
 
-TEST(Vector3Test, constructors) {
+TEST(VectorTest, DefaultConstructor) {
 	Vec3 a;
-	Vec3 b( 0.0f, 0.0f, 0.0f );
+	EXPECT_EQ(a[0], 0.f);
+	EXPECT_EQ(a[1], 0.f);
+	EXPECT_EQ(a[2], 0.f);
+}
+
+TEST(VectorTest, UniformConstructor) {
+	Vec3 a(3.3f);
+
+	EXPECT_EQ(a[0], 3.3f);
+	EXPECT_EQ(a[1], 3.3f);
+	EXPECT_EQ(a[2], 3.3f);
+}
+
+TEST(VectorTest, ConstructConvertion) {
+	Vec3 a = { 1.f, 2.f, 3.f };
+	EXPECT_EQ(a[0], 1.f);
+	EXPECT_EQ(a[1], 2.f);
+	EXPECT_EQ(a[2], 3.f);
+
+	Vec3 b(1.f, 2.f, 3.f);
 	EXPECT_EQ(a, b);
 
-	Vec3 c(1.0f, -1.0f, 2.0f);
-	Vec3 d( 1.0f, -1.0f, 2.0f );
-	EXPECT_EQ(c, d);
+	Vec2 v2(2.2f, 2.2f);
+	Vec3 c(v2, 1.f);
+	EXPECT_EQ(c, Vec3(2.2f, 2.2f, 1.f));
+}
 
-	Vec3 e(5.5f, -11.0f, 100.0f);
-	Vec3 f(e);
-	EXPECT_EQ(e, f);
+TEST(VectorTest, CopyConstructor) {
+	Vec3 a = { 321.f, 8932.f, 223.f };
+	Vec3 b(a);
 
-	c = f;
-	EXPECT_EQ(c, e);
+	EXPECT_EQ(a, b);
+
+	Vec3 c = a;
+	EXPECT_EQ(a, c);
+	EXPECT_EQ(b, c);
 }
 
 TEST(Vector3Test, CrossProduct) {

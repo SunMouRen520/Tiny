@@ -21,8 +21,31 @@ namespace Tiny { namespace Math {
 		using Vec4 = Vector4<T>;
 
 	public:
-		/*default constructor*/
-		explicit Matrix4() = default;
+		/*
+		  @brief Default identity construction
+		*/
+		/*explicit*/ Matrix4(IdentityInitT = IdentityInit)
+			:Matrix<4, T>(IdentityInit) {}
+
+		/*
+		  @brief	Zero-clear construction
+		*/
+		explicit Matrix4(ZeroInitT)
+			:Matrix<4, T>(ZeroInit) {}
+
+		/*
+		  @brief	Set all entries with uniform
+		*/
+		explicit Matrix4(const T& uniform)
+			:Matrix<4, T>(uniform) {}
+
+		/*
+		  @brief Construct from other dimension.
+		  If otherSize >= size, first 4x4 data will be taken from other.
+		  otherwise, <other> will be copied to matrix4 and empty space will be full-filled with 0
+		*/
+		template<std::size_t otherSize> Matrix4(const RectangularMatrix<otherSize, otherSize, T>& other)
+			: Matrix<4, T>(other) {}
 
 		/*
 			@brief Construct from 4D vectors
@@ -59,6 +82,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Rotate around axis rad in right-hand rule.
+
 			@param	axis	The rotate axis, expected normalized
 			@param	rad		The rotation unit in radian, right-hand rule, defined in the plane perpendicular to axis, in range [-M_PI, M_PI].
 
@@ -81,6 +105,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Perspective projection. Map from view frustum to canonical view volume, with view direction -z.
+
 			@param	rect	rect.x is the horizontal length of near clipping plane
 							rect.y is the vertical length of near clipping plane
 			@param	near	The near clipping plane distance
@@ -92,6 +117,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Perspective projection. Map from view frustum to canonical view volume, with view direction -z.
+
 			@param	fieldOfView		Horizontal field of view angle in Rad (0, M_PI)
 			@param	aspectRatio		Horizontal : vertical aspect ratio
 			@param	near			The near clipping plane distance
@@ -105,6 +131,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Orthographic projection. Map from orthographic view volume to canonical view volume, with view direction -z.
+
 			@param	rect	rect.x is the horizontal length of orthographic view volume
 							rect.y is the vertical length of orthographic view volume
 			@param	near	The near clipping plane of orghographic view volume.
@@ -114,11 +141,21 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	Map from view frustum to orthographic view volume, with view direction -z.
+
 			@param	near	near clipping plane
 			@param	far		far clipping plane
 		*/
 		static Matrix4<T> PerspectiveToOrthographic(const T& near, const T& far);
 
+		/*
+			@brief	Build camera transform matrix
+
+			@param	right		The right vector of camera coordinate
+			@param	up			The up vector of camera coordinate
+			@param	direction	The direction vector of camera coordinate
+			@param	viewPoint	The world position of view point
+		*/
+		static Matrix4<T> LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint);
 	};
 
 	template<typename T> Matrix4<T> Matrix4<T>::Scale(const Vec3& scale) {
@@ -230,6 +267,10 @@ namespace Tiny { namespace Math {
 				{T(0)	, n		, T(0)	, T(0)},
 				{T(0)	, T(0)	, n + f	, T(1)},
 				{T(0)	, T(0)	, -f * n, T(0)}};
+	}
+
+	template<typename T> Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint) {
+		
 	}
 
 	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){

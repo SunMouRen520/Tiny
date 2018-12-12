@@ -8,40 +8,85 @@ using Vec3f = Vector<3, float>;
 
 using Matrix2f = Matrix<2, float>;
 using Matrix3f = Matrix<3, float>;
+using Matrix4f = Matrix<4, float>;
 
-template<std::size_t size> static void CheckEqual(const Matrix<size, float>& m, const float (&data)[size][size]) {
-	for (std::size_t i = 0; i != size; i++)
-		for (std::size_t j = 0; j != size; j++)
-			EXPECT_EQ(m[i][j], data[i][j]);
+template<std::size_t size> static void CheckEqual(const Matrix<size, float>& m, const float *data, int dataSize, int loopSize = 0) {
+	if (!loopSize)
+		loopSize = dataSize < size ? dataSize : size;
+	for (std::size_t i = 0; i != loopSize; i++)
+		for (std::size_t j = 0; j != loopSize; j++)
+			EXPECT_EQ(data[i * dataSize + j], m[i][j]);
 }
 
-TEST(MatrixTest, Uniform) {
-	Matrix3f u = Matrix3f::Uniform(1.0f);
-	const float one[3][3] = { {1.0f, 1.0f, 1.0f},{ 1.0f, 1.0f, 1.0f },{ 1.0f, 1.0f, 1.0f } };
-	CheckEqual(u, one);
-}
-
-TEST(MatrixTest, Identity) {
-	Matrix2f iden = Matrix2f::Identity();
-	const float data[2][2] = { {1.0f, 0.0f}, {0.0f, 1.0f} };
-	CheckEqual(iden, data);
-}
-
-TEST(MatrixTest, Constructor) {
+static int index[3] = { 0, 1, 2 };
+TEST(MatrixTest, DefaultConstructor) {
 	Matrix3f m;
-	Matrix3f zero = Matrix3f::Uniform(0.0f);
-	EXPECT_EQ(m, zero);
+	for (auto i : index) {
+		for (auto j : index) {
+			if (i == j)
+				EXPECT_EQ(m[i][j], 1.0f);
+			else
+				EXPECT_EQ(m[i][j], 0.0f);
+		}
+	}
+}
 
-	Matrix3f initialize(Vec3f(0.0f, 0.1f, 0.2f), Vec3f(1.0f, 1.1f, 1.2f), Vec3f(2.0f, 2.1f, 2.2f));
-	const float data[3][3] = { {0.0f, 0.1f, 0.2f}, {1.0f, 1.1f, 1.2f},{2.0f, 2.1f, 2.2f} };
-	CheckEqual(initialize, data);
+TEST(MatrixTest, ZeroConstructor) {
+	Matrix3f m(ZeroInit);
+	for (auto i : index) {
+		for (auto j : index) {
+			EXPECT_EQ(m[i][j], 0.f);
+		}
+	}
+}
 
-	Matrix3f copy(initialize);
-	CheckEqual(copy, data);
+TEST(MatrixTest, UniformConstructor) {
+	Matrix3f m(5.f);
+	for (auto i : index) {
+		for (auto j : index) {
+			EXPECT_EQ(m[i][j], 5.f);
+		}
+	}
+}
+
+TEST(MatrixTest, ConstructorConvertion) {
+	Matrix3f m(Vec3f{ 0.0f, 0.1f, 0.2f }, Vec3f{ 1.0f, 1.1f, 1.2f }, Vec3f{ 2.0f, 2.1f, 2.2f });
+	for (auto i : index) {
+		for (auto j : index) {
+			EXPECT_EQ(m[i][j], i * 1.f + j * 0.1f);
+		}
+	}
+
+}
+
+TEST(MatrixTest, CopyConstructor) {
+	Matrix3f a(Vec3f{ 0.0f, 0.1f, 0.2f }, Vec3f{ 1.0f, 1.1f, 1.2f }, Vec3f{ 2.0f, 2.1f, 2.2f });
+	Matrix3f b(a);
+	EXPECT_EQ(a, b);
+
+	Matrix3f c = a;
+	EXPECT_EQ(c, b);
+}
+
+TEST(MatrixTest, ConstructFromOtherDimension) {
+	Matrix3f m3(Vec3f(0.0f, 0.1f, 0.2f), Vec3f(1.0f, 1.1f, 1.2f), Vec3f(2.0f, 2.1f, 2.2f));
+
+	const float data[2][2] = { {0.0f, 0.1f}, {1.0f, 1.1f} };
+	Matrix2f m2(m3);
+	CheckEqual(m2, &data[0][0], 2);
+	
+	const float data2[3][3] = { {0.0f, 0.1f, 0.2f}, {1.0f, 1.1f, 1.2f},{2.0f, 2.1f, 2.2f} };
+	Matrix4f m4(m3);
+	CheckEqual(m4, &data2[0][0], 3);
+
+	for (int i = 0; i < 4; i++) {
+		EXPECT_EQ(m4[3][i], (i == 3 ? 1.f : 0.f));
+		EXPECT_EQ(m4[i][3], (i == 3 ? 1.f : 0.f));
+	}
 }
 
 TEST(MatrixTest, orthnogal) {
-	Matrix3f iden = Matrix3f::Identity();
+	Matrix3f iden;
 	EXPECT_TRUE(iden.Orthogonal());
 
 	const float v1 = std::sqrt(2.0f) / 2.0f;
@@ -63,7 +108,7 @@ TEST(MatrixTest, Determinant) {
 
 
 TEST(MatrixTest, Invertible) {
-	Matrix3f iden = Matrix3f::Identity();
+	Matrix3f iden;
 	EXPECT_TRUE(iden.Invertible());
 
 

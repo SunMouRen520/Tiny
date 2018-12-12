@@ -26,15 +26,18 @@ const float data_3[6] = { 1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f };
 
 const float data_4[8] = { 2.0f, 3.0f, 4.0f, 5.0f, 321.0f, 22.0f, 54.0f, 98.0f };
 
-TEST(RectangularMatrixTest, constructors) {
-	static_assert(std::is_same<Matrix34::Type, float>::value, "invalid type for Matrix34");
+TEST(RectangularMatrixTest, DefaultConstructor) {
+	Matrix32 m;
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 2; j++)
+			EXPECT_EQ(m[i][j], 0.f);
+}
 
-	Matrix32 def;
-	Matrix32 zero(Vec2(0.0f, 0.0f), Vec2(0.0f, 0.0f), Vec2(0.0f, 0.0f));
-
-	EXPECT_EQ(def, zero);
-
-	//Matrix32 incomplete(Vec2(1.1f, 1.2f), Vec2(2.1f, 2.2f));
+TEST(RectangularMatrixTest, ConstructorConversion) {
+	Matrix32 m{ Vec2{0.f, 0.1f}, Vec2{1.f, 1.1f}, Vec2{2.f, 2.1f} };
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 2; j++)
+			EXPECT_EQ(m[i][j], (i * 1.f + j * 0.1f));
 
 	Matrix32 complete(Vec2(2.3f, 321.0f), Vec2(33.0f, 12.3f), Vec2(3233.3f, 65.0f));
 	EXPECT_EQ(complete[0][0], 2.3f);
@@ -43,20 +46,16 @@ TEST(RectangularMatrixTest, constructors) {
 	EXPECT_EQ(complete[1][1], 12.3f);
 	EXPECT_EQ(complete[2][0], 3233.3f);
 	EXPECT_EQ(complete[2][1], 65.0f);
-	
-	const float source[12] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f };
-	const Matrix34& from_data = Matrix34::From(source);
-	EXPECT_EQ(from_data, Matrix34(Vec4(1.0f, 2.0f, 3.0f, 4.0f), Vec4(5.0f, 6.0f, 7.0f, 8.0f), Vec4(9.0f, 10.0f, 11.0f, 12.0f)));
+}
 
-	Matrix32 copy_complete(complete);
-	EXPECT_EQ(copy_complete, complete);
 
-	Matrix32 assign_complete = complete;
-	EXPECT_EQ(assign_complete, complete);
+TEST(RectangularMatrixTest, CopyConstructor) {
+	Matrix32 a(Vec2(2.3f, 321.0f), Vec2(33.0f, 12.3f), Vec2(3233.3f, 65.0f));
+	Matrix32 b(a);
+	EXPECT_EQ(a, b);
 
-	///*	apparently, there will be many c-style arrays to deal with vector and matrix. 
-	//	So */
-	//Matrix34 initializer_list({{ 1.0f, 2.0f, 3.0f, 4.0f}, {5.0f, 6.0f, 7.0f, 8.0f}, {9.0f, 10.0f, 11.0f, 12.0f}});
+	Matrix32 c = a;
+	EXPECT_EQ(a, b);
 }
 
 TEST(RectangularMatrixTest, GetData) {

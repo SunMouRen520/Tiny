@@ -53,11 +53,10 @@
 
 #include "Math/RectangularMatrix.h"
 #include "Math/Tools.h"
+#include "Math/Tags.h"
 
 namespace Tiny { namespace Math {
-	/*
-		@brief Square Matrix base class.
-	*/
+
 	template<std::size_t, typename> class Matrix;
 	namespace Implementation {
 		template<std::size_t size, typename T> struct Determinant{
@@ -82,25 +81,59 @@ namespace Tiny { namespace Math {
 				return m[0][0];
 			}
 		};
+
+
+		template<std::size_t size, std::size_t otherSize, typename T, std::size_t ...cols> Vector<size, T> CopyOrIdentity(const RectangularMatrix<otherSize, otherSize, T>& other, std::size_t row, Implementation::Sequence<cols...>) {
+			return{ ((row < otherSize && cols < otherSize )? other[row][cols] : (row == cols ? T{1} : T{0}))... };
+		}
+
+		template<std::size_t otherSize, std::size_t size, typename T> Vector<size, T> CopyOrIdentityColumn(const RectangularMatrix<otherSize, otherSize, T>& other, std::size_t row) {
+			return CopyOrIdentity<size, otherSize ,T>(other, row, GenerateSeq<size>::Type());
+		}
 	}
 
+	/*
+		@brief Square Matrix base class.
+	*/
 	template<std::size_t size, typename T> class Matrix : public RectangularMatrix<size, size, T> {
-
 	public:
 		enum : std::size_t {
 			Size = size
 		};
 
 		/*
-			@brief Get the idendity matirx.
+			@breif	Default constructor, identity.
 		*/
-		static Matrix<size, T> Identity();
+		/*explicit*/ Matrix(IdentityInitT = IdentityInit) noexcept
+			:RectangularMatrix<size, size, T>{Implementation::GenerateSeq<size>::Type(), Vector<size, T>(1)} {}
 
 		/*
-			@brief Set all entries as value
+			@brief	Construct zero clear matrix
 		*/
-		static Matrix<size, T> Uniform(T value);
+		explicit Matrix(ZeroInitT) noexcept
+			:RectangularMatrix<size, size, T>(ZeroInit){}
 
+		/*
+			@brief	Set all value in matrix to be uniform
+		*/
+		explicit Matrix(const T& uniform)
+			:RectangularMatrix<size, size, T>{Implementation::GenerateSeq<size>::Type(), uniform} {}
+
+		/*
+			@brief	Generate matrix from Rectangularmatrix. 
+		*/
+		explicit Matrix(const RectangularMatrix<size, size, T>& other)
+			:RectangularMatrix<size, size, T>(other) {}
+
+		/*
+			@brief	Constructor from other dimensation
+		*/
+		template<std::size_t otherSize> explicit Matrix(const RectangularMatrix<otherSize, otherSize, T>& other)
+			:Matrix(Implementation::GenerateSeq<size>::Type(), other) {}
+
+		/*
+			@brief	
+		*/
 		/*
 			constructors TODO:
 			For now, there are just two constructors: The default and Row vectors version.
@@ -111,7 +144,7 @@ namespace Tiny { namespace Math {
 			etc.
 			But for now, i can't find a nice way to handle this.....
 		*/
-		explicit Matrix():RectangularMatrix<size, size, T>(){}
+		//explicit Matrix():RectangularMatrix<size, size, T>(){}
 
 		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == size, T>::type* = nullptr> Matrix(const Vector<size, T>& first, const U&... next) : RectangularMatrix<size, size, T>(first, next...){}
 
@@ -155,22 +188,10 @@ namespace Tiny { namespace Math {
 		*/
 		Matrix<size - 1, T> ij(std::size_t i, std::size_t j) const;
 
+	private:
+		template<std::size_t otherSize, std::size_t ...RowSeq> Matrix(Implementation::Sequence<RowSeq...>, const RectangularMatrix<otherSize, otherSize, T>& other) 
+			:RectangularMatrix<size, size, T>{( Implementation::CopyOrIdentityColumn<otherSize, size, T>(other, RowSeq))...} {}
 	};
-
-	template<std::size_t size, typename T> Matrix<size, T> Matrix<size, T>::Identity() {
-		Matrix<size, T> out;
-		for (std::size_t i = 0; i != size; i++)
-			out[i][i] = 1;
-		return out;
-	}
-
-	template<std::size_t size, typename T> Matrix<size, T> Matrix<size, T>::Uniform(T value) {
-		Matrix<size, T> out;
-		for (std::size_t i = 0; i != size; i++)
-			for (std::size_t j = 0; j != size; j++)
-				out[i][j] = value;
-		return out;
-	}
 
 	template<std::size_t size, typename T> bool Matrix<size, T>::Invertible() const {
 		return Determinant() != 0;

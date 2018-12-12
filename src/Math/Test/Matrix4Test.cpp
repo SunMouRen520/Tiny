@@ -1,12 +1,14 @@
 #include "gtest/gtest.h"
 #include "Matrix4.h"
 #include "Tools.h"
-// #include "Utility/Log.h"
-#include <ostream>
+#include "TestTools.h"
 
 using namespace Tiny::Math;
+using namespace Tiny::Math::Test;
 
 using Mat4f = Matrix4<float>;
+using Mat3f = Matrix3<float>;
+
 using Vec4f = Vector4<float>;
 using Vec3f = Vector3<float>;
 using Vec2f = Vector2<float>;
@@ -14,36 +16,67 @@ using Vec2f = Vector2<float>;
 using Radf = Rad<float>;
 using Degf = Deg<float>;
 
-namespace Tiny { namespace Math{
-	std::ostream& operator<<(std::ostream& os, const Vec4f& v){
-		os<< "[" << v[0] <<", "<< v[1] <<", " << v[2] <<", " << v[3] <<"]"<<std::endl;
-		return os;
-	}
-
-	std::ostream &operator<<(std::ostream& os, const Mat4f& m) {
-		os << std::endl
-			<< "| " << m[0][0] << ",\t" << m[0][1] << ",\t" << m[0][2] << ",\t" << m[0][3] << " |" << std::endl
-			<< "| " << m[1][0] << ",\t" << m[1][1] << ",\t" << m[1][2]<< ",\t" << m[1][3]  << " |" << std::endl
-			<< "| " << m[2][0] << ",\t" << m[2][1] << ",\t" << m[2][2] << ",\t" << m[2][3] << " |" << std::endl
-			<< "| " << m[3][0] << ",\t" << m[3][1] << ",\t" << m[3][2] << ",\t" << m[3][3] << " |" << std::endl;
-		return os;
-	}
-} }
 
 
-TEST(Matrix4Test, Constructor) {
-	Mat4f m0;
-	EXPECT_EQ(m0, Mat4f::Uniform(0.0f));
-
-	Mat4f m1(Vec4f(0.0f, 0.1f, 0.2f, 0.3f), Vec4f(1.0f, 1.1f, 1.2f, 1.3f), Vec4f(2.0f, 2.1f, 2.2f, 2.3f),Vec4f(3.0f, 3.1f, 3.2f, 3.3f));
-	for(std::size_t i = 0 ; i < 4 ; i++)
-		for(std::size_t j = 0 ; j < 4 ; j++)
-			EXPECT_EQ(m1[i][j], i * 1.0f + j * 0.1f);
-
-	Mat4f m2(m1);
-	EXPECT_EQ(m1, m2);
-	// IronBranch::Utility::Log::E("HolyShit, Finally i can do some logging now!\n");
+static int index[] = { 0, 1, 2, 3};
+TEST(Matrix4Test, DefaultConstructor) {
+	Mat4f m;
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(m[i][j], (i == j ? 1.f : 0.f));
 }
+
+TEST(Matrix4Test, ZeroConstructor) {
+	Mat4f m(ZeroInit);
+
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(m[i][j], 0.f);
+}
+
+TEST(Matrix4Test, UniformConstructor) {
+	Mat4f a(ZeroInit);
+	Mat4f b(0.f);
+
+	EXPECT_EQ(a, b);
+
+	Mat4f c(100.f);
+	for (auto i : index)
+		for (auto j : index)
+			EXPECT_EQ(c[i][j], 100.f);
+}
+
+TEST(Matrix4Test, CopyConstructor) {
+	Mat4f m2(Vec4f(0.0f, 0.1f, 0.2f, 0.3f), Vec4f(1.0f, 1.1f, 1.2f, 1.3f), Vec4f(2.0f, 2.1f, 2.2f, 2.3f), Vec4f(3.0f, 3.1f, 3.2f, 3.3f));
+	Mat4f m3(m2);
+	EXPECT_EQ(m2, m3);
+
+	Mat4f m4 = m2;
+	EXPECT_EQ(m4, m2);
+}
+
+TEST(Matrix4Test, ConstructorFromOtherDimension) {
+	const float data[][4] = { { 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f } };
+	Mat4f m4{ { 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f },
+	{ 1.f, 2.f, 3.f, 4.f } };
+
+
+	Mat3f m3(m4);
+	CheckEqual(m3, &data[0][0], 4, 3);
+
+	Mat4f m42(m3);
+	CheckEqual(m42, &data[0][0], 4, 3);
+	for (int i = 0; i < 4; i++) {
+		EXPECT_EQ(m42[3][i], (i == 3 ? 1.f : 0.f));
+		EXPECT_EQ(m42[i][3], (i == 3 ? 1.f : 0.f));
+	}
+}
+
 
 TEST(Matrix4Test, Scale) {
 	Vec4f target1(1.0f, 2.0f, 3.0f, 1.0f);

@@ -6,26 +6,40 @@ using namespace Tiny::Math;
 
 using Vec2 = Vector2<float>;
 
-
-TEST(Vector2Test, constructors) {
+TEST(Vector2Test, DefaultConstruct) {
 	Vec2 a;
-	Vec2 b(0.0f, 0.0f);
-	//Vec2 l(0.0f, 0.0f);
-	//static_assert(b == c);
-	//const int p = 1;
-	//typename std::enable_if<std::is_const<decltype(b)>::value, int>::type int_type = 5;
+	EXPECT_EQ(a[0], 0.f);
+	EXPECT_EQ(a[1], 0.f);
+}
 
+TEST(Vector2Test, UniformConstruct) {
+	Vec2 a(0.f);
+	Vec2 b;
 	EXPECT_EQ(a, b);
 
-	Vec2 c( 3.0f, -5.0f );
-	Vec2 d(3.0f, -5.0f);
-	EXPECT_EQ(c, d);
+	Vec2 c(3.3f);
+	EXPECT_EQ(c[0], 3.3f);
+	EXPECT_EQ(c[1], 3.3f);
+}
 
-	Vec2 e(d);
-	EXPECT_EQ(e, d);
+TEST(Vector2Test, ConstructConvertion) {
+	Vec2 a = {1.0f, 2.0f};
+	EXPECT_EQ(a[0], 1.0f);
+	EXPECT_EQ(a[1], 2.0f);
 
-	Vec2 f = d;
-	EXPECT_EQ(f, e);
+	Vec2 b(1.0f, 2.0f);
+	EXPECT_EQ(a, b);
+
+	EXPECT_EQ(b, Vec2({ 1.0f, 2.0f }));
+}
+
+TEST(Vector2Test, CopyConstruct) {
+	Vec2 a(5321.f, 390.f);
+	Vec2 b(a);
+	EXPECT_EQ(a, b);
+
+	Vec2 c = b;
+	EXPECT_EQ(a, c);
 }
 
 TEST(Vector2Test, interfaces) {

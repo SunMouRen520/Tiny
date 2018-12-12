@@ -7,18 +7,21 @@ namespace Tiny { namespace Math {
 	/*
 		@brief Two-component Vector
 		@param T		Data type
-
-		TODO:
-			1.	Need some facilities to convert between different dimensions easily.
 	*/
 
 	template<typename T> class Vector2 : public Vector<2, T> {
 	public:
 		/*
-			@brief Constructors
+			@brief Default zero-clear.
 		*/
-		Vector2() : Vector<2, T>() {}
-		//constexpr Vector2(const T source[2]) noexcept :Vector<2, T>(source) {}
+		/*explicit*/ Vector2(ZeroInitT = ZeroInit) : Vector<2, T>(ZeroInit) {}
+
+		/*
+		  @brief	Set all entry to be uniform
+		*/
+		explicit Vector2(const T& uniform) :Vector<2, T>(uniform) {}
+
+
 		constexpr Vector2(T x, T y) noexcept : Vector<2, T>(x, y) {}
 
 		constexpr Vector2(const Vector<2, T>& other) noexcept : Vector<2, T>(other) {}
@@ -27,6 +30,7 @@ namespace Tiny { namespace Math {
 
 		/*@berif destructor*/
 		~Vector2() = default;
+
 
 		/*
 			@brief index fist component

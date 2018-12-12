@@ -10,8 +10,26 @@ namespace Tiny { namespace Math {
 	*/
 	template<typename T> class Vector4 :public Vector<4, T> {
 	public:
-		/*default constructor*/
-		explicit Vector4() = default;
+		/*
+			@brief	Default zero-clear 
+		*/
+		/*explicit*/ Vector4(ZeroInitT = ZeroInit) : Vector<4, T>(ZeroInit) {}
+
+		/*
+		  @brief Set all entries to uniform
+		*/
+		explicit Vector4(const T& uniform) : Vector<4, T>(uniform) {}
+
+		/*
+		  @brief Create from xyz and w
+		*/
+		explicit Vector4(const Vector3<T>& xyz, const T& w) :Vector<4, T>(xyz.X(), xyz.Y(), xyz.Z(), w) {}
+
+		/*
+		  @brief Create from xy z w
+		*/
+		explicit Vector4(const Vector2<T>& xy, const T& z, const T& w) : Vector<4, T>(xy.X(), xy.Y(), z, w) {}
+
 
 		/*
 			@brief Construct from four component
@@ -21,12 +39,13 @@ namespace Tiny { namespace Math {
 		/*default copy constructor*/
 		Vector4(const Vector4<T>& other) = default;
 		Vector4(const Vector<4, T>& other) :Vector<4, T>(other) {}
-		Vector4(const Vector3<T>& other){
-			for(std::size_t i = 0 ; i < 3 ;i++)
-				(*this)[i] = other[i];
-			(*this)[3] = T(1);
-		}
 
+		/*
+			@brief	Construct from different dimension
+		*/
+		template<std::size_t otherSize> Vector4(const Vector<otherSize, T>& other)
+			: Vector<4, T>(other) {}
+			
 		/*
 			@brief X component
 		*/

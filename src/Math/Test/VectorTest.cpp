@@ -8,19 +8,44 @@ using Vec2 = Vector<2, float>;
 using Vec3 = Vector<3, float>;
 using Vec4 = Vector<4, float>;
 
-TEST(VectorTest, constructor) {
-	Vec4 e;
-	Vec4 empty(0.0f, 0.0f, 0.0f, 0.0f);
-	EXPECT_EQ(e, empty);
+TEST(VectorTest, DefaultConstructor) {
+	Vec4 a;
+	EXPECT_EQ(a[0], 0.f);
+	EXPECT_EQ(a[1], 0.f);
+	EXPECT_EQ(a[2], 0.f);
+	EXPECT_EQ(a[3], 0.f);
+}
 
-	Vec4 a(1.0f, 2.0f, 3.0f, 4.0f);
-	Vec4 b { 1.0f, 2.0f, 3.0f, 4.0f };
+TEST(VectorTest, UniformConstructor) {
+	Vec4 a(3.3f);
+
+	EXPECT_EQ(a[0], 3.3f);
+	EXPECT_EQ(a[1], 3.3f);
+	EXPECT_EQ(a[2], 3.3f);
+	EXPECT_EQ(a[3], 3.3f);
+}
+
+TEST(VectorTest, ConstructConvertion) {
+	Vec3 a = { 1.f, 2.f, 3.f };
+	EXPECT_EQ(a[0], 1.f);
+	EXPECT_EQ(a[1], 2.f);
+	EXPECT_EQ(a[2], 3.f);
+
+	Vec3 b(1.f, 2.f, 3.f);
+	EXPECT_EQ(a, b);
+}
+
+TEST(VectorTest, CopyConstructor) {
+	Vec3 a = { 321.f, 8932.f, 223.f};
+	Vec3 b(a);
+
 	EXPECT_EQ(a, b);
 
-	float c[4] = { 1.0f, 2.0f, 3.0f, 4.0f };
-	const Vec4& d = Vec4::From(c);
-	EXPECT_EQ(a, d);
+	Vec3 c(a);
+	EXPECT_EQ(a, c);
+	EXPECT_EQ(b, c);
 }
+
 
 TEST(VectorTest, Operators) {
 	Vec4 a(1.0f, 1.0f, 2.0f, 1.0f);

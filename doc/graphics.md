@@ -27,6 +27,8 @@
             + Developing State:
                 - 2018/12/01 Due to the fact that i'm just newbie to OpenGL, So I decide to only support OpenGL 4.5, which is the OpenGL version of <OpenGl SuperBible 7th>. When OpenGL 4.5 jobs are done, i'll go ahead with OpenGL ES 3.0.
 
+                - Why Magnum Buffer only has three Target?
+
         * Texture:
             + Basically, texture data comprise of two layers: ImageData and TextureData.
                 - ImageData defines the raw-input images. And we need some facility to load ImageData from resources.
