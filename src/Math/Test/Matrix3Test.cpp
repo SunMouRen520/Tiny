@@ -130,9 +130,9 @@ TEST(Matrix3Test, Reflection) {
 
 	Vec2f y_up(0.0f, 1.0f);
 	Vec2f x_right(1.0f, 0.0f);
-	EXPECT_EQ(y_up * reflect1, Vec2f(0.0f, -1.0f));
-	EXPECT_EQ(y_up * reflect2, Vec2f(0.0f, -1.0f));
-	EXPECT_EQ(x_right * reflect3, Vec2f(0.0f, 1.0f));
+	EXPECT_EQ(Vec3f(y_up, 1.f) * reflect1, Vec3f(0.0f, -1.0f, 1.f));
+	EXPECT_EQ(Vec3f(y_up, 1.f) * reflect2, Vec3f(0.0f, -1.0f, 1.f));
+	EXPECT_EQ(Vec3f(x_right , 1.f)* reflect3, Vec3f(0.0f, 1.0f, 1.f));
 }
 
 TEST(Matrix3Test, Projection) {
@@ -143,10 +143,10 @@ TEST(Matrix3Test, Projection) {
 	Vec2f pv3 = Vec2f(1.0f, 1.0f).Normalize();
 	Matrix3f project3 = Matrix3f::Projection(pv3);
 
-	EXPECT_EQ(v1 * project_x, Vec2f(32.1f, 0.0f));
-	EXPECT_EQ(v1 * project_y, Vec2f(0.0f, 66989.f));
+	EXPECT_EQ(Vec3f(v1, 1.f) * project_x, Vec3f(32.1f, 0.0f, 1.f));
+	EXPECT_EQ(Vec3f(v1, 1.f) * project_y, Vec3f(0.0f, 66989.f, 1.f));
 
-	Vec2f v1_p3 = v1 * project3;
+	Vec2f v1_p3 = ((Vec3f)(Vec3f(v1, 1.f) * project3)).XY();
 	Vec2f v1_p3_check = (v1 * pv3) * pv3;
 
 	EXPECT_EQ(v1_p3, v1_p3_check);
@@ -167,10 +167,10 @@ TEST(Matrix3Test, ScaleAlongVector) {
 	Matrix3f scale3 = Matrix3f::ScaleAlongVector(vector_scale_3, k);
 
 
-	EXPECT_EQ(v1 * scale1, Vec2f(10.0f, 1.0f));
-	EXPECT_EQ(v1 * scale2, Vec2f(10.0f, 10.0f));
+	EXPECT_EQ(Vec3f(v1, 1.f) * scale1, Vec3f(10.0f, 1.0f, 1.f));
+	EXPECT_EQ(Vec3f(v1, 1.f) * scale2, Vec3f(10.0f, 10.0f, 1.f));
 
-	Vec2f v2_scale3 = v2 * scale3;
+	Vec2f v2_scale3 = ((Vec3f)(Vec3f(v2, 1.f) * scale3)).XY();
 
 	Vec2f raw_vector_along = (v2 * vector_scale_3) * vector_scale_3;
 	Vec2f raw_vector_perpen = v2 - raw_vector_along;

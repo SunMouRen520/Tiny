@@ -7,8 +7,6 @@
 namespace Tiny { namespace Math {
 	/*
 		@brief 2D transformation matrix
-		TODO:
-			1.	Need some facilities to convert between different dimensions easily.
 	*/
 	template<typename T> class Matrix3 : public Matrix<3, T> {
 		using Vec2 = Vector2<T>;
@@ -34,7 +32,7 @@ namespace Tiny { namespace Math {
 			:Matrix<3, T>(uniform) {}
 
 		/*
-			@brief	Construct from different dimension 
+			@brief	Construct from different dimension
 		*/
 		template<std::size_t otherSize> Matrix3(const RectangularMatrix<otherSize, otherSize, T>& other)
 			:Matrix<3, T>(other){}
@@ -74,7 +72,7 @@ namespace Tiny { namespace Math {
 
 		/*
 			@brief	2D relection about arbitrary normalized vector n
-			
+
 			Reflection can be viewed in two ways:
 			1.	Transfer vector v to standard cartesian basis, then rotate, then trasfer back t o vector v
 			2.	scale along v's perpendicular vector with factor -1.
@@ -82,8 +80,8 @@ namespace Tiny { namespace Math {
 		*/
 		static Matrix3<T> Reflection(const Vec2& n);
 
-		/*	
-			@brief	Scale along normalized vector n with factor k.  
+		/*
+			@brief	Scale along normalized vector n with factor k.
 		*/
 		static Matrix3<T> ScaleAlongVector(const Vec2& n, const T& k);
 
@@ -94,7 +92,7 @@ namespace Tiny { namespace Math {
 		*/
 		static Matrix3<T> Projection(const Vec2& n);
 	};
-	
+
 	template<typename T> Matrix3<T> Matrix3<T>::Scale(const Vec2& v) {
 		return{ { v[0], T(0), T(0)},
 				{ T(0), v[1], T(0)},
@@ -124,7 +122,7 @@ namespace Tiny { namespace Math {
 
 	template<typename T> Matrix3<T> Matrix3<T>::Reflection(const Vec2& n) {
 		assert(n.IsNormalized());
-		
+
 		Vec2 perpenN = n.Perpendicular();
 
 		const T nx2 = std::pow(perpenN.X(), 2), ny2 = std::pow(perpenN.Y(), 2), nxy = perpenN.X() * perpenN.Y();
@@ -135,7 +133,7 @@ namespace Tiny { namespace Math {
 
 	template<typename T> Matrix3<T> Matrix3<T>::ScaleAlongVector(const Vec2& n, const T& k) {
 		assert(n.IsNormalized());
-		
+
 		const T nx2 = std::pow(n.X(), 2), ny2 = std::pow(n.Y(), 2), nxy = n.X() * n.Y();
 		return { {1 + (k - 1)* nx2, (k - 1) * nxy, T(0)},
 				{ (k - 1) * nxy , 1 + (k - 1) * ny2, T(0) },
@@ -144,7 +142,7 @@ namespace Tiny { namespace Math {
 
 	template<typename T> Matrix3<T> Matrix3<T>::Projection(const Vec2& n) {
 		assert(n.IsNormalized());
-		
+
 		Vec2 perpenN = n.Perpendicular();
 
 		const T nx2 = std::pow(perpenN.X(), 2), ny2 = std::pow(perpenN.Y(), 2), nxy = perpenN.X() * perpenN.Y();
@@ -152,17 +150,5 @@ namespace Tiny { namespace Math {
 				{ -nxy, 1 - ny2, T(0)},
 				{ T(0), T(0), T(1) }};
 	}
-
-	/*
-		convinent function for Vec2 times Matrix3
-		TODO:
-			This will be removed when different dimension convert facility is provied for vectors
-	*/
-	template<typename T> Vector2<T> operator*(const Vector2<T>& v, const Matrix3<T>& m) {
-		Vector3<T> affine_v(v.X(), v.Y(), T(1));
-		Vector<3, T> out = (affine_v * m);
-		return{ out[0], out[1] };
-	}
-
 }}
-#endif 
+#endif

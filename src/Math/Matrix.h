@@ -120,7 +120,7 @@ namespace Tiny { namespace Math {
 			:RectangularMatrix<size, size, T>{Implementation::GenerateSeq<size>::Type(), uniform} {}
 
 		/*
-			@brief	Generate matrix from Rectangularmatrix. 
+			@brief	Generate matrix from Rectangularmatrix.
 		*/
 		explicit Matrix(const RectangularMatrix<size, size, T>& other)
 			:RectangularMatrix<size, size, T>(other) {}
@@ -131,41 +131,11 @@ namespace Tiny { namespace Math {
 		template<std::size_t otherSize> explicit Matrix(const RectangularMatrix<otherSize, otherSize, T>& other)
 			:Matrix(Implementation::GenerateSeq<size>::Type(), other) {}
 
-		/*
-			@brief	
-		*/
-		/*
-			constructors TODO:
-			For now, there are just two constructors: The default and Row vectors version.
-			Apparently, we need more convinent constructors , such as:
-			1.	convert from different size Matrix,
-			2.	constrcut from c style array list
-			3.	convert to c style array list
-			etc.
-			But for now, i can't find a nice way to handle this.....
-		*/
-		//explicit Matrix():RectangularMatrix<size, size, T>(){}
-
 		template<typename ...U, typename std::enable_if<sizeof...(U)+1 == size, T>::type* = nullptr> Matrix(const Vector<size, T>& first, const U&... next) : RectangularMatrix<size, size, T>(first, next...){}
 
 		/*default copy constructor*/
 		Matrix(const Matrix<size, T>& other) = default;
 
-
-		/*
-			@brief construct from other size matrix.
-			if other_size >= size, then the result matrix filled with data from the first size rows and colmuns in other.
-			else, the result matrix is expanded to identity(ones on diagonal, zeros elsewhere).
-
-			TODO:
-				this function is intended to be undefined.
-				in magnum, this is implement by this:
-					Matrix<size, T>{typename Implementation::GenerateSequence<size>::Type(), other}
-				how to understand?
-		*/
-		//template<std::size_t other_size, typename std::enable_if<false, T>::type * = nullptr> explicit Matrix(const Matrix<other_size, T>& other) {
-		//
-		//}
 
 		/*
 			@brief Get the determinant
@@ -189,7 +159,7 @@ namespace Tiny { namespace Math {
 		Matrix<size - 1, T> ij(std::size_t i, std::size_t j) const;
 
 	private:
-		template<std::size_t otherSize, std::size_t ...RowSeq> Matrix(Implementation::Sequence<RowSeq...>, const RectangularMatrix<otherSize, otherSize, T>& other) 
+		template<std::size_t otherSize, std::size_t ...RowSeq> Matrix(Implementation::Sequence<RowSeq...>, const RectangularMatrix<otherSize, otherSize, T>& other)
 			:RectangularMatrix<size, size, T>{( Implementation::CopyOrIdentityColumn<otherSize, size, T>(other, RowSeq))...} {}
 	};
 

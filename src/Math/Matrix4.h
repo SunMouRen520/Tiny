@@ -13,7 +13,6 @@ namespace Tiny { namespace Math {
 				a.	Complex for 2D rotation and Quaternion for 3D rotation
 				b.	Normal Transformtion facility.
 				c.	For complete transformation reference, see: https://doc.magnum.graphics/magnum/transformations.html
-			3.	Need some facilities to convert between different dimensions easily.
 	*/
 	template<typename T> class Matrix4 :public Matrix<4, T> {
 		using Vec2 = Vector2<T>;
@@ -270,7 +269,7 @@ namespace Tiny { namespace Math {
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint) {
-		
+
 	}
 
 	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){

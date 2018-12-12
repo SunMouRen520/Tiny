@@ -2,7 +2,6 @@
 #define Tiny_MATH_VECTOR_H
 
 
-#include <cstddef> //TODO:Check if we realy need this include
 #include <cstdlib>
 #include <cmath>
 #include <cassert>
@@ -19,7 +18,7 @@ namespace Tiny { namespace Math {
 	template<std::size_t , typename > class Vector;
 	namespace Implementation {
 		template<std::size_t ...seq> struct Sequence{};
-		
+
 		template<std::size_t N, std::size_t ...seq> struct GenerateSeq
 			: GenerateSeq<N - 1, N - 1, seq...>{};
 
@@ -296,7 +295,7 @@ namespace Tiny { namespace Math {
 		os << "[";
 		for (int i = 0; i < size - 1; i++)
 			os << vector[i] << ", ";
-		
+
 		os << vector[size - 1] << "]" << std::endl;
 		return os;
 	}

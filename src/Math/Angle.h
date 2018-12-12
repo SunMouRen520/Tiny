@@ -8,8 +8,6 @@ namespace Tiny { namespace Math {
 
 	/*
 		@bried MeasurementUnit provide the common operations for unit of measurement.
-		TODO:
-			1.
 	*/
 	template<template<typename> class Derived, typename T> class MeasurementUnit {
 		template<template<typename> class, typename> friend class MeasurementUnit;
