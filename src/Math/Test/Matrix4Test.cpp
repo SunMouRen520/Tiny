@@ -182,6 +182,20 @@ TEST(Matrix4Test, Orthographic) {
     EXPECT_EQ(actual, expected);
 }
 
+TEST(Matrix4Test, LookAt) {
+	Vec3f p1(0.f, 0.f, -1.f);
+	Vec3f p2(3.f, 1.f, -1.f);
+
+	Mat4f transform1 = Mat4f::LookAt({0.f, 0.f, 0.f}, {0.f, 0.f, -1.f}, {0.f, 1.f, 0.f});
+	Mat4f transform2 = Mat4f::LookAt({1.f, 0.f, 0.f}, {1.f, 0.f, -1.f}, {0.f, -1.f, 0.f});
+
+	EXPECT_EQ(p1 * transform1, p1);
+	EXPECT_EQ(p1 * transform2, Vec3f(1.f, 0.f, -1.f));
+
+	EXPECT_EQ(p2 * transform1, p2);
+	EXPECT_EQ(p2 * transform2, Vec3f(-2.f, -1.f, -1.f));
+}
+
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();

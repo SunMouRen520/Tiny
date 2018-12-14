@@ -23,10 +23,18 @@ set(GL_FILES
     GL/Commondef.h
 )
 
+set(SCENE_FILES
+    Scene/Camera.h
+    Scene/Camera.cpp
+    Scene/Light.h
+    Scene/Light.cpp
+)
+
 set(Graphics_SRC
     ${Graphics_RenderSystem_SRC}
     ${Texture_FILES}
     ${GL_FILES}
+    ${SCENE_FILES}
 )
 
 add_library(Graphics ${Graphics_SRC})
@@ -42,3 +50,4 @@ endif()
 source_group("GL" FILES ${GL_FILES})
 source_group("Texture" FILES ${Texture_FILES})
 source_group("RenderSystem" FILES ${Graphics_RenderSystem_SRC})
+source_group("Scene" FILES ${SCENE_FILES})

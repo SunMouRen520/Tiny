@@ -147,14 +147,13 @@ namespace Tiny { namespace Math {
 		static Matrix4<T> PerspectiveToOrthographic(const T& near, const T& far);
 
 		/*
-			@brief	Build camera transform matrix
-
-			@param	right		The right vector of camera coordinate
-			@param	up			The up vector of camera coordinate
-			@param	direction	The direction vector of camera coordinate
-			@param	viewPoint	The world position of view point
+		  @brief	Build camera tranform matrix where camera at eye, target sit at minus-z direction, and has up-direction insipred by up.
+		  @caution	upHint cannot parallize with (eye - target)
+		  @param	eye		camera position
+		  @param	target	lookat target
+		  @param	upHint	hint for up-direction of camera. Should not be parallize with (eye - target).
 		*/
-		static Matrix4<T> LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint);
+		static Matrix4<T> LookAt(const Vector3<T>& eye, const Vector3<T>& target, const Vector3<T>& upHint);
 	};
 
 	template<typename T> Matrix4<T> Matrix4<T>::Scale(const Vec3& scale) {
@@ -268,8 +267,14 @@ namespace Tiny { namespace Math {
 				{T(0)	, T(0)	, -f * n, T(0)}};
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint) {
-		TODO
+	template<typename T> Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& eye, const Vector3<T>& target, const Vector3<T>& upHint){
+		const Vector3<T> z = (eye - target).Normalize();
+		const Vector3<T> x = Cross(upHint, z).Normalize();
+		const Vector3<T> y = Cross(z, x);
+		return{ {x.X(), y.X(), z.X(), T{0} },
+				{x.Y(), y.Y(), z.Y(), T{0}},
+				{x.Z(), y.Z(), z.Z(), T{0}},
+				{-eye * x, -eye * y, -eye * z, T{1}}};
 	}
 
 	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){
