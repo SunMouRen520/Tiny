@@ -40,11 +40,6 @@ namespace Tiny { namespace Math {
 		Vector4(const Vector4<T>& other) = default;
 		Vector4(const Vector<4, T>& other) :Vector<4, T>(other) {}
 
-		/*
-			@brief	Construct from different dimension
-		*/
-		template<std::size_t otherSize> Vector4(const Vector<otherSize, T>& other)
-			: Vector<4, T>(other) {}
 			
 		/*
 			@brief X component

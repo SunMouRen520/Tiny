@@ -26,6 +26,13 @@ namespace Tiny { namespace Math {
 
 		return (diff / (absA + absB)) < std::numeric_limits<T>::epsilon();
 	}
+
+	/*
+	  @brief	Generic linear interpolation
+	*/
+	template<typename T, typename U> T Lerp(const T& a, const T&b, const U& t) {
+		return (1 - t) * a + t * b;
+	}
 }}
 
 #endif

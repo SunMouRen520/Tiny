@@ -41,7 +41,7 @@ namespace Tiny { namespace Math {
 		MeasurementUnit<Derived, T> operator* (const MeasurementUnit<Derived, T>& other) const { return MeasurementUnit<Derived, T>(_data) *= other; }
 		MeasurementUnit<Derived, T> operator/ (const MeasurementUnit<Derived, T>& other) const { return MeasurementUnit<Derived, T>(_data) /= other; }
 
-		MeasurementUnit<Derived, T>	operator-() { return MeasurementUnit<Derived, T>(-_data); }
+		MeasurementUnit<Derived, T>	operator-() const { return MeasurementUnit<Derived, T>(-_data); }
 
 		explicit operator T() const { return _data; }
 

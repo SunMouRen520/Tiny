@@ -80,6 +80,8 @@ TEST(AngleTest, rad_operators) {
 	EXPECT_TRUE(equals(float(r1 - r2), d3));
 	EXPECT_TRUE(equals(float(r1 * r2), float(d1 * d2)));
 	EXPECT_TRUE(equals(float(r1 / r2), float(d1 / d2)));
+
+	EXPECT_EQ(static_cast<float>(-r1), -d1);
 }
 
 TEST(AngleTest, deg_operators) {

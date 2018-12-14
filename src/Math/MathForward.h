@@ -38,6 +38,9 @@ namespace Tiny { namespace Math {
 
 	using Radf = Rad<float>;
 	using Degf = Deg<float>;
+
+	template<typename T> class Quaternion;
+	using Quaternionf = Quaternion<float>;
 }
 }
 

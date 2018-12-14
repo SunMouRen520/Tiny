@@ -204,8 +204,9 @@ namespace Tiny { namespace Math {
 
 	template<std::size_t size, typename T >
 	typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Vector<size, T>::Normalize() const {
-		Vector<size, T> out;
 		T mag = Magnitude();
+		assert(mag > 0);
+		Vector<size, T> out;
 		for (std::size_t i = 0; i != size; i++)
 			out._data[i] = _data[i] / mag;
 		return out;

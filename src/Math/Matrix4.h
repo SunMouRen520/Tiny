@@ -269,11 +269,11 @@ namespace Tiny { namespace Math {
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& right, const Vector3<T>& up, const Vector3<T>& direction, const Vector3<T>& viewPoint) {
-
+		TODO
 	}
 
 	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){
-		return (Vector4<T>(v) * m).XYZ();
+		return Vector4<T>((Vector4<T>(v, T{ 1 }) * m)).XYZ();
 	}
 } }
 
