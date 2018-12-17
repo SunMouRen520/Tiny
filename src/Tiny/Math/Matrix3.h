@@ -1,8 +1,8 @@
 #ifndef TINY_MATH_MATRIX3_H
 #define TINY_MATH_MATRIX3_H
 
-#include "Math/Matrix.h"
-#include "Math/Vector3.h"
+#include "Tiny/Math/Matrix.h"
+#include "Tiny/Math/Vector3.h"
 
 namespace Tiny { namespace Math {
 	/*

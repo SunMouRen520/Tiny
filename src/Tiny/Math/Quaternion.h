@@ -1,11 +1,11 @@
 #ifndef TINY_MATH_QUATERNION_H
 #define TINY_MATH_QUATERNION_H
 
-#include "Math/Vector3.h"
-#include "Math/Angle.h"
-#include "Math/Tags.h"
-#include "Math/Matrix.h"
-#include "Math/Tools.h"
+#include "Tiny/Math/Vector3.h"
+#include "Tiny/Math/Angle.h"
+#include "Tiny/Math/Tags.h"
+#include "Tiny/Math/Matrix.h"
+#include "Tiny/Math/Tools.h"
 
 #include <cmath>
 

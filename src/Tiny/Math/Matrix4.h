@@ -1,9 +1,9 @@
 #ifndef TINY_MATH_MATRIX4_H
 #define TINY_MATH_MATRIX4_H
 
-#include "Math/Matrix3.h"
-#include "Math/Vector4.h"
-#include "Math/Angle.h"
+#include "Tiny/Math/Matrix3.h"
+#include "Tiny/Math/Vector4.h"
+#include "Tiny/Math/Angle.h"
 
 namespace Tiny { namespace Math {
 	/*

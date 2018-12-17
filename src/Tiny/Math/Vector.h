@@ -6,9 +6,9 @@
 #include <cmath>
 #include <cassert>
 
-#include "Math/Tools.h"
-#include "Math/Angle.h"
-#include "Math/Tags.h"
+#include "Tiny/Math/Tools.h"
+#include "Tiny/Math/Angle.h"
+#include "Tiny/Math/Tags.h"
 
 #ifdef TINY_TEST
 #include <iostream>

@@ -90,7 +90,7 @@
 
 #include <cstddef>
 #include <type_traits>
-#include "Math/Vector.h"
+#include "Tiny/Math/Vector.h"
 
 #ifdef TINY_TEST
 #include <iostream>

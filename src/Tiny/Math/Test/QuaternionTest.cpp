@@ -1,8 +1,8 @@
 #include "gtest\gtest.h"
-#include "Math/Quaternion.h"
-#include "Math/Matrix4.h"
-#include "Math/MathForward.h"
-#include "Math/Tools.h"
+#include "Tiny/Math/Quaternion.h"
+#include "Tiny/Math/Matrix4.h"
+#include "Tiny/Math/MathForward.h"
+#include "Tiny/Math/Tools.h"
 
 using namespace Tiny::Math;
 
