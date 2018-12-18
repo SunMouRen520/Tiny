@@ -118,8 +118,8 @@ TEST(Matrix4Test, Transpose) {
 	Vec4f target1(1.0f, 2.0f, 3.0f, 1.0f);
 	Vec4f target2(0.0f, -1.0f, 3.0f, 1.0f);
 
-	Mat4f tran1 = Mat4f::Transpose({1.0f, 1.0f, 1.0f});
-	Mat4f tran2 = Mat4f::Transpose({0.0f, 0.0f, 0.0f});
+	Mat4f tran1 = Mat4f::Translation({1.0f, 1.0f, 1.0f});
+	Mat4f tran2 = Mat4f::Translation({0.0f, 0.0f, 0.0f});
 
 	EXPECT_EQ(target1 * tran1, Vec4f(2.0f, 3.0f, 4.0f, 1.0f));
 	EXPECT_EQ(target2 * tran1, Vec4f(1.0f, 0.0f, 4.0f, 1.0f));
@@ -148,10 +148,11 @@ TEST(Matrix4Test, Rotation) {
 TEST(Matrix4Test, Perspective) {
 	Vec4f v1(1.f, 1.f, -20.f, 1.f);
 
-    Mat4f expected({-4.0f,      0.0f,         0.0f,  0.0f},
-                     {0.0f, -7.111111f,         0.0f,  0.0f},
-                     {0.0f,      0.0f,  -1.9411764f, -1.0f},
-                     {0.0f,      0.0f, -94.1176452f,  0.0f});
+    Mat4f expected({4.0f,      0.0f,         0.0f,  0.0f},
+                     {0.0f, 7.111111f,         0.0f,  0.0f},
+                     {0.0f,      0.0f,  1.9411764f,  -1.f
+					 },
+                     {0.0f,      0.0f, 94.1176452f,  0.0f});
     Mat4f actual = Mat4f::Perspective({16.0f, 9.0f}, -32.0f, -100.0f);
 	EXPECT_EQ(actual, expected);
 
@@ -161,11 +162,13 @@ TEST(Matrix4Test, Perspective) {
 
 	Vec4f v2(0.f, 0.f, -5.f, 1.f);
 	Vec4f v2m2 = v2 * m2;
-	EXPECT_EQ(v2m2, Vec4f(0.f, 0.f, -5.f, 5.f));
+	v2m2 /= v2m2.W();
+	EXPECT_EQ(v2m2.XYZ(), Vec3f(0.f, 0.f, 1.f));
 
 	Vec4f v3(0.f, 0.f, -100.f, 1.f);
 	Vec4f v3m2 = v3 * m2;
-	EXPECT_EQ(v3m2, Vec4f(0.f, 0.f, 100.f, 100.f));
+	v3m2 /= v3m2.W();
+	EXPECT_EQ(v3m2.XYZ(), Vec3f(0.f, 0.f, -1.f));
 }
 
 TEST(Matrix4Test, Orthographic) {
@@ -189,11 +192,12 @@ TEST(Matrix4Test, LookAt) {
 	Mat4f transform1 = Mat4f::LookAt({0.f, 0.f, 0.f}, {0.f, 0.f, -1.f}, {0.f, 1.f, 0.f});
 	Mat4f transform2 = Mat4f::LookAt({1.f, 0.f, 0.f}, {1.f, 0.f, -1.f}, {0.f, -1.f, 0.f});
 
-	EXPECT_EQ(p1 * transform1, p1);
-	EXPECT_EQ(p1 * transform2, Vec3f(1.f, 0.f, -1.f));
+	EXPECT_EQ(transform1.TransformPoint(p1), p1);
+	Vec3f t2p1 = transform2.TransformPoint(p1);
+	EXPECT_EQ(t2p1, Vec3f(1.f, 0.f, -1.f));
 
-	EXPECT_EQ(p2 * transform1, p2);
-	EXPECT_EQ(p2 * transform2, Vec3f(-2.f, -1.f, -1.f));
+	EXPECT_EQ(transform1.TransformPoint(p2), p2);
+	EXPECT_EQ(transform2.TransformPoint(p2), Vec3f(-2.f, -1.f, -1.f));
 }
 
 int main(int argc, char **argv) {

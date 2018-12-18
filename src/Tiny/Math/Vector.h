@@ -288,7 +288,10 @@ namespace Tiny { namespace Math {
 		@brief Free-sstanding div operator
 	*/
 	template<std::size_t size, typename T> Vector<size, T> operator/(const T& a, const Vector<size, T>& b) {
-		return {a / b[0], a / b[1]};
+		Vector<size, T> out(ZeroInit);
+		for (int i = 0; i < size; i++)
+			out[i] = a / b[i];
+		return out;
 	}
 
 #ifdef TINY_TEST

@@ -56,6 +56,7 @@ TEST(VectorTest, Operators) {
 	EXPECT_EQ(a * b, 20.1f + 2.1f + 0.42f + 1.0f);
 	EXPECT_EQ(b * 3.0f, Vec4(60.3f, 6.3f, 0.63f, 3.0f));
 	EXPECT_EQ(b / 10.0f, Vec4(2.01f, 0.21f, 0.021f, 0.1f));
+	EXPECT_EQ(10.f / a, Vec4(10.f, 10.f, 5.f, 10.f));
 	
 	a += b;
 	EXPECT_EQ(a, Vec4(21.1f, 3.1f, 2.21f, 2.0f));

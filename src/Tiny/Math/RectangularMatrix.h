@@ -168,14 +168,14 @@ namespace Tiny { namespace Math {
 		/*
 			@brief Transpose
 		*/
-		RectangularMatrix<cols, rows, T> Transpose();
+		RectangularMatrix<cols, rows, T> Transpose() const;
 
 		/*
 			@brief Get the raw data
 		*/
-		T* Get() { return &_data[0][0]; }
+		T* Get() { return _data[0].Get(); }
 		/*const overload*/
-		const T* Get() const { return _data; }
+		const T* Get() const { return _data[0].Get(); }
 
 		/*
 			@brief index operatiosn
@@ -217,13 +217,13 @@ namespace Tiny { namespace Math {
 			@brief	Multiply with another rectangular matrix.
 			@caution	Matrix multiplications are very expensive.
 		*/
-		template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type operator*=(const U& other);
+		//template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type operator*=(const U& other);
 
 		/*Multiply with vector is provided as free-standing functions*/
 		/*
 			@brief Multiply with Matrix
 		*/
-		template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type operator*(const U& other);
+		template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type operator*(const U& other) const;
 
 		/*
 			@brief Matrix compare
@@ -256,7 +256,7 @@ namespace Tiny { namespace Math {
 		Vector<cols, T> _data[rows];
 	};
 
-	template<std::size_t rows, std::size_t cols, typename T> RectangularMatrix<cols, rows, T> RectangularMatrix<rows, cols, T>::Transpose() {
+	template<std::size_t rows, std::size_t cols, typename T> RectangularMatrix<cols, rows, T> RectangularMatrix<rows, cols, T>::Transpose() const{
 		RectangularMatrix<cols, rows, T> out;
 		for (std::size_t c = 0; c != cols; c++)
 			for (std::size_t r = 0; r != rows; r++)
@@ -298,7 +298,7 @@ namespace Tiny { namespace Math {
 	}
 
 	template<std::size_t rows, std::size_t cols, typename T>
-	template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *(const U& other) {
+	template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *(const U& other) const{
 		RectangularMatrix<rows, U::Cols, T> out;
 		for (std::size_t i = 0; i < rows; i++) {
 			for (std::size_t j = 0; j < U::Cols; j++) {
@@ -316,10 +316,10 @@ namespace Tiny { namespace Math {
 		return true;
 	}
 
-	template<std::size_t rows, std::size_t cols, typename T>
-	template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *=(const U& other) {
-		return (*this) * other;
-	}
+	//template<std::size_t rows, std::size_t cols, typename T>
+	//template<typename U> typename std::enable_if<U::Rows == cols, RectangularMatrix<rows, U::Cols, T>>::type RectangularMatrix<rows, cols, T>::operator *=(const U& other) {
+	//	return (*this) * other;
+	//}
 
 	/*
 		@brief Vector multiply Matrix

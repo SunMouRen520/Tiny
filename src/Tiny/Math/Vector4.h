@@ -23,7 +23,7 @@ namespace Tiny { namespace Math {
 		/*
 		  @brief Create from xyz and w
 		*/
-		explicit Vector4(const Vector3<T>& xyz, const T& w) :Vector<4, T>(xyz.X(), xyz.Y(), xyz.Z(), w) {}
+		Vector4(const Vector3<T>& xyz, const T& w) :Vector<4, T>(xyz.X(), xyz.Y(), xyz.Z(), w) {}
 
 		/*
 		  @brief Create from xy z w

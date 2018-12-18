@@ -2,7 +2,6 @@ set(TINY_CORE_SOURCES
     Application.h
     Application.cpp
     Types.h
-    Tags.h
 )
 
 add_library(TinyCore ${TINY_CORE_SOURCES})

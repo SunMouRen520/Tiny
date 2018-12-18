@@ -10,7 +10,7 @@ namespace Tiny { namespace Math {
 		@brief	3D Transformation matrix
 		TODO:
 			1.	Incompletge transformation support:
-				a.	Complex for 2D rotation and Quaternion for 3D rotation
+				a.	Complex for 2D rotation.
 				b.	Normal Transformtion facility.
 				c.	For complete transformation reference, see: https://doc.magnum.graphics/magnum/transformations.html
 	*/
@@ -55,6 +55,22 @@ namespace Tiny { namespace Math {
 		Matrix4(const Matrix4<T>& other) = default;
 		Matrix4(const Matrix<4, T>& other) :Matrix<4, T>(other) {};
 
+
+		/*
+		  @brief	Tranform Point
+		*/
+		Vector3<T> TransformPoint(const Vector3<T>& point) {
+			Vector4<T> t = (Vector4<T>(point, T(1)) * (*this));
+			return t.XYZ() / t.W();
+		}
+
+		/*
+		  @brief	Tranform vector
+		*/
+		Vector3<T> TransformVector(const Vector3<T>& vector) {
+			return (Vector4<T>(vector, T(0)) * (*this)).XYZ();
+		}
+
 		/*
 			@brief	3D scaling matrix
 			@param	scale	The scale vector
@@ -77,7 +93,7 @@ namespace Tiny { namespace Math {
 			@brief	3d transpose matrix
 			@param	transpose	The transpose vector
 		*/
-		static Matrix4<T> Transpose(const Vec3& transpose);
+		static Matrix4<T> Translation(const Vec3& transpose);
 
 		/*
 			@brief	Rotate around axis rad in right-hand rule.
@@ -147,7 +163,7 @@ namespace Tiny { namespace Math {
 		static Matrix4<T> PerspectiveToOrthographic(const T& near, const T& far);
 
 		/*
-		  @brief	Build camera tranform matrix where camera at eye, target sit at minus-z direction, and has up-direction insipred by up.
+		  @brief	Build camera tranform matrix where camera at eye, target sit at view  direction, and has up-direction insipred by up.
 		  @caution	upHint cannot parallize with (eye - target)
 		  @param	eye		camera position
 		  @param	target	lookat target
@@ -182,7 +198,7 @@ namespace Tiny { namespace Math {
 				{T(0)		, T(0)		, T(0)		, T(1)}};
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Transpose(const Vec3& tran) {
+	template<typename T> Matrix4<T> Matrix4<T>::Translation(const Vec3& tran) {
 		return{ {T(1), T(0), T(0), T(0)},
 				{T(0), T(1), T(0), T(0)},
 				{T(0), T(0), T(1), T(0)},
@@ -234,20 +250,26 @@ namespace Tiny { namespace Math {
 
 	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, const T& n, const T& f) {
 		assert(n <=0 && f <= 0 && n > f);
-		const Vec2 xyScale = T(2) * n / rect;
-		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (n + f) / (n - f), v32 = T(2) * f * n / (f - n);
-		return{	{T(v00)	, T(0)	, T(0)	, T(0)},
-				{T(0)	, T(v11), T(0)	, T(0)},
-				{T(0)	, T(0)	, T(v22), T(-1)},
-				{T(0)	, T(0)	, T(v32), T(0)}};
+		const Vec2 xyScale = T(2) * std::abs(n) / rect;
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (n + f) / (f - n), v32 = T(2) * f * n / (n - f);
+		return{	{v00	, T(0)	, T(0)	, T(0)},
+				{T(0)	, v11, T(0)	, T(0)},
+				{T(0)	, T(0)	, v22, T(-1)},
+				{T(0)	, T(0)	, v32, T(0)}};
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& near, const T& far) {
+	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Rad<T>& fieldOfView, const T& aspectRatio, const T& n, const T& f) {
 		assert(fieldOfView > Rad<T>(0) && fieldOfView < Rad<T>(M_PI));
 		assert(aspectRatio > 0);
-		const T width = T(2) * std::abs(near) * std::tan(T(fieldOfView) / T(2));
-		const T height = width / aspectRatio;
-		return Perspective(Vec2(width, height), near, far);
+		//const T width = T(2) * std::abs(near) * std::tan(T(fieldOfView) / T(2));
+		//const T height = width / aspectRatio;
+		//return Perspective(Vec2(width, height), n, f);
+		T const tanHalfFov = std::tan(static_cast<T>(fieldOfView) / T(2));
+		const T v00 = T(1) / tanHalfFov, v11 = aspectRatio / tanHalfFov, v22 = (n + f) / (f - n), v32 = T(2) * f * n / (n - f);
+		return{	{T(v00)	, T(0)	, T(0)	, T(0)},
+				{T(0)	, T(v11), T(0)	, T(0)},
+				{T(0)	, T(0)	, T(v22), -1},
+				{T(0)	, T(0)	, v32, T(0)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& near, const T& far) {
@@ -275,10 +297,6 @@ namespace Tiny { namespace Math {
 				{x.Y(), y.Y(), z.Y(), T{0}},
 				{x.Z(), y.Z(), z.Z(), T{0}},
 				{-eye * x, -eye * y, -eye * z, T{1}}};
-	}
-
-	template<typename T> Vector3<T> operator*(const Vector3<T>& v, const Matrix4<T>& m){
-		return Vector4<T>((Vector4<T>(v, T{ 1 }) * m)).XYZ();
 	}
 } }
 
