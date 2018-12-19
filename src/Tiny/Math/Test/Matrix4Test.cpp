@@ -150,9 +150,9 @@ TEST(Matrix4Test, Perspective) {
 
     Mat4f expected({4.0f,      0.0f,         0.0f,  0.0f},
                      {0.0f, 7.111111f,         0.0f,  0.0f},
-                     {0.0f,      0.0f,  1.9411764f,  -1.f
+                     {0.0f,      0.0f,  -1.9411764f,  -1.f
 					 },
-                     {0.0f,      0.0f, 94.1176452f,  0.0f});
+                     {0.0f,      0.0f, -94.1176452f,  0.0f});
     Mat4f actual = Mat4f::Perspective({16.0f, 9.0f}, -32.0f, -100.0f);
 	EXPECT_EQ(actual, expected);
 
@@ -163,12 +163,12 @@ TEST(Matrix4Test, Perspective) {
 	Vec4f v2(0.f, 0.f, -5.f, 1.f);
 	Vec4f v2m2 = v2 * m2;
 	v2m2 /= v2m2.W();
-	EXPECT_EQ(v2m2.XYZ(), Vec3f(0.f, 0.f, 1.f));
+	EXPECT_EQ(v2m2.XYZ(), Vec3f(0.f, 0.f, -1.f));
 
 	Vec4f v3(0.f, 0.f, -100.f, 1.f);
 	Vec4f v3m2 = v3 * m2;
 	v3m2 /= v3m2.W();
-	EXPECT_EQ(v3m2.XYZ(), Vec3f(0.f, 0.f, -1.f));
+	EXPECT_EQ(v3m2.XYZ(), Vec3f(0.f, 0.f, 1.f));
 }
 
 TEST(Matrix4Test, Orthographic) {
