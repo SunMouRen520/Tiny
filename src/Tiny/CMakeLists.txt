@@ -3,9 +3,12 @@ set(TINY_CORE_SOURCES
     Application.cpp
     Types.h
 
-    Input/BaseInputEvent.h
+    Input/InputEvent.h
+    Input/InputsData.h
     Input/InputSystem.h
     Input/InputSystem.cpp
+    Input/WindowsInputSystem.h
+    Input/WindowsInputSystem.cpp
     # Input/BaseInputEvent.h
 )
 

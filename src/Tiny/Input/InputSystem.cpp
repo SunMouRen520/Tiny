@@ -1,55 +1,67 @@
 #include "Tiny/Input/InputSystem.h"
-#include "Tiny/Input/BaseInputEvent.h"
-#include <assert.h>
+#include "Tiny/Input/InputEvent.h"
 #include "Tiny/Math/Tools.h"
 #include "IronBranch/Utility/Log.h"
+#include <assert.h>
 
 namespace Tiny { namespace Input {
-	InputSystem::InputSystem()
-		:_lastFrameInput{ 0, 0 }, _curFrameInput{ 0, 0 } {
 
+
+	void StandardInputSystem::Update(double dt) {
+		if (_standardInputs.Size()) {
+			for (auto& input : _standardInputs) {
+				Touch(input);
+			}
+		}
+		else
+			TouchEnd();
+
+		_standardInputs.Clear();
 	}
 
-	void InputSystem::ProcessTouch() {
-		if (_lastFrameInput.Empty()) {
-			_clickSlots.Emit({ _curFrameInput.x, _curFrameInput.y, ClickEvent::ClickType::Press });
-		}
-		else {
-			if (_curFrameInput == _lastFrameInput) {
-				if (_lastFrameInput.isDragging) {
-					_curFrameInput.isDragging = _lastFrameInput.isDragging;
-					_dragSlots.Emit({ 0, 0, DragEvent::DragType::Drag });
-				}
-				/*
-				else
-					TODO: long press
-				*/
+	void StandardInputSystem::Touch(const StandardInputs::Datum& input) {
+		//IronBranch::Utility::Log::V("Standard Input x:{}, y{}, state:{}\n Last Input x::{}, y:{}, dragging:{}\n",
+		//	input.x, input.y, (input.type == StandardDatum::Type::Press ? "press":"release"),
+		//	_lastInput._input.x, _lastInput._input.y, (_lastInput._isDragging ? "True" : "False"));
+		if (input.type == StandardInputs::Datum::Type::Press) {
+			bool dragging = false;
+			if (_lastInput.Empty()) {
+				_clickSlots.Emit({ input.x, input.y, ClickEvent::Stage::Press });
 			}
 			else {
-				_curFrameInput.isDragging = true;
-					_dragSlots.Emit({ _curFrameInput.x - _lastFrameInput.x, _curFrameInput.y - _lastFrameInput.y, DragEvent::DragType::Drag });
+				if (_lastInput.Same(input)) {
+					if (_lastInput._isDragging) {
+						dragging = _lastInput._isDragging;;
+						_dragSlots.Emit({ 0, 0, DragEvent::Stage::Drag });
+					}
+					/*
+					else
+						TODO: long press
+					*/
+				}
+				else {
+					dragging = true;
+					if(!_lastInput._isDragging)
+						_dragSlots.Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Begin});
+					_dragSlots.Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Drag });
+				}
 			}
+			_lastInput._input = input;
+			_lastInput._isDragging = dragging;
 		}
-		_lastFrameInput = _curFrameInput;
+		else if (input.type == StandardInputs::Datum::Type::Release) {
+			TouchEnd();
+		}
 	}
 
-	void InputSystem::ProcessTouchEnd() {
-		if (!_lastFrameInput.Empty()) {
-			if (_lastFrameInput.isDragging)
-				_dragSlots.Emit({ 0.0, 0.0, DragEvent::DragType::Release });
+	void StandardInputSystem::TouchEnd() {
+		if (!_lastInput.Empty()) {
+			if (_lastInput._isDragging)
+				_dragSlots.Emit({ 0.0, 0.0, DragEvent::Stage::Release });
 			else
-				_clickSlots.Emit({ _lastFrameInput.x, _lastFrameInput.y, ClickEvent::ClickType::Release });
+				_clickSlots.Emit({ _lastInput._input.x,  _lastInput._input.y, ClickEvent::Stage::Release });
 		}
-		_lastFrameInput = StandartInput();
-	}
-	
-	void InputSystem::Update(double dt) {
-		assert(_plat);
-		_curFrameInput = _plat->GetStandartInputInfo();
-		if (_curFrameInput.Empty())
-			ProcessTouchEnd();
-		else
-			ProcessTouch();
+		_lastInput.Clear();
 	}
 } }
 
