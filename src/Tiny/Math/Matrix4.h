@@ -90,10 +90,18 @@ namespace Tiny { namespace Math {
 		static Matrix4<T> Shear(const Vec3& shear);
 
 		/*
-			@brief	3d transpose matrix
+			@brief	3d Translation matrix
 			@param	transpose	The transpose vector
 		*/
 		static Matrix4<T> Translation(const Vec3& transpose);
+
+
+		/*
+			@brief	Tranform from local coordinate to the coordinate whre basis and pos define
+			@param	basis	basis coordinate
+			@param	pos		pos
+		*/
+		static Matrix4<T> InnterToOuter(const Matrix3<T>& basis, const Vector3<T>& pos);
 
 		/*
 			@brief	Rotate around axis rad in right-hand rule.
@@ -297,6 +305,10 @@ namespace Tiny { namespace Math {
 				{x.Y(), y.Y(), z.Y(), T{0}},
 				{x.Z(), y.Z(), z.Z(), T{0}},
 				{-eye * x, -eye * y, -eye * z, T{1}}};
+	}
+
+	template<typename T> Matrix4<T> Matrix4<T>::InnterToOuter(const Matrix3<T>& basis, const Vector3<T>& pos) {
+		return Matrix4<T>(basis) * Matrix4<T>::Translation(pos);
 	}
 } }
 

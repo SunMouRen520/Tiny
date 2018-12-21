@@ -4,6 +4,7 @@
 
 using namespace Tiny::Math;
 
+using Matrix22 = RectangularMatrix<2, 2, float>;
 using Matrix32 = RectangularMatrix<3, 2, float>;
 using Matrix24 = RectangularMatrix<2, 4, float>;
 using Matrix42 = RectangularMatrix<4, 2, float>;
@@ -125,6 +126,12 @@ TEST(RectangularMatrixTest, MatrixMul) {
 	Matrix24 result_2 = n * 100;
 	float *result_data = result_2.Get();
 	EXPECT_TRUE(std::equal(result_data, result_data + 8, data_4, [](const float& v1, const float& v2) -> bool {return v1 == (v2 * 100); }));
+
+	Matrix24 t1(Vec4(1.f, 2.f, 3.f, 4.f), Vec4(2.f, 3.f, 4.f, 5.f));
+	Matrix42 t2(Vec2(1.f, 2.f), Vec2(3.f, 4.f), Vec2(2.f, 3.f), Vec2(4.f, 5.f));
+
+	Matrix22 result = t1 * t2;
+	EXPECT_EQ(result, Matrix22(Vec2(29.f, 39.f), Vec2(39.f, 53.f)));
 }
 
 

@@ -5,6 +5,7 @@ using namespace Tiny::Math;
 
 using Vec2f = Vector<2, float>;
 using Vec3f = Vector<3, float>;
+using Vec4f = Vector<4, float>;
 
 using Matrix2f = Matrix<2, float>;
 using Matrix3f = Matrix<3, float>;
@@ -45,6 +46,19 @@ TEST(MatrixTest, UniformConstructor) {
 	for (auto i : index) {
 		for (auto j : index) {
 			EXPECT_EQ(m[i][j], 5.f);
+		}
+	}
+}
+
+TEST(MatrixTest, DiagonalConstructor) {
+	Vec3f v(100.f, 200.f, 300.f);
+	Matrix3f m(v);
+	for (auto i : index) {
+		for (auto j : index) {
+			if (i == j)
+				EXPECT_EQ(m[i][j], v[i]);
+			else
+				EXPECT_EQ(m[i][j], 0.f);
 		}
 	}
 }
@@ -132,6 +146,22 @@ TEST(MatrixTest, ij) {
 	EXPECT_EQ(m1.ij(1, 1), Matrix2f(Vec2f(0.0f, 0.2f), Vec2f(2.0f, 2.2f)));
 }
 
+TEST(MatrixTest, Inverse) {
+	Matrix4f m(Vec4f(3.0f, 5.0f, 8.0f, 4.0f),
+		Vec4f(4.0f, 4.0f, 7.0f, 3.0f),
+		Vec4f(7.0f, -1.0f, 8.0f, 0.0f),
+		Vec4f(9.0f, 4.0f, 5.0f, 9.0f));
+
+	Matrix4f inverse(Vec4f(-60 / 103.0f, 71 / 103.0f, -4 / 103.0f, 3 / 103.0f),
+		Vec4f(-66 / 103.0f, 109 / 103.0f, -25 / 103.0f, -7 / 103.0f),
+		Vec4f(177 / 412.0f, -97 / 206.0f, 53 / 412.0f, -7 / 206.0f),
+		Vec4f(259 / 412.0f, -185 / 206.0f, 31 / 412.0f, 27 / 206.0f));
+
+	Matrix4f _inverse = m.Inverse();
+
+	EXPECT_EQ(_inverse, inverse);
+	//EXPECT_EQ(m * _inverse , Matrix4f());  this suffers from the floating point issue, seems like need to define some compare function for Google Test.
+}
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);

@@ -119,6 +119,13 @@ namespace Tiny { namespace Math {
 		explicit Matrix(const T& uniform)
 			:RectangularMatrix<size, size, T>{Implementation::GenerateSeq<size>::Type(), uniform} {}
 
+
+		/*
+			@brief	Construct from diagonal vector
+		*/
+		explicit Matrix(const Vector<size, T>& diagonal)
+			:RectangularMatrix<size, size, T>(Implementation::GenerateSeq<size>::Type(), diagonal){}
+
 		/*
 			@brief	Generate matrix from Rectangularmatrix.
 		*/
@@ -157,6 +164,13 @@ namespace Tiny { namespace Math {
 			@brief Get sub-matrix without row i and col j.
 		*/
 		Matrix<size - 1, T> ij(std::size_t i, std::size_t j) const;
+
+		/*
+			@brief	Get vector along diagonal 
+		*/
+		Vector<size, T> Diagonal() const;
+
+		Matrix<size, T> Inverse() const;
 
 	private:
 		template<std::size_t otherSize, std::size_t ...RowSeq> Matrix(Implementation::Sequence<RowSeq...>, const RectangularMatrix<otherSize, otherSize, T>& other)
@@ -202,6 +216,22 @@ namespace Tiny { namespace Math {
 				out[row][col] = (*this)[row  + (row >= i)][col + (col >= j)];
 
 		return out;
+	}
+
+	template<std::size_t size, typename T>  Vector<size, T> Matrix<size, T>::Diagonal() const {
+		return Vector<size, T>((*this)[0][0], (*this)[1][1], (*this)[2][2]);
+	}
+
+	//The cofactor Cij = (-1) ^ (i + j)detA(ij)
+	template<std::size_t size, typename T>  Matrix<size, T> Matrix<size, T>::Inverse() const {
+		T k = T(1) / Determinant();
+		Matrix<size, T> result;
+		for (int i = 0; i != size; i++) {
+			for (int j = 0; j != size; j++) {
+				result[i][j] = (((i + j) & 1) ? -1 : 1) * ij(j, i).Determinant() * k;
+			}
+		}
+		return result;
 	}
 } }
 

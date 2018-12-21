@@ -15,12 +15,12 @@
 
 /*
 	Quaternion can be used to representing 3D rotations.
-	Quaternions are composed of two components: 
+	Quaternions are composed of two components:
 		(theta, vector) or [w, v]
 		vector represents the axis about which to rotate.
 		theta represents the rotation angle.
 
-	Mathematically, quaternion(w, x, y, z) represents complex number: 
+	Mathematically, quaternion(w, x, y, z) represents complex number:
 		w + xi + yj + zk
 		which constrainted by:
 			1.	i * i = j * j = k * k = -1
@@ -40,20 +40,20 @@
 		-Q = [-w, -x, -y, -z], which represents the same rotation as Q.
 
 	Idendity:
-		Q = [1, 0, 0, 0].  In computer graphics , [-1, 0, 0, 0] can also be idendity quaternion. 
+		Q = [1, 0, 0, 0].  In computer graphics , [-1, 0, 0, 0] can also be idendity quaternion.
 		Do no rotation at all.
 
 	Conjugate Q*:
 		Q* = [w, -x, -y, -z].
-		
+
 	Inverse QN:
 		Qinver = Q* / ||Q||
 		Due to the fact that quaternions in computer graphics always has norm to be 1, so QN = Q*.
 		Qinver represents the inverse rotation of Q.
 
-	Multiplication: 
+	Multiplication:
 		one of two definitions, using this def we can represent rotation combination with multiply from left to right
-		Q3	= Q1 * Q2 
+		Q3	= Q1 * Q2
 			= [w1 x1 y1 z1] * [w2 x2 y2 z2]
 			= [	w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
 				w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
@@ -76,7 +76,7 @@
 
 	Log:
 		Set Q = [cos(Alpha), n * sin(Alpha)]
-		logQ = log([cos(Aplha), n * sin(Alpha)]) 
+		logQ = log([cos(Aplha), n * sin(Alpha)])
 			 = [0, Alpha * n]
 
 	Exponential :
@@ -86,9 +86,9 @@
 		exp(logQ) = Q.
 
 	Exponentiation:
-		Say quaternion Q represents some rotation. 
+		Say quaternion Q represents some rotation.
 		q' = exp(t * log(Q)) represent repeat rotation by t times.
-	
+
 	Tranform between Quaternion and Matrix:
 		see code blow.
 */
@@ -133,6 +133,8 @@ namespace Tiny { namespace Math {
 
 	/*
 	  @brief	Represents 3D rotation.
+	  TOOD:
+	  	1. multiply with matrix
 	*/
 	template<typename T> class Quaternion {
 	public:
@@ -155,7 +157,7 @@ namespace Tiny { namespace Math {
 		*/
 		/*explicit*/ Quaternion(IdentityInitT = IdentityInit) noexcept
 			:_w(T{ 1 }), _v(ZeroInit) {}
-		
+
 		/*
 		  @brief	Zero-clear quaternion
 		*/
@@ -163,7 +165,7 @@ namespace Tiny { namespace Math {
 			:_w(T{ 0 }), _v(ZeroInit) {}
 
 		/*
-		  @brief	Construct with scalar part and vector part 
+		  @brief	Construct with scalar part and vector part
 		*/
 		explicit Quaternion(const T& scalar, const Vector3<T>& imaginary)
 			:_w(scalar), _v(imaginary) {}
@@ -171,7 +173,7 @@ namespace Tiny { namespace Math {
 		/*
 		  @brief	Rotate target in right-hand rule.
 		*/
-		Vector3<T> Tranform(const Vector<3, T>& target);
+		Vector3<T> Tranform(const Vector<3, T>& target) const;
 
 		/*
 		  @brief	Get the vector part
@@ -224,7 +226,7 @@ namespace Tiny { namespace Math {
 
 		/*
 		  @brief	Return the negative of quaternion
-		  @caution	In the case of rotation, -Q is same as Q. 
+		  @caution	In the case of rotation, -Q is same as Q.
 					To get inverse of Q, using Q.Inverse() instead.
 		*/
 		Quaternion<T> operator-() const { return Quaternion<T>(-_w, -_v); }
@@ -344,7 +346,7 @@ namespace Tiny { namespace Math {
 		Given 3D-vector p, we extern p to quaternion: p = [0, p] then we can transfrom p to p':
 			p' = Qinver * p * Q
 	*/
-	template<typename T> Vector3<T> Quaternion<T>::Tranform(const Math::Vector<3, T>& target) {
+	template<typename T> Vector3<T> Quaternion<T>::Tranform(const Math::Vector<3, T>& target) const{
 		return (Inverse() * Quaternion<T>(0, target) * (*this)).Vector();
 	}
 
