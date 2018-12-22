@@ -59,7 +59,7 @@ namespace Tiny { namespace Math {
 		/*
 		  @brief	Tranform Point
 		*/
-		Vector3<T> TransformPoint(const Vector3<T>& point) {
+		Vector3<T> TransformPoint(const Vector3<T>& point) const {
 			Vector4<T> t = (Vector4<T>(point, T(1)) * (*this));
 			return t.XYZ() / t.W();
 		}
@@ -67,7 +67,7 @@ namespace Tiny { namespace Math {
 		/*
 		  @brief	Tranform vector
 		*/
-		Vector3<T> TransformVector(const Vector3<T>& vector) {
+		Vector3<T> TransformVector(const Vector3<T>& vector) const{
 			return (Vector4<T>(vector, T(0)) * (*this)).XYZ();
 		}
 
