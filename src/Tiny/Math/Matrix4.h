@@ -280,10 +280,10 @@ namespace Tiny { namespace Math {
 				{T(0)	, T(0)	, v32, T(0)}};
 	}
 
-	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& near, const T& far) {
+	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& n, const T& f) {
 		const Vec2 xyScale = T(2) / rect;
-		const T v22 = T(2) / (near - far);
-		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (near + far) / (far - near);
+		const T v22 = T(2) / (n - f);
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (n + f) / (f - n);
 		return{ {v00	, T(0)	, T(0), T(0)},
 				{T(0)	, v11	, T(0), T(0)},
 				{T(0)	, T(0)	, v22 , T(0)},
