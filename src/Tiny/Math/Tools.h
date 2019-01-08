@@ -33,6 +33,14 @@ namespace Tiny { namespace Math {
 	template<typename T, typename U> T Lerp(const T& a, const T&b, const U& t) {
 		return (1 - t) * a + t * b;
 	}
+
+	template<typename T> T RoundDown(T val, T base) {
+		return val - val % base;
+	}
+
+	template<typename T> T RoundUp(T val, T base) {
+		return RoundDown(val + base - 1, base);
+	}
 }}
 
 #endif
