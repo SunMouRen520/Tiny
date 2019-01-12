@@ -6,9 +6,15 @@
             For simplicity, every obect that has graphics output owns it's render data and feeds into the render system during render.
         * to be continue
     2. Overview:
-        GL submodule provides two-level abstraction of OpenGL:
-        - Wrapper of raw OpenGL interface
-        - OpenGl state management
+        * Graphics system will be divided into three levels:
+            + Some GameLogic-End Abstraction, such as frame etc(Since i still don't know how to use graphics library in proper way, so this level should be done after Render Abstraction is done.)
+                -
+            + Render Abstraction:
+                -
+            + OpenGL Wrapper and State Management:
+                - Wrapper of raw OpenGL interface
+                - OpenGl state management
+
 
         Mesh/Texture(abbr M/T) submodule provides the internal data structure of M/T and provide related utilities. And the internal data structure is also the target of resource loading result.
 
@@ -33,8 +39,8 @@
             + Basically, texture data comprise of two layers: ImageData and TextureData.
                 - ImageData defines the raw-input images. And we need some facility to load ImageData from resources.
                 - TextureData controls how the ImageData interpreted.
-        *
 
 #Basic file organization of Graphics:
     1. Every subfolder under Graphics contains specific data structures and relate tools.
         For example, Texture directory contains texture data structures and texture related tools such as altas, sampler etc.
+    2. Add demo projects as bgfx.

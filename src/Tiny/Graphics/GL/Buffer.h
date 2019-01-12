@@ -1,9 +1,8 @@
 #ifndef TINY_GRAPHICS_GL_BUFFER_H
 #define TINY_GRAPHICS_GL_BUFFER_H
 
-#include "GLFW/glfw3.h"
-#include "gl3w/GL/gl3w.h"
-#include "Graphics/GL/Commondef.h"
+#include "Tiny/Graphics/GL/OpenGL.h"
+#include "Tiny/Graphics/GL/Definition.h"
 
 namespace Tiny{ namespace Graphics{ namespace GL{
     /*

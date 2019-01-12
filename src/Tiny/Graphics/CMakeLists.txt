@@ -14,13 +14,15 @@ set(Texture_FILES
     Texture/TextureData.cpp
     Texture/ImageData.h
     Texture/ImageData.cpp
+    Texture/Definition.h
 )
 
 set(GL_FILES
     GL/Buffer.cpp
     GL/Buffer.h
     GL/Context.h
-    GL/Commondef.h
+    GL/Definition.h
+    GL/OpenGL.h
 )
 
 set(SCENE_FILES
