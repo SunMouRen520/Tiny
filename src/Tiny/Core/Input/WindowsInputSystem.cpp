@@ -1,4 +1,4 @@
-#include "Tiny/Input/WindowsInputSystem.h"
+#include "Tiny/Core/Input/WindowsInputSystem.h"
 
 
 namespace Tiny { namespace Input {

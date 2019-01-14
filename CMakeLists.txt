@@ -68,7 +68,7 @@ endif()
 #enable folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#smelly, for including directories persistence
+#smelly, for including directories consistence
 include_directories(src)
 
 add_subdirectory(src)

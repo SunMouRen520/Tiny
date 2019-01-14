@@ -1,5 +1,5 @@
-#include "Tiny/Input/InputSystem.h"
-#include "Tiny/Input/InputEvent.h"
+#include "Tiny/Core/Input/InputSystem.h"
+#include "Tiny/Core/Input/InputEvent.h"
 #include "Tiny/Math/Tools.h"
 #include "IronBranch/Utility/Log.h"
 #include <assert.h>

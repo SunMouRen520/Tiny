@@ -1,8 +1,8 @@
 #ifndef TINY_CORE_INPT_INPUTSYSTEM_H
 #define TINY_CORE_INPT_INPUTSYSTEM_H
 
-#include "Tiny/Input/InputEvent.h"
-#include "Tiny/Input/InputsData.h"
+#include "Tiny/Core/Input/InputEvent.h"
+#include "Tiny/Core/Input/InputsData.h"
 
 
 #include "IronBranch/Notion/Signals.h"

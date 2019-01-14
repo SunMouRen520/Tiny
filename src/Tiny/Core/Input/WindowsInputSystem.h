@@ -1,7 +1,7 @@
 #ifndef TINY_CORE_INPUT_WINDOWSINPUTSYSTEM_H
 #define TINY_CORE_INPUT_WINDOWSINPUTSYSTEM_H
 
-#include "Tiny/Input/InputSystem.h"
+#include "Tiny/Core/Input/InputSystem.h"
 
 namespace Tiny { namespace Input {
 
