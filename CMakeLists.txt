@@ -17,6 +17,12 @@
 
 cmake_minimum_required(VERSION 3.12.4)
 
+set(TINY_MAJOR_VERSION 0)
+set(TINY_MINOR_VERSION 0)
+set(TINY_PATCH_VERSION 0)
+
+set(TINY_VERSION "${TINY_MAJOR_VERSION}.${TINY_MINOR_VERSION}.${TINY_PATCH_VERSION}")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -30,11 +36,15 @@ find_package(IronBranch REQUIRED)
 
 #include cmake utilities
 include(support/CMakeUtility.cmake)
+include(support/macro.cmake)
 
 project(Tiny)
 
+# do not know
+configure_file(support/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h )
+
 #we only have GLFW for now.
-option(BUILDING_GLFW "Build with GLFW" ON)
+# option(BUILDING_GLFW "Build with GLFW" ON)
 
 option(PACKAGE_TESTS "Build the tests" OFF)
 

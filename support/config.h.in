@@ -1,0 +1,5 @@
+#ifndef CONFIG_H
+
+#cmakedefine    TINY_VERSION        "@TINY_VERSION@"
+
+#endif
