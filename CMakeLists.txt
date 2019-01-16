@@ -41,7 +41,7 @@ include(support/macro.cmake)
 project(Tiny)
 
 # do not know
-configure_file(support/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h )
+configure_file(support/config.h.in ${CMAKE_SOURCE_DIR}/src/Tiny/config.h )
 
 #we only have GLFW for now.
 # option(BUILDING_GLFW "Build with GLFW" ON)
@@ -50,7 +50,6 @@ option(PACKAGE_TESTS "Build the tests" OFF)
 
 if(PACKAGE_TESTS)
     message("Tiny Test is ON")
-    add_definitions(-DTINY_TEST)
 
     #setup testing
     include(CTest)
