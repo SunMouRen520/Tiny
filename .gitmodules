@@ -9,3 +9,6 @@
 [submodule "extern/glfw"]
 	path = extern/glfw
 	url = git@github.com:glfw/glfw.git
+[submodule "extern/rapidjson"]
+	path = extern/rapidjson
+	url = git@github.com:Tencent/rapidjson.git
