@@ -2,6 +2,7 @@
 #define TINY_MATH_MATHFORWARD_H
 
 #include <cstddef>
+#include "Tiny/Types.h"
 
 namespace Tiny { namespace Math {
 	template<std::size_t, std::size_t, typename> class RectangularMatrix;
@@ -20,27 +21,29 @@ namespace Tiny { namespace Math {
 	template<typename> class Matrix3;
 	template<typename> class Matrix4;
 
-	using Matrix3f = Matrix3<float>;
-	using Matrix4f = Matrix4<float>;
+	using Matrix3f = Matrix3<Float>;
+	using Matrix4f = Matrix4<Float>;
 
 	template<std::size_t, typename> class Vector;
 	template<typename> class Vector2;
 	template<typename> class Vector3;
 	template<typename> class Vector4;
 
-	using Vector2f = Vector2<float>;
-	using Vector3f = Vector3<float>;
-	using Vector4f = Vector4<float>;
+	using Vector2f = Vector2<Float>;
+	using Vector3f = Vector3<Float>;
+	using Vector4f = Vector4<Float>;
+
+	using Vector2i = Vector2<Int>;
 
 	template<template<typename> class, typename> class MeasurementUnit;
 	template<typename> class Rad;
 	template<typename> class Deg;
 
-	using Radf = Rad<float>;
-	using Degf = Deg<float>;
+	using Radf = Rad<Float>;
+	using Degf = Deg<Float>;
 
 	template<typename T> class Quaternion;
-	using Quaternionf = Quaternion<float>;
+	using Quaternionf = Quaternion<Float>;
 }
 }
 

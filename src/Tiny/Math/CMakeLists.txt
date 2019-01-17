@@ -1,3 +1,10 @@
+#[[
+  external dependencies:
+  1. Types.h
+  2. config.h
+]]
+
+
 set(MATH_HEADERS
     Angle.h
     Quaternion.h

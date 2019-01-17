@@ -108,7 +108,14 @@ namespace Tiny { namespace Math {
 			@brief Normalized
 			@caution Only avaliable for float-point Vector.
 		*/
-		typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Normalize() const;
+		template<typename U = T> typename std::enable_if<std::is_floating_point<U>::value, Vector<size, T>>::type Normalize() const {
+			T mag = Magnitude();
+			assert(mag > 0);
+			Vector<size, T> out;
+			for (std::size_t i = 0; i != size; i++)
+				out._data[i] = _data[i] / mag;
+			return out;
+		}
 
 		/*
 			@brief Whether the vector is normalized
@@ -201,16 +208,6 @@ namespace Tiny { namespace Math {
 	private:
 		T _data[size];
 	};
-
-	template<std::size_t size, typename T >
-	typename std::enable_if<std::is_floating_point<T>::value, Vector<size, T>>::type Vector<size, T>::Normalize() const {
-		T mag = Magnitude();
-		assert(mag > 0);
-		Vector<size, T> out;
-		for (std::size_t i = 0; i != size; i++)
-			out._data[i] = _data[i] / mag;
-		return out;
-	}
 
 	template<std::size_t size, typename T > inline T Vector<size, T>::Sum() const {
 		T sum(0);
