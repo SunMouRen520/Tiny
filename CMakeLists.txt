@@ -33,15 +33,16 @@ set(BUILD_TARGET_MSVC ON)
 set(BUILD_TARGET_ANDROID OFF)
 
 find_package(IronBranch REQUIRED)
+find_package(RapidJSON REQUIRED)
 
 #include cmake utilities
-include(support/CMakeUtility.cmake)
+# include(support/CMakeUtility.cmake)
 include(support/macro.cmake)
 
 project(Tiny)
 
 # do not know
-configure_file(support/config.h.in ${CMAKE_SOURCE_DIR}/src/Tiny/config.h )
+configure_file(support/config.h.in ${PROJECT_SOURCE_DIR}/src/Tiny/config.h )
 
 #we only have GLFW for now.
 # option(BUILDING_GLFW "Build with GLFW" ON)
@@ -77,10 +78,11 @@ endif()
 #enable folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#smelly, for including directories consistence
-include_directories(src)
 
 add_subdirectory(src)
+
+#For dev convinience, plugins shall not appears in Tiny's CMakeList
+add_subdirectory(plugin/STB)
 
 
 #

@@ -25,6 +25,11 @@ set(GL_FILES
     GL/OpenGL.h
 )
 
+set(Renderer_FILES
+  Renderer/Renderer.h
+  Renderer/Renderer.cpp
+)
+
 set(SCENE_FILES
     Scene/Camera.h
     Scene/Camera.cpp
@@ -37,10 +42,14 @@ set(Graphics_SRC
     ${Texture_FILES}
     ${GL_FILES}
     ${SCENE_FILES}
+    ${Renderer_FILES}
 )
 
 add_library(Graphics ${Graphics_SRC})
 target_link_libraries(Graphics PRIVATE IronBranch)
+target_include_directories(Graphics PUBLIC
+$<TARGET_PROPERTY:TinyCore,INTERFACE_INCLUDE_DIRECTORIES>)
+
 
 if(BUILD_TARGET_MSVC)
     find_package(gl3w REQUIRED)
@@ -53,3 +62,4 @@ source_group("GL" FILES ${GL_FILES})
 source_group("Texture" FILES ${Texture_FILES})
 source_group("RenderSystem" FILES ${Graphics_RenderSystem_SRC})
 source_group("Scene" FILES ${SCENE_FILES})
+source_group("Renderer" FILES ${Renderer_FILES})

@@ -2,7 +2,8 @@
 #define TINY_GRAPHICS_DATA_IMAGEDATA_H
 
 #include "Tiny/Types.h"
-#include "Tiny/Math/Vector.h"
+#include "Tiny/Math/Vector2.h"
+#include "Tiny/Math/MathForward.h"
 #include "Tiny/Graphics/Texture/Definition.h"
 
 #include <array>
@@ -22,29 +23,23 @@ namespace Tiny { namespace Graphics {
 		TODO:
 			1. We shall use engine-managed memory, not the raw UnsignedByte pointer.
 	*/
-	template<UnsignedInt dimension> class ImageData {
+	class ImageData {
 	public:
-
-		Using Dimensation = dimensation;
-
 		/*
 			@pararm	p	Raw memory pointer
 		*/
-		explicit ImageData(UnsignedByte* p, PixelFormat f, Math::Vector<dimension, UnsignedInt> size)
+		explicit ImageData(UnsignedByte* p, PixelFormat f, Math::Vector2i size)
 			:_data(p), _pixelDesc(f), _size(size) {
 
 		}
 
-		~ImageData() {
-
-		}
+		~ImageData() = default;
 
 		ImageData(const ImageData&) = delete;
 		ImageData& operator = (const ImageData&) = delete;
 
-		ImageData(ImageData&& other) { Move(other); }
-		ImageData& operator = (ImageData&& other) { Move(other); }
-
+		ImageData(ImageData&& other) { swap(*this, other); }
+		ImageData& operator = (ImageData&& other) { swap(*this, other); return *this; }
 
 		/*
 			@brief	Get the raw data.
@@ -54,29 +49,32 @@ namespace Tiny { namespace Graphics {
 		/*
 			@brief Get the size info.
 		*/
-		const Math::Vector<Dimensation, UnsignedInt>& Size() const { return _size; }
+		const Math::Vector2i& Size() const { return _size; }
 
 		/*
 			@brief	Get the pixel format.
 		*/
 		PixelFormat PixelDesc() const { return _pixelDesc; }
 
-	private:
-		void Move(ImageData&& other) {
-			_data.reset(other._data.release());
-			_pixelDesc = other._pixelDesc;
-			_size = other._size;
-		}
+		friend void swap(ImageData& first, ImageData& second); // nothrow
 
 	private:
 		PixelFormat	_pixelDesc;
-		Math::Vector<Dimensation, UnsignedInt> _size;
+		Math::Vector2i _size;
 		std::unique_ptr<UnsignedByte> _data;
 	};
 
-	using ImageData1D = ImageData<1>;
-	using ImageData2D = ImageData<2>;
-	using ImageData3D = ImageData<3>;
-} }
+	inline void swap(ImageData& first, ImageData& second)// nothrow
+	{
+		// enable ADL (not necessary in our case, but good practice)
+		// by swapping the members of two objects,
+		// the two objects are effectively swapped
+		std::swap(first._size, second._size);
+		std::swap(first._pixelDesc, second._pixelDesc);
+		first._data.swap(second._data);
+	}
+
+}
+}
 
 #endif // !TINY_GRAPHICS_DATA_IMAGEDATA_H

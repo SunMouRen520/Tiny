@@ -1,5 +1,7 @@
 #ifndef CONFIG_H
 
 #cmakedefine    TINY_VERSION        "@TINY_VERSION@"
+#cmakedefine    TINY_PLATFORM_WINDOWS
+#cmakedefine    TINY_TEST
 
 #endif

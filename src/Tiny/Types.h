@@ -12,6 +12,9 @@ namespace Tiny{
 	using Int = std::int32_t;
 	using UnsignedLong = std::uint64_t;
 	using Long = std::int64_t;
+
+	using Float = float;
+	using Double = double;
 }
 
 #endif

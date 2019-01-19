@@ -1,7 +1,7 @@
 if(WIN32)
-    add_definitions(-DTINY_PLATFORM_WINDOWS )
+    set(TINY_PLATFORM_WINDOWS 1)
 endif(WIN32)
 
 if(PACKAGE_TESTS)
-    add_definitions(-DTINY_TEST)
+    SET(TINY_TEST 1)
 endif(PACKAGE_TESTS)

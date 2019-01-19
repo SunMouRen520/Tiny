@@ -1,15 +1,26 @@
 #ifndef TINY_CORE_PLUGIN_APBSTRACTPLUGIN_H
-#define TINY_CORE_PLUGIN__APBSTRACTPLUGIN_H
+#define TINY_CORE_PLUGIN_APBSTRACTPLUGIN_H
 
 #include "Tiny/Graphics/Texture/ImageData.h"
+#include <exception>
 
 namespace Tiny { namespace PLUGIN{
+	class ImportFailed : public std::exception { 
+	public:
+		ImportFailed(const char *what)
+			:std::exception(what) {
+
+		}
+	};
+
+
 	class AbstractImporter{
 	public:
-		Graphics::ImageData2D Image2D(const std::string& path);
+		virtual Graphics::ImageData Image(const std::string& path){
+			assert(false);
+			return Tiny::Graphics::ImageData(NULL, Tiny::Graphics::PixelFormat::RBG332, { 0, 0 });
+		}
 
-	private:
-		virtual Graphics::ImageData2D DoImage2D(const std::string& path);
 		
 	};
 } }

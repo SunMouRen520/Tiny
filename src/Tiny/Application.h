@@ -8,11 +8,11 @@ namespace Tiny {
 
 	class Application {
 	public:
-		virtual void StartUp();
+		void StartUp();
 
 		void Update(double dt);
-		
-		virtual void ShutDown();
+
+		void ShutDown();
 	};
 
 }

@@ -1,3 +1,13 @@
+Do not waste time try to wrap state-oriented OpenGL into OOP.
+#Two options:
+  1. Build higher level abstraction such as model, material, light etc.
+  2. Build render abstraction like bgfx, and impelement this render abstraction by OpenGL.
+
+
+Renderer system basically 
+1. 为renderer pipeline提供数据
+2. 设置renderer pipeline的各种选项
+
 #Design of Graphics:
     1. Ideally, Graphics system only take render related data as input and has nothing to do with other part of the engine..
     To achieve this, the following facilities must be provided.

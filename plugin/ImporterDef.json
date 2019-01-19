@@ -1,0 +1,6 @@
+{
+  ".jpg":"JPGImporter",
+  ".png":"PNGImporter",
+  ".obj":"OBJImporter",
+  ".fbx":"FBXImporter"
+}

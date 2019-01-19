@@ -9,11 +9,26 @@ namespace Tiny { namespace Graphics {
 			1. 
 	*/
     enum class PixelFormat{
+		UNKNOWN,
+
 		RGB888,
 		RBG332,
 		RGB565,
 		RGBA8888,
 		RGBA4444,
+	};
+
+	enum class WrapMode {
+		Clamp,
+		Wrap,
+	};
+
+	enum class FilterMode {
+		Linear,
+	};
+
+	enum class TextureType {
+		
 	};
 } }
 

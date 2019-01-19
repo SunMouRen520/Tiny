@@ -4,6 +4,9 @@
 #include <cstddef>
 #include <vector>
 
+#include "Tiny/config.h"
+
+
 namespace Tiny {
 	namespace Input {
 		/*
@@ -54,7 +57,7 @@ namespace Tiny {
 		*/
 		struct StandardDatum {
 			enum class Type {
-				Press, 
+				Press,
 				Release,
 			};
 			double x;
@@ -127,14 +130,14 @@ namespace Tiny {
 		};
 
 		/*
-		  @brief	keyboard 
+		  @brief	keyboard
 		*/
 		struct KeyboardDatum {
 			enum class Type {
-				Press, 
+				Press,
 				Rlease,
 			};
-			std::uint32_t keyboard; 
+			std::uint32_t keyboard;
 			Type type;
 		};
 		using KeyoardInputs = InputsTemplate<KeyboardDatum>;

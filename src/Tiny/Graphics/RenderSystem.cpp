@@ -1,5 +1,4 @@
 #include "RenderSystem.h"
-#include "Texture/Texture.h"
 
 namespace Tiny{ namespace Graphics{
     RenderSystem::RenderSystem(){

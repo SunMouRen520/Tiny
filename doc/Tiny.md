@@ -1,4 +1,4 @@
 #Design of Tiny:
-    + 
+    +
 
     + Submodules
