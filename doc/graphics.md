@@ -4,9 +4,19 @@ Do not waste time try to wrap state-oriented OpenGL into OOP.
   2. Build render abstraction like bgfx, and impelement this render abstraction by OpenGL.
 
 
-Renderer system basically 
+Renderer system basically
 1. 为renderer pipeline提供数据
 2. 设置renderer pipeline的各种选项
+
+不管多线程部分如何，应该先实现下面“基本结构”中的面向用户接口部分。 此部分接口应该无论多线程与否，基本保持一致
+
+基本结构(来源于对bgfx代码的粗略阅读，其中的多线程部分可能存在错误，需要先复习操作系统课程的多线程再确认):
+通过面向用户的接口填充数据和设置渲染选项(数据和渲染选项合组成一次Drawcall)（可多线程）
+                            |
+存储到公用的buffer中形成drawcall队列
+                            |
+唯一的渲染线程从drawcall队列中读取drawcall信息，进行渲染
+
 
 #Design of Graphics:
     1. Ideally, Graphics system only take render related data as input and has nothing to do with other part of the engine..

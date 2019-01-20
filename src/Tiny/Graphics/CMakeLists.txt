@@ -28,6 +28,10 @@ set(GL_FILES
 set(Renderer_FILES
   Renderer/Renderer.h
   Renderer/Renderer.cpp
+
+  Renderer/Buffer.h
+  Renderer/Buffer.cpp
+
 )
 
 set(SCENE_FILES
