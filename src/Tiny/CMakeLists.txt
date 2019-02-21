@@ -65,6 +65,7 @@ add_custom_target(copy_plugin_def
   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/plugin/ImporterDef.json         ${CMAKE_SOURCE_DIR}/bin/plugin/ImporterDef.json
 )
 
+set_target_properties(copy_plugin_def PROPERTIES FOLDER "Tiny")
 target_link_libraries(TinyCore Graphics Math)
 
 add_dependencies(TinyCore copy_plugin_def)

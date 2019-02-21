@@ -52,6 +52,7 @@ set(Graphics_SRC
 )
 
 add_library(Graphics ${Graphics_SRC})
+set_target_properties(Graphics PROPERTIES FOLDER "Tiny")
 target_link_libraries(Graphics PRIVATE IronBranch)
 target_include_directories(Graphics PUBLIC
 $<TARGET_PROPERTY:TinyCore,INTERFACE_INCLUDE_DIRECTORIES>)

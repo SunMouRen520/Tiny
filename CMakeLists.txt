@@ -81,8 +81,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(src)
 
-#For dev convinience, plugins shall not appears in Tiny's CMakeList
-add_subdirectory(plugin/STB)
+# add_subdirectory(plugin/STB)
 
 
 #
