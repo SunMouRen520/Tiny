@@ -7,6 +7,7 @@
 set(Graphics_RenderSystem_SRC
     RenderSystem.h
     RenderSystem.cpp
+    Memory.h
 )
 
 set(Texture_FILES
@@ -27,11 +28,12 @@ set(GL_FILES
 
 set(Renderer_FILES
   Renderer/Renderer.h
+  Renderer/Command.h
   Renderer/Renderer.cpp
 
-  Renderer/Buffer.h
-  Renderer/Buffer.cpp
-
+  Renderer/Object/AbstractObject.h
+  Renderer/Object/Buffer.h
+  Renderer/Object/Buffer.cpp
 )
 
 set(SCENE_FILES

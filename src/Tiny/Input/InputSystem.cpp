@@ -1,10 +1,13 @@
 #include "Tiny/Core/Input/InputSystem.h"
 #include "Tiny/Core/Input/InputEvent.h"
 #include "Tiny/Math/Tools.h"
+#include "Tiny/Core/Input/InputEvent.h"
+
 #include "IronBranch/Utility/Log.h"
 #include <assert.h>
 
 namespace Tiny { namespace Input {
+	
 
 
 	void StandardInputSystem::Update(double dt) {
@@ -26,13 +29,16 @@ namespace Tiny { namespace Input {
 		if (input.type == StandardInputs::Datum::Type::Press) {
 			bool dragging = false;
 			if (_lastInput.Empty()) {
-				_clickSlots.Emit({ input.x, input.y, ClickEvent::Stage::Press });
+				IronBranch::GetEventSignal<ClickEvent>().Emit({ input.x, input.y, ClickEvent::Stage::Begin});
 			}
 			else {
 				if (_lastInput.Same(input)) {
 					if (_lastInput._isDragging) {
 						dragging = _lastInput._isDragging;;
-						_dragSlots.Emit({ 0, 0, DragEvent::Stage::Drag });
+						IronBranch::GetEventSignal<DragEvent>().Emit({ 0, 0, DragEvent::Stage::Drag });
+					}
+					else {
+						IronBranch::GetEventSignal<ClickEvent>().Emit({ input.x, input.y, ClickEvent::Stage::Press});
 					}
 					/*
 					else
@@ -42,8 +48,8 @@ namespace Tiny { namespace Input {
 				else {
 					dragging = true;
 					if(!_lastInput._isDragging)
-						_dragSlots.Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Begin});
-					_dragSlots.Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Drag });
+						IronBranch::GetEventSignal<DragEvent>().Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Begin});
+					IronBranch::GetEventSignal<DragEvent>().Emit({ input.x - _lastInput._input.x, input.y - _lastInput._input.y, DragEvent::Stage::Drag });
 				}
 			}
 			_lastInput._input = input;
@@ -57,11 +63,10 @@ namespace Tiny { namespace Input {
 	void StandardInputSystem::TouchEnd() {
 		if (!_lastInput.Empty()) {
 			if (_lastInput._isDragging)
-				_dragSlots.Emit({ 0.0, 0.0, DragEvent::Stage::Release });
+				IronBranch::GetEventSignal<DragEvent>().Emit({ 0.0, 0.0, DragEvent::Stage::Release });
 			else
-				_clickSlots.Emit({ _lastInput._input.x,  _lastInput._input.y, ClickEvent::Stage::Release });
+				IronBranch::GetEventSignal<ClickEvent>().Emit({ _lastInput._input.x,  _lastInput._input.y, ClickEvent::Stage::Release });
 		}
 		_lastInput.Clear();
 	}
 } }
-

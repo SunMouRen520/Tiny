@@ -10,6 +10,9 @@
 namespace Tiny {
 	namespace Input {
 		/*
+			TODO:
+			Impelemnt a thread-independent input buffer.
+
 			This file include the data structures which should be provided by underlying system accordingly.
 		*/
 
@@ -68,66 +71,7 @@ namespace Tiny {
 		using StandardInputs = InputsTemplate<StandardDatum>;
 
 #ifdef TINY_PLATFORM_WINDOWS
-		enum class KeyBoard {
-			None = 0,
-
-			KEY_A,
-			KEY_B,
-			KEY_C,
-			KEY_D,
-			KEY_E,
-			KEY_F,
-			KEY_G,
-			KEY_H,
-			KEY_I,
-			KEY_J,
-			KEY_K,
-			KEY_L,
-			KEY_M,
-			KEY_N,
-			KEY_O,
-			KEY_P,
-			KEY_Q,
-			KEY_R,
-			KEY_S,
-			KEY_T,
-			KEY_U,
-			KEY_V,
-			KEY_W,
-			KEY_X,
-			KEY_Y,
-			KEY_Z,
-
-			f1,
-			f2,
-			f3,
-			f4,
-			f5,
-			f6,
-			f7,
-			f8,
-			f9,
-			f10,
-			f11,
-			f12,
-
-			ESC,
-			TILDE,
-			TAB,
-			CAPSLOCK,
-			LEFTSHIFT,
-			LEFTCTRL,
-			BACKSPACE,
-			ENTER,
-			LEFTBRACKET,
-			RIGHTBRACKET,
-			SEMICOLON,
-			QUOTE,
-			COMMA,
-			PERIOD,
-			SLASH,
-			BACKSLASH,
-		};
+	
 
 		/*
 		  @brief	keyboard

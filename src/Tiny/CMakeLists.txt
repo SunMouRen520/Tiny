@@ -5,6 +5,9 @@ set(Input_SRC
     Core/Input/InputSystem.cpp
     Core/Input/WindowsInputSystem.h
     Core/Input/WindowsInputSystem.cpp
+
+    Core/Time.h
+    Core/Engine.h
 )
 
 set(Plugin_SRC

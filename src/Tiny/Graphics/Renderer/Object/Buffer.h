@@ -3,13 +3,16 @@
 
 #include "Tiny/Graphics/Renderer/Object/AbstractObject.h"
 
-namespace Tiny{ namespace Buffer{
+#include <string>
+
+
+namespace Tiny{ namespace Graphics {
+	class ManagedMemory;
+
 	/*
 		TODO:
-			For desciption data such as Vertex attributes info, uniform info and texture info,
-			the abstract render system and the underlying render system(OpenGL) shares the same knowledge.
-			So we need some common facilities to shared these description data instead of copy around.
-			facilities like bgfx VertexDeclHandle, UniformHandle and TextureHandle.
+			For desciption data such as Vertex attributes info, the abstract render system and the underlying render system(OpenGL) shares the same knowledge.
+			So we need some common facilities to shared these description data instead of copy around,  facilities like bgfx VertexDeclHandle.
 	*/
 	class VertexAttribsDesc {
 	public:
@@ -21,6 +24,9 @@ namespace Tiny{ namespace Buffer{
 			Float,
 			Count
 		};
+		using Handle = UnsignedInt;
+
+		static Handle Create();
 
 		struct AttribDesc {
 			int index; //attribute index
@@ -29,13 +35,17 @@ namespace Tiny{ namespace Buffer{
 			AttribType type; //element data type
 		};
 
-		AttribDesc& Add(const AttribDesc& desc);
+		VertexAttribsDesc& Add(const AttribDesc& desc);
 		void Commit();
+
+	protected:
+		VertexAttribsDesc() = default;
+		~VertexAttribsDesc() = default;
 
 	private:
 		UnsignedShort _stride;
+		static Handle _handle;
 	};
-
 
 
 	class AbstractBuffer : public AbstractObject {
@@ -72,21 +82,6 @@ namespace Tiny{ namespace Buffer{
 	};
 
 	/*
-	@brief	index buffer with fixed data.
-	*/
-	class StaticIndexBuffer : public AbstractBuffer {
-	public:
-		enum class IndexSize :UnsignedByte {
-			Short,
-			Int
-		};
-		explicit StaticIndexBuffer(const ManagedMemory& mem, IndexSize size);
-
-	private:
-
-	};
-
-	/*
 	@brief	vbo with dynamic data, dynamic atributes and variable memory size.
 	*/
 	class DynamicVertexBuffer : public AbstractBuffer {
@@ -96,7 +91,7 @@ namespace Tiny{ namespace Buffer{
 		/*
 		@brief	Only avaliable when variable size enabled
 		*/
-		void ChangeSize(UnsignedInt size);
+		void Resize(UnsignedInt size);
 
 		void RefAttributes(const VertexAttribsDesc& desc);
 
@@ -105,12 +100,30 @@ namespace Tiny{ namespace Buffer{
 
 	};
 
-	class DynamicIndexBuffer : public AbstractBuffer{
+	enum class IndexUnitSize :UnsignedByte {
+		Short,
+		Int
+	};
+	/*
+		@brief	index buffer with fixed data.
+	*/
+	class StaticIndexBuffer : public AbstractBuffer {
 	public:
-		
+		explicit StaticIndexBuffer(const ManagedMemory& mem, IndexUnitSize unitSize = IndexUnitSize::Short);
+
 	private:
 
-	}
+	};
+
+	class DynamicIndexBuffer : public AbstractBuffer{
+	public:
+		explicit DynamicIndexBuffer(bool variableSize, IndexUnitSize unitSize = IndexUnitSize::Short);
+
+		void Resize(UnsignedInt size);
+
+	private:
+		
+	};
 
 } }
 

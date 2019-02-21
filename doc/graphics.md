@@ -8,14 +8,26 @@ Renderer system basically
 1. 为renderer pipeline提供数据
 2. 设置renderer pipeline的各种选项
 
-不管多线程部分如何，应该先实现下面“基本结构”中的面向用户接口部分。 此部分接口应该无论多线程与否，基本保持一致
-
 基本结构(来源于对bgfx代码的粗略阅读，其中的多线程部分可能存在错误，需要先复习操作系统课程的多线程再确认):
 通过面向用户的接口填充数据和设置渲染选项(数据和渲染选项合组成一次Drawcall)（可多线程）
                             |
 存储到公用的buffer中形成drawcall队列
                             |
 唯一的渲染线程从drawcall队列中读取drawcall信息，进行渲染
+
+TODO:
+    - 不管多线程部分如何，应该先实现下面“基本结构”中的面向用户接口部分。 此部分接口应该无论多线程与否，基本保持一致
+    - 实现基本的pipeline数据输入接口和pipiline设置接口
+    - 实现没有线程和内存管理的command系统
+    - 实现OpenGL端的command响应。
+    - 截止到此，应该可以用这个简单的系统去实现各种渲染效果了。
+    - 复习操作系统中的内存管理和多线程，搞清楚为什么要使用多线程提交渲染数据
+    - 实现render system的内存管理和多线程渲染
+    - 额外功能：
+      - 接入一个单独的gui系统（如imgui）,作为graphics test bed
+      - 为graphics test bed增加lua支持，加快开发速度
+      - 实现vulkan支持
+
 
 
 #Design of Graphics:

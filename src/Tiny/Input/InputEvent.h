@@ -5,15 +5,17 @@
 	Events used by gamelogic
 */
 #include "Tiny/Types.h"
+#include "IronBranch/Notion/Signals.h" //This file must be included in every header file which has event definition.
 
 namespace Tiny { namespace Input {
 
 	/*
 		@brief	Press without movement, triggered by mouse left-button/mobile touch.
-				
+
 	*/
 	struct ClickEvent {
 		enum class Stage{
+			Begin,
 			Press,
 			Release,
 		};
@@ -24,7 +26,7 @@ namespace Tiny { namespace Input {
 
 	/*
 		@brief	Press with movement, triggered by mouse left-button/mobile touch.
-				
+
 	*/
 	struct DragEvent {
 		enum class Stage {
@@ -43,6 +45,7 @@ namespace Tiny { namespace Input {
 	*/
 	struct KeyboardEvent {
 		enum class Stage{
+			Begin,
 			Press,
 			Release,
 		};
@@ -61,4 +64,3 @@ namespace Tiny { namespace Input {
 }
 
 #endif // !TINY_CORE_INPUT_BASEINPUTDATA_H
-

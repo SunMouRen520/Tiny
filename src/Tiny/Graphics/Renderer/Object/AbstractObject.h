@@ -1,6 +1,10 @@
 #ifndef TINY_GRAPHICS_ABSTRACTOBJECT_H
 #define TINY_GRAPHICS_ABSTRACTOBJECT_H
 
+#include "Tiny/Types.h"
+
+#include <algorithm>
+
 namespace Tiny{ namespace Graphics{
 	class AbstractObject {
 	public:
