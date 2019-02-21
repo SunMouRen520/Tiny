@@ -1,10 +1,13 @@
 set(Input_SRC
-    Core/Input/InputEvent.h
-    Core/Input/InputsData.h
-    Core/Input/InputSystem.h
-    Core/Input/InputSystem.cpp
-    Core/Input/WindowsInputSystem.h
-    Core/Input/WindowsInputSystem.cpp
+    Input/InputEvent.h
+    Input/InputsData.h
+    Input/InputSystem.h
+    Input/InputSystem.cpp
+    Input/WindowsInputSystem.h
+    Input/WindowsInputSystem.cpp
+    Input/Interface/Data.h
+    Input/Interface/Input.cpp
+    Input/Interface/Input.h
 
     Core/Time.h
     Core/Engine.h
