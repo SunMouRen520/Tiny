@@ -1,5 +1,4 @@
-#ifndef TINY_APPLICATION_H
-#define TINY_APPLICATION_H
+#pragma once
 
 namespace Tiny {
 	/*
@@ -16,5 +15,3 @@ namespace Tiny {
 	};
 
 }
-
-#endif // !TINY_APPLICATION_H

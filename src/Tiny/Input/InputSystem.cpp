@@ -7,7 +7,10 @@
 #include <assert.h>
 
 namespace Tiny { namespace Input {
-	
+	void InputBuffer::AddKeyPress(Key k){
+		
+	}
+
 
 
 	void StandardInputSystem::Update(double dt) {

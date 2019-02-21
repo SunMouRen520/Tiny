@@ -15,7 +15,6 @@
 
 namespace Tiny {
 	namespace Input {
-
 		class InputBuffer{
 		public:
 			struct TouchData{
@@ -23,11 +22,7 @@ namespace Tiny {
 				Int fingerId;
 			};
 
-			//TODO:把instance做成宏
-			static InputBuffer& Instance(){
-				static InputBuffer _inst;
-				return _inst;
-			}
+			DEF_INSTANCE(InputBuffer)
 
 			void Init(std::function<void()> dataFeeder,  bool threading, UnsignedByte frequency = 120){
 				_dataFeeder = dataFeeder;
@@ -41,6 +36,14 @@ namespace Tiny {
 			void SetMousePos(const Vector2f& pos);
 			void AddScrollOffset(Short offset);
 			void AddTouch(const InputBuffer::TouchData& data);
+
+			bool Threading() const {
+				return _threading;
+			}
+
+			void Tick(double dt){
+				_dataFeeder();
+			}
 
 		private:
 			void GetLock();
@@ -63,8 +66,8 @@ namespace Tiny {
 			}
 
 			void Tick(double dt){
-				if(!_threading)
-					_dataFeeder();
+				if(!InputBuffer.Instance().Threading())
+					InputBuffer.Instance().Tick(dt);
 
 			}
 
