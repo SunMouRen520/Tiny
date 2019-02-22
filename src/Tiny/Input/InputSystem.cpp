@@ -7,12 +7,6 @@
 #include <assert.h>
 
 namespace Tiny { namespace Input {
-	void InputBuffer::AddKeyPress(Key k){
-		
-	}
-
-
-
 	void StandardInputSystem::Update(double dt) {
 		if (_standardInputs.Size()) {
 			for (auto& input : _standardInputs) {

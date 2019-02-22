@@ -1,5 +1,4 @@
-#ifndef TINY_TYPES_H
-#define TINY_TYPES_H
+#pragma once
 
 #include <cstdint>
 
@@ -16,5 +15,3 @@ namespace Tiny{
 	using Float = float;
 	using Double = double;
 }
-
-#endif

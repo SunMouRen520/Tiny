@@ -1,30 +1,9 @@
-#ifndef TINY_CORE_ENGINE_H
-#deifne TINY_CORE_ENGINE_H
+#pragma once
 
 #include "Tiny/Types.h"
+#include "Tiny/Macro.h"
 
 namespace Tiny{
-  class Engine;
-  class FrameManager{
-    friend class Engine;
-  public:
-    /*
-      @brief  set fphHint as target fps, which may not be the real fps due to each tick may take too long time and so on.
-    */
-    void SetFps(UnsignedByte fpsHint);
-    UnsignedByte GetFps() const;
-
-  protected:
-    void StepForward(){
-      _frameCount++;
-    }
-
-  private:
-    Int _frameCount;
-    UnsignedByte _fps;
-
-  };
-
   class Engine{
   public:
     static Engine& Instance(){
@@ -36,12 +15,11 @@ namespace Tiny{
     void StartUp();
     void ShutDown();
 
-    Int GetFrameCount(){
-      return _frameCount;
-    }
-
-  protected:
+  private:
     Engine();
+
+    void LogicalUpdate();
+    void RenderUpdate();
 
   private:
     FrameManager _frameMgr;

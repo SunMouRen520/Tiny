@@ -4,6 +4,7 @@
 // #include "Tiny/Core/Input/InputEvent.h"
 // #include "Tiny/Core/Input/InputsData.h"
 
+#include "Tiny/Macro.h"
 #include "Tiny/Input/Interface/Data.h"
 
 #include "IronBranch/Notion/Signals.h"
@@ -15,66 +16,23 @@
 
 namespace Tiny {
 	namespace Input {
-		class InputBuffer{
+		class InputSystem {
 		public:
-			struct TouchData{
-				Vector2f pos;
-				Int fingerId;
-			};
-
-			DEF_INSTANCE(InputBuffer)
-
-			void Init(std::function<void()> dataFeeder,  bool threading, UnsignedByte frequency = 120){
-				_dataFeeder = dataFeeder;
-			}
-
-			void ReadLock();
-			void ReleaseReadLock();
-
-			void AddKeyPress(Key k);
-			void AddKeyRelease(Key k);
-			void SetMousePos(const Vector2f& pos);
-			void AddScrollOffset(Short offset);
-			void AddTouch(const InputBuffer::TouchData& data);
-
-			bool Threading() const {
-				return _threading;
-			}
-
-			void Tick(double dt){
-				_dataFeeder();
-			}
-
-		private:
-			void GetLock();
-
-		private:
-			std::function<void()> _dataFeeder;
-			bool _threading; //run
-
-		};
-
-		class InputModule {
-		public:
-			static InputModule& Instance(){
-				static InputModule _inst;
-				return _inst;
-			}
+			DEF_INSTANCE(InputSystem)
 
 			void Init( bool threading, UnsignedByte frequency){
 
 			}
 
-			void Tick(double dt){
-				if(!InputBuffer.Instance().Threading())
-					InputBuffer.Instance().Tick(dt);
+			void Update(){
+				InputBuffer.Instance().Update(dt);
 
 			}
 
 			void
 
 		private:
-			InputModule();
+			InputSystem();
 
 		private:
 			std::unordered_map<Key, bool> _keyDown;
