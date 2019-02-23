@@ -5,3 +5,5 @@
     static class _inst;\
     return _inst;\
   }
+
+#define TINY_API

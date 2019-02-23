@@ -20,27 +20,21 @@ namespace Tiny {
 		public:
 			DEF_INSTANCE(InputSystem)
 
-			void Init( bool threading, UnsignedByte frequency){
+			/*
+				@param	threading 	InputBuffer threading
+				@param	frequency	if threading enabled, frequency is InputBuffer's polling frequency
+			*/
+			void Init( bool threading, UnsignedByte frequency);
 
-			}
-
-			void Update(){
-				InputBuffer.Instance().Update(dt);
-
-			}
-
-			void
+			void Update();
 
 		private:
-			InputSystem();
+			InputSystem() = default;
+			void ProcessInput();
 
 		private:
-			std::unordered_map<Key, bool> _keyDown;
-			std::unordered_map<Key, bool> _keyUp;
-			std::unordered_map<Key, bool> _keyPress;
-			Math::Vector2f _mousePos;
-			Short _scrollOffset;
-
+			std::unordered_map<Key, bool> 	_lastTickKeyPress;
+			Math::Vector2f					_lastTickMousePos;
 		};
 
 		class StandardInputSystem{

@@ -6,8 +6,27 @@
 */
 #include "Tiny/Types.h"
 #include "IronBranch/Notion/Signals.h" //This file must be included in every header file which has event definition.
+#include "Tiny/Input/Interface/Data.h"
 
 namespace Tiny { namespace Input {
+	struct KeyboardEvent{
+		bool 	holding; //key was pressed before this event.
+		bool 	pressed; //key press/release event
+		Key		key;
+	};
+
+	struct MouseMoveEvent{
+		Math::Vector2f 	position; //in screen space coordinate
+		Float 			deltaPosition; // relative pos difference from last input. in screen space coordinate
+		Float			deltaTime; //in seconds
+	};
+
+	struct MouseClickEvent{
+		bool		holding;// btn was pressed before this event.
+		bool		pressed; //press/release event
+		MouseBtn 	button; //left/right btn
+	};
+
 
 	/*
 		@brief	Press without movement, triggered by mouse left-button/mobile touch.

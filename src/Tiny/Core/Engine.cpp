@@ -12,8 +12,8 @@ namespace Tiny{
   }
 
   void Engine::Init(){
-    InputSystem.Instance().Init();
     TimeSystem.Instance().Init();
+    InputSystem.Instance().Init();
   }
 
   /*
@@ -31,7 +31,7 @@ namespace Tiny{
    Status(Render)  = lerp(Status(last logical frame), Status(current logical frame),  t)
    以Status(Render)的结果进行渲染。(如位置，缩放，角度，透明度等等一切属性)
 
-   Reference discuss:
+   Reference :
    1. https://gafferongames.com/post/fix_your_timestep/
    2. http://lspiroengine.com/?p=378
    3. http://www.kinematicsoup.com/news/2016/8/9/rrypp5tkubynjwxhxjzd42s3o034o8

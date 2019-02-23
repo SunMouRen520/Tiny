@@ -27,7 +27,7 @@ namespace Tiny{
     UnsignedByte GetFps() const{ return _realFps; }
 
     /*
-      @brief  get total fps target
+      @brief  get total fps target. default is 60.
     */
     UnsignedByte GetTargetFps() const{ return _targetFps; }
 
@@ -47,6 +47,7 @@ namespace Tiny{
 
     /*
       @brief  get last frame's running time(real time).
+      @return default value is 1 / _targetFps;
     */
     Float GetLastFrameDeltaTime() const { return _lastFrameDelta; }
 

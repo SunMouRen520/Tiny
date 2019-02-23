@@ -6,9 +6,8 @@ namespace Tiny{
     :_frameCount(0),
     _targetFps(60),
     _logicalFps(60),
-    _currentFrameBeginTime(0.0),
-    _lastFrameDelta(0.0){
-
+    _currentFrameBeginTime(0.0){
+        _lastFrameDelta = 1 / _targetFps;
     }
 
     void FrameManager::OnFrameBegin(double currentFrameBeginTime, double lastFrameDelta){

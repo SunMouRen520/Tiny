@@ -2,11 +2,27 @@
 #include "Tiny/Core/Input/InputEvent.h"
 #include "Tiny/Math/Tools.h"
 #include "Tiny/Core/Input/InputEvent.h"
+#include "Tiny/Input/InputBuffer.h"
 
 #include "IronBranch/Utility/Log.h"
 #include <assert.h>
 
 namespace Tiny { namespace Input {
+	void InputSystem::Init( bool threading, UnsignedByte frequency){
+		InputBuffer.Instance().Init(threading, frequency);
+	}
+
+	void InputSystem::Update(){
+		InputBuffer.Instance().Update(dt);
+		ProcessInput();
+	}
+
+	void InputSystem::ProcessInput(){
+		const std::unordered_map<Key, UnsignedByte>& keys = InputBuffer.Instance().GetKeyDownUp();
+		
+	}
+
+
 	void StandardInputSystem::Update(double dt) {
 		if (_standardInputs.Size()) {
 			for (auto& input : _standardInputs) {

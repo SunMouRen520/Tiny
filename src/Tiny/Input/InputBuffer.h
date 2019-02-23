@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 #include <list>
+#include <bitset>
 
 namespace Tiny{
   namespace Input{
@@ -16,9 +17,17 @@ namespace Tiny{
     public:
       DEF_INSTANCE(InputBuffer)
 
-      struct InputData{
+      struct TuchData{
         Long touchId;
         Vector2f pos;
+
+        void Clear(){
+            touchId = -1;
+        }
+
+        bool Valid() {
+            return touchId != -1;
+        }
       };
 
       struct MouseData{
@@ -26,19 +35,22 @@ namespace Tiny{
         UnsignedByte mask; // 1: left btn press. 2: right btn press 4:middle btn press.
       };
 
-      void Init(std::function<void()> dataFeeder,  bool threading, UnsignedByte frequency = 120){
-        _dataFeeder = dataFeeder;
+      void Init(bool threading, UnsignedByte frequency = 120){
         _threading = threading;
         _frequency = frequency;
       }
 
-      void KeyPress(Key k);
-      void KeyRelease(Key k);
+      void SetDataFeeder(std::function<void()> dataFeeder){
+        _dataFeeder = dataFeeder;
+      }
+
+      void KeyPress(KEYBOARD k);
+      void MouseBtn(MOUSEBTN m);
       void SetMousePos(const InputBuffer::MouseData& data);
       /*
         @brief  offset is positive when scroll upward.
       */
-      void AddScrollOffset(Short offset);
+      void Add(Short offset);
       /*
         @brief  only data.touchId and data.position are needed, remain properties will be calculated by InputBuffer.
       */
@@ -49,10 +61,24 @@ namespace Tiny{
       */
       void Poll();
 
+      /*
+        @brief  get the interval time(in milliseconds) of last poll.
+      */
+      Float GetPollDeltaInMilliSec();
+
       void Update();
 
-      const std::list<InputBuffer::TouchData>& GetTouches(){ return _touches;}
-      const std::unordered_map<Key, UnsignedByte>& GetKeyDownUp() {return }
+      const std::list<InputBuffer::TouchData>& GetTouches() const{ return _buffers[_readingBufferIndex]._touches;}
+
+      const std::unordered_map<Key, bool>& GetKeyDown() const {return _buffers[_readingBufferIndex]._keyDownUp;}
+
+      Short GetScrollOffset() const {return _scrollOffset;}
+
+      const std::list<MouseData>& GetMouseData const{ return _mousePos;}
+
+  private:
+      InputBuffer();
+      ~InputBuffer() = default;
 
     private:
       std::function<void()> _dataFeeder;
@@ -60,23 +86,26 @@ namespace Tiny{
       UnsignedByte _frequency ; //threading loop frequency
 
       struct FrameKeyBuffer{
-        //UnsignedByte是mask, 1表示down, 2表示up
-        std::unordered_map<Key, UnsignedByte> _keyDownUp;
-        std::list<MouseData>          	        _mousePos;
-        Short 												        _scrollOffset;
-        std::list<InputBuffer::TouchData>                  _touches;
+          std::bitset<KEYBOARD::COUNT> _keys; //bit setting to 1 means the corresponding key was pressed
+          std::bitset<MOUSE::COUNT> _mouse;//bit setting to 1 means the corresponding moust btn was pressed
+          Math::Vector2f    _mousePos;
 
-        void Clear(){
-          _keyDownUp.clear();
-          _mousePos.clear();
-          _scrollOffset = 0;
-          _touches.Clear();
-        }
+          InputBuffer::TouchData[MaxTouchCount] _touches;
+
+          void Clear(){
+              _keys.reset();
+              _mouse.reset();
+              for(auto& touch : _touches)
+              touch.Clear();
+          }
       };
 
-      FrameKeyBuffer	_buffers[2];
+      std::list<FrameKeyBuffer> _buffers[2];
       UnsignedByte		_readingBufferIndex;
       UnsignedByte		_writingBufferIndex;
+
+      Float             _lastPollTime;
+      Float             _pollDelta; // in milliseconds
     };
   }
 }
