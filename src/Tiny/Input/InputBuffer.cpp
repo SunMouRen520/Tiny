@@ -5,7 +5,8 @@
 namespace Tiny{
     namespace Input{
         InputBuffer::InputBuffer()
-        :_pollDelta(10.0f){
+        :_validDataCount(0)
+        ,_pollDelta(10.0f){
             _lastPollTime = Time.GetTime();
         }
 
@@ -28,6 +29,7 @@ namespace Tiny{
             }
 
             _dataFeeder();
+            _buffers[_writingBufferIndex]._validDataCount++;
 
             if(_threading){
                 //此处应释放读写锁的写锁
