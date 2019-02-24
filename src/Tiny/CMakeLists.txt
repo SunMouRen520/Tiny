@@ -1,6 +1,7 @@
 set(Input_SRC
     Input/InputEvent.h
     Input/InputsData.h
+    Input/InputQueue.h
     Input/InputSystem.h
     Input/InputSystem.cpp
     Input/WindowsInputSystem.h

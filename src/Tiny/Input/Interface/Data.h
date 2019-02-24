@@ -79,27 +79,6 @@ namespace Tiny{
             MOUSE_MIDDLE_BTN_SCROLL_DOWN,
             COUNT,
         };
-
-        enum class InputPhase{
-            Begin,
-            Press,
-            Release,
-        };
-
-        struct PointerData{
-            Math::Vector2f  position;
-            Math::Vector2f  deltaPosition;
-            Float           deltaTime;
-        };
-
-        struct TouchData : public PointerData{
-            InputPhase      phase;
-            Long            touchId;
-        };
-
-        struct MouseData : public PointerData{
-            InputPhase      phase[3]; //0:left btn, 1:right btn, 2:middle btn
-        };
     }
 }
 

@@ -32,7 +32,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(BUILD_TARGET_MSVC ON)
 set(BUILD_TARGET_ANDROID OFF)
 
-find_package(IronBranch REQUIRED)
+if(NOT BOOTSTRAP)
+    find_package(IronBranch REQUIRED)
+endif()
 find_package(RapidJSON REQUIRED)
 
 #include cmake utilities

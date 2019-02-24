@@ -1,8 +1,8 @@
-#include "Input/Interface/Input.h"
+#include "Tiny/Input/Interface/Input.h"
 
 
 namespace Tiny{
-  Vector2f Input::GetMousePosition(){
-    
-  }
+  //Vector2f Input::GetMousePosition(){
+  //  
+  //}
 }

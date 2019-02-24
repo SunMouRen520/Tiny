@@ -1,8 +1,8 @@
 #ifndef TINY_INTERFACE_INPUT_INPUT_H
 #define TINY_INTERFACE_INPUT_INPUT_H
 
-#include "Tiny/Math/Vector2"
-#include "Tiny/Math/MathForward"
+#include "Tiny/Math/Vector2.h"
+#include "Tiny/Math/MathForward.h"
 #include "Tiny/Input/Interface/Data.h"
 
 namespace Tiny{
