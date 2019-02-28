@@ -5,7 +5,7 @@
 
 #include "Tiny/config.h"
 
-#include "IronBranch/Utility/Log.h"
+#include "Tiny/Core/Service.h"
 
 #ifdef TINY_PLATFORM_WINDOWS
 #include "windows.h"
@@ -42,7 +42,7 @@ namespace Tiny { namespace PLUGIN {
 		std::string data = FileSystem::ReadChar("plugin/PluginConfig.json");
 		//std::string data(" { \"PNGImporter\":\"STBPlugin\", \"JPGImporter\" : \"STBPlugin\", }");
 		if (config.Parse(data.c_str()).HasParseError()) {
-			IronBranch::Utility::Log::E("plugin/PluginConfig.json parse failed!");
+			Service::Log().E("plugin/PluginConfig.json parse failed!");
 			rapidjson::ParseErrorCode code = config.GetParseError();
 			return;
 		}
@@ -64,7 +64,7 @@ namespace Tiny { namespace PLUGIN {
 						cache[dllName] = pImporter;
 					}
 					else {
-						IronBranch::Utility::Log::E("Cannot Load Importer:{}", cfg.value.GetString());
+						Service::Log().E("Cannot Load Importer:{}", cfg.value.GetString());
 					}
 
 				}

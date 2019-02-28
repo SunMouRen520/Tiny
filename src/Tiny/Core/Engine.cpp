@@ -1,19 +1,29 @@
 #include "Tiny/Core/Engine.h"
-#include "Tiny/Input/InputSystem.h"
-#include "Tiny/Time.h"
+#include "Tiny/Core/Service.h"
+#include "Tiny/Core/Time/Time.h"
+#include "Tiny/Application.h"
 
 #include <chrono>
 #include <thread>
 
 namespace Tiny{
-    void Engine::Engine()
-    :_frameCount(0){
+    Engine::Engine()
+    :_app(nullptr)
+    ,_running(false)
+    ,_input(){
 
     }
 
-    void Engine::Init(){
-        TimeSystem.Instance().Init();
-        InputSystem.Instance().Init();
+    void Engine::Init(Application *app){
+        _app = app;
+
+		auto time = std::make_unique<Time>();
+		Service::SetTime(std::move(time));
+
+		auto fm = std::make_unique<FrameManager>();
+		Service::SetFrameManager(std::move(fm));
+		
+		Service::Time().Init();
     }
 
     /*
@@ -37,32 +47,43 @@ namespace Tiny{
     3. http://www.kinematicsoup.com/news/2016/8/9/rrypp5tkubynjwxhxjzd42s3o034o8
     */
     void Engine::StartUp(){
-        double logicalDelta = FrameManager.Instance().GetLogicalFrameDelta();
-        double targetDelta = FrameManager.Instance().GetTargetFrameDelta();
+        if(!_app){
+            Service::Log().E("Engine Initialized failed, crash!");
+
+			_app->GetAppPath(); //cause crash
+        }
+
+        double logicalDelta = Service::FrameManager().GetLogicalFrameDelta();
+        double targetDelta = Service::FrameManager().GetTargetFrameDelta();
 
         LogicalUpdate();
 
-        double lastTime = Time.GetTime();
+		double lastTime = Service::Time().GetTime();
         double logicalAccumulator = 0.0;
 
         //test code for total frame rate control
         double sleepCalibrating = 0.0;
+        _running = true;
 
         while(true){
-            double currentTime = Time.GetTime();
+            if(!_running)
+                break;
+
+            double currentTime = Service::Time().GetTime();
             double delta = currentTime - lastTime;
             lastTime = currentTime;
 
-            FrameManager.Instance().OnFrameBegin(currentTime, delta);
+			Service::FrameManager().OnFrameBegin(currentTime, delta);
 
             //test code for total frame rate control
             sleepCalibrating += targetDelta - delta;
             if(sleepCalibrating > 0){
-                double beforeSleep = Time.GetTime();
+                double beforeSleep = Service::Time().GetTime();
                 std::this_thread::sleep_for(std::chrono::milliseconds((int)(sleepCalibrating * 1000)));
-                sleepCalibrating -= Time.GetTime() - beforeSleep;
+                sleepCalibrating -= Service::Time().GetTime() - beforeSleep;
             }
 
+			_input.Pool();
             logicalAccumulator += delta;
             while(logicalAccumulator >= logicalDelta){
                 LogicalUpdate();
@@ -70,6 +91,8 @@ namespace Tiny{
             }
 
             RenderUpdate();
+
+            _app->OnFrameDone();
         }
     }
 
@@ -77,8 +100,13 @@ namespace Tiny{
     @brief  update logical world.
     */
     void Engine::LogicalUpdate(){
-        TimeSystem.Instance().Update();
-        InputSystem.Instance().Update();
+        //input should be processed befor all logic start.
+		_input.Update();
+
+        //TODO
+
+        //time system should be update after all logic end.
+		Service::Time().Update();
     }
 
     /*
@@ -86,5 +114,10 @@ namespace Tiny{
     */
     void Engine::RenderUpdate(){
 
+        _app->OnRenderFrameDone();
+    }
+
+    void Engine::ShutDown(){
+        _running = false;
     }
 }

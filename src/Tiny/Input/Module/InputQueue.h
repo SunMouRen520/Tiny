@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Tiny/Macro.h"
+#include "Tiny/Def.h"
 #include "Tiny/Types.h"
-#include "Tiny/Input/Interface/Data.h"
+#include "Tiny/Core/Service.h"
 
 #include "IronBranch/Memory/Strategy/FreeList.h"
 #include "IronBranch/Memory/AllocatorWrapper.h"
@@ -38,20 +38,23 @@ namespace Tiny{
             }
 
             void Push(Datum data){
-                if(_used >= maxSize){
-                    Service.Log().E("InputQueue {0} overflow! MaxQueueSize is {1}", _tag, _maxSize);
+                if(_used >= _maxSize){
+                    Service::Log().E("InputQueue {0} overflow! MaxQueueSize is {1}", _tag, _maxSize);
                     return;
                 }
                 _queue.push_back(data);
                 _used++;
             }
 
+            /*
+                @brief  pop all cached data and clear all data.
+            */
             std::list<Datum> Pop(){
                 std::list<Datum> result;
                 auto& iter = _queue.begin();
                 std::size_t count = 0;
                 while(iter != _queue.end() && count <= _used){
-                    result.push_back(std::move(iter->_placeHolder.data));
+                    result.push_back(std::move(iter->data));
                     count++;
                 }
                 _queue.clear();
@@ -59,34 +62,35 @@ namespace Tiny{
             }
 
         private:
-            struct Trait{
-                union PlaceHolder{
-                    Datum data;
-                    void* _;
-                    PlaceHolder(const Datum& d)
-                    :data(d){
+     //       struct Trait{
+     //           union PlaceHolder{
+     //               Datum data;
+     //               void* _;
+     //               PlaceHolder(const Datum& d)
+     //               :data(d){
 
-                    }
-                } _placeHolder;
+     //               }
+					//PlaceHolder() = default;
+     //           } _placeHolder;
 
-                Trait(Datum data){
-                    new(&_placeHolder.data){std::move(data);}
-                }
-            };
+     //           Trait(Datum data){
+     //               new(&_placeHolder.data)Datum{data};
+     //           }
+     //       };
+			union Trait {
+				Datum data;
+				void* _;
+				Trait(const Datum& d)
+					:data(d) {
+
+				}
+				Trait() = default;
+			};
+
             std::list<Trait, IronBranch::Memory::STLAllocatorWrapper<IronBranch::Memory::FreeList, Trait>> _queue;
             std::size_t     _maxSize;
             std::size_t     _used;
             std::string     _tag;
-        };
-
-        struct KeyboardData{
-            KEYBOARD    key;
-            bool        pressed;
-        };
-
-        struct MouseBtnData{
-            MOUSEBTN    btn;
-            bool        pressed;
         };
     }
 }

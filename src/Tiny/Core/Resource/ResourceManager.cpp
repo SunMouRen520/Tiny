@@ -2,10 +2,11 @@
 
 #include "Tiny/Core/Resource/ResourceManager.h"
 #include "Tiny/Core/Plugin/PluginManager.h"
+#include "Tiny/Core/Service.h"
 #include "Tiny/FileSystem/Utility.h"
 
 #include "IronBranch/Utility/String.h"
-#include "IronBranch/Utility/Log.h"
+
 
 #include "Tiny/FileSystem/FileSystem.h"
 
@@ -38,13 +39,13 @@ namespace Tiny {
 	Optional<Graphics::ImageData> ResourceLoader::LoadImage(const std::string& path) {
 		std::string fileType = FileSystem::FileType(path);
 		if (fileType.empty()) {
-			IronBranch::Utility::Log::E("ResourceLoader:LoadImage without file type:{}", path);
+			Service::Log().E("ResourceLoader:LoadImage without file type:{}", path);
 			return IronBranch::NoInit;
 		}
 
 		auto pluginName = _fileSuffixToPlugin.find(fileType);
 		if (pluginName == _fileSuffixToPlugin.end()) {
-			IronBranch::Utility::Log::E("ResourceLoader:No loader for : {}", fileType);
+			Service::Log().E("ResourceLoader:No loader for : {}", fileType);
 			return IronBranch::NoInit;
 		}
 
@@ -53,7 +54,7 @@ namespace Tiny {
 			p = PLUGIN::PluginManager<PLUGIN::AbstractImporter>::Instance().GetPlugin(pluginName->second);
 		}
 		catch (std::exception e) {
-			IronBranch::Utility::Log::E(e.what());
+			Service::Log().E(e.what());
 			return IronBranch::NoInit;
 		}
 		
@@ -61,7 +62,7 @@ namespace Tiny {
 			return p->Image(FileSystem::GetResourceFullPath(path));
 		}
 		catch (PLUGIN::ImportFailed e) {
-			IronBranch::Utility::Log::E("ResourceLoader:Failed to resolve Image: {}", e.what());
+			Service::Log().E("ResourceLoader:Failed to resolve Image: {}", e.what());
 		}
 		return IronBranch::NoInit;
 	}

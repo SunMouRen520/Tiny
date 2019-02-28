@@ -3,5 +3,6 @@
 #cmakedefine    TINY_VERSION        "@TINY_VERSION@"
 #cmakedefine    TINY_PLATFORM_WINDOWS
 #cmakedefine    TINY_TEST
+#cmakedefine    TINY_DEBUG
 
 #endif

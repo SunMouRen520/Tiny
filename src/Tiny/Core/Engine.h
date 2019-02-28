@@ -1,29 +1,39 @@
 #pragma once
 
 #include "Tiny/Types.h"
-#include "Tiny/Macro.h"
+#include "Tiny/Def.h"
+#include "Tiny/Input/InputSystem.h"
+#include "Tiny/Core/FrameManager.h"
 
 namespace Tiny{
+    namespace Input{
+        class InputSystem;
+    }
+
+    class Application;
+
     class Engine{
     public:
-        static Engine& Instance(){
-            static Engine _inst;
-            return _inst;
-        }
+        Engine();
+        ~Engine() = default;
 
-        void Init();
+        void Init(Application *app);
         void StartUp();
         void ShutDown();
 
+        bool Running() const { return _running;}
+
+        //FIXME: shall we expose inputsystem directly?
+        Input::InputSystem& GetInputSystem() {return _input;}
+
     private:
-        Engine();
 
         void LogicalUpdate();
         void RenderUpdate();
 
     private:
-        FrameManager _frameMgr;
-    }
+        Application* _app;
+        bool        _running;
+        Input::InputSystem _input;
+    };
 }
-
-#endif

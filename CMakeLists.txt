@@ -35,13 +35,19 @@ set(BUILD_TARGET_ANDROID OFF)
 if(NOT BOOTSTRAP)
     find_package(IronBranch REQUIRED)
 endif()
+
 find_package(RapidJSON REQUIRED)
+find_package(gl3w REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(assimp REQUIRED)
 
 #include cmake utilities
 # include(support/CMakeUtility.cmake)
 include(support/macro.cmake)
 
 project(Tiny)
+
+option(TINY_DEBUG "Enable debug mode" ON)
 
 # do not know
 configure_file(support/config.h.in ${PROJECT_SOURCE_DIR}/src/Tiny/config.h )

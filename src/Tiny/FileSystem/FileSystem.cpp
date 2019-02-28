@@ -1,6 +1,6 @@
 #include "Tiny/FileSystem/FileSystem.h"
 
-#include "IronBranch/Utility/Log.h"
+#include "Tiny/Core/Service.h"
 
 #include <fstream>
 
@@ -61,7 +61,7 @@ namespace Tiny { namespace FileSystem {
 			file.close();
 		}
 		catch(std::exception e){
-			IronBranch::Utility::Log::E("Binary Read failed:{}", e.what());
+			Tiny::Service::Log(). E("Binary Read failed:{}", e.what());
 		}
 		return content;
 	}

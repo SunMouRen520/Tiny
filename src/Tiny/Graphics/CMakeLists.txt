@@ -61,7 +61,7 @@ $<TARGET_PROPERTY:TinyCore,INTERFACE_INCLUDE_DIRECTORIES>)
 if(BUILD_TARGET_MSVC)
     find_package(gl3w REQUIRED)
     find_package(glfw3 REQUIRED)
-    target_link_libraries(Graphics PRIVATE gl3w PRIVATE glfw3)
+    target_link_libraries(Graphics PRIVATE gl3w PRIVATE glfw)
 endif()
 
 #add msvc filter group

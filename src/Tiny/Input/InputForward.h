@@ -2,10 +2,9 @@
 #define TINY_INPUT_INPUTFORWARD_H
 
 namespace Tiny{ namespace Input{
-        struct ClickEvent;
-        struct DragEvent;
-        struct KeyboardEvent;
-        struct ScrollEvent;
+    struct KeyboardEvent;
+    struct MouseMoveEvent;
+    struct MouseBtnEvent;
 }
 }
 

@@ -1,98 +1,49 @@
-#ifndef TINY_CORE_INPT_INPUTSYSTEM_H
-#define TINY_CORE_INPT_INPUTSYSTEM_H
+#pragma once
 
-#include "Tiny/Input/InputQueue.h"
+#include "Tiny/Input/Module/InputModule.h"
+#include "Tiny/Types.h"
+#include "Tiny/Input/InputEvent.h"
 
-//TODO:不要直接使用Ironbran的signal，需要在tiny加一层事件逻辑 以保证事件都是在logicalupdate中触发。
-// #include "IronBranch/Notion/Signals.h"
-// #include "Tiny/Math/Tools.h"
-// #include "Tiny/Math/Vector2.h"
-// #include "Tiny/Math/MathForward.h"
-
-// #include <unordered_map>
+#include "IronBranch/Notion/Signals.h"
 
 namespace Tiny {
 	namespace Input {
-		class KeyboardMouseSerice{
-		public:
-			void SetPollFunction(std::function<void()> pollFunc);
-			void Poll();
-
-		private:
-			InputQueue<KeyboardData> _keyboardInput;
-			InputQueue<MouseBtnData> _mouseBtnInput;
-			InputQueue<Math::Vector2f>	_mousePosInput;
-		};
+		class KeyboardMouseModule;
+		class JoypadModule;
 
 		class InputSystem {
 		public:
-			/*
-				@param	threading 	InputBuffer threading
-				@param	frequency	if threading enabled, frequency is InputBuffer's polling frequency
-			*/
-
+			InputSystem();
 
 			void Update();
 
-		private:
-			InputSystem() = default;
-			void ProcessInput();
+			void Pool();
+
+			void AddInputModule(InputModule *input, bool active = true);
+
+			void ActiveInputModule(InputModuleType t);
+
+			void DeactiveInputModule(InputModuleType t);
+
+			void RegisterKeyboard(const std::function<void(const KeyboardEvent&)>& func);
+			void RegisterMouseMove(const std::function<void(const MouseMoveEvent&)>& func);
+			void RegisterMouseBtn(const std::function<void(const MouseBtnEvent&)>& func);
 
 		private:
+			void ProcessKeyboardMouse();
+			void ProcessJoyPad();
+
+		private:
+			KeyboardMouseModule *_kmModule;
+			JoypadModule		*_jpModule;
+
+			InputModuleType	_currentInput;
+
+			IronBranch::Signals<KeyboardEvent> _keyboardEvent;
+			IronBranch::Signals<MouseMoveEvent> _mouseMoveEvent;
+			IronBranch::Signals<MouseBtnEvent> _mouseBtnEvent;
+
+			Tiny::Math::Vector2f	_lastMousePos;
 		};
-
-		// class StandardInputSystem{
-		// public:
-		// 	virtual ~StandardInputSystem() = default;
-		//
-		// 	void FeedStandInput(const StandardDatum& data) {
-		// 		_standardInputs.AddDatum(data);
-		// 	}
-		//
-		// 	virtual void Update(double dt) ;
-		//
-		// 	// IronBranch::Signals<const ClickEvent&>& OnClick() { return _clickSlots; }
-		// 	// IronBranch::Signals<const DragEvent&>& OnDrag() { return _dragSlots; }
-		//
-		// protected:
-		// 	StandardInputSystem() {}
-		//
-		// private:
-		// 	void Touch(const StandardInputs::Datum& input);
-		// 	void TouchEnd();
-		//
-		// private:
-		// 	struct InputWithState{
-		// 		StandardInputs::Datum	_input;
-		// 		bool					_isDragging;
-		//
-		// 		InputWithState() {
-		// 			Clear();
-		// 		}
-		//
-		// 		bool Empty() {
-		// 			return _input.x == 0.0 && _input.y == 0.0;
-		// 		}
-		//
-		// 		void Clear() {
-		// 			_input.x = 0.0;
-		// 			_input.y = 0.0;
-		// 			_isDragging = false;
-		// 		}
-		//
-		// 		bool Same(const StandardInputs::Datum& input) {
-		// 			return std::abs(_input.x - input.x) < 0.3 && std::abs(_input.y - input.y) < 0.3;
-		// 		}
-		// 	};
-		//
-		// private:
-		// 	// IronBranch::Signals<const ClickEvent&> _clickSlots;
-		// 	// IronBranch::Signals<const DragEvent&>	_dragSlots;
-		//
-		// 	InputWithState	_lastInput;
-		// 	StandardInputs	_standardInputs;
-		// };
 	}
 }
-
-#endif // !TINY_CORE_INPT_INPUTSYSTEM_H

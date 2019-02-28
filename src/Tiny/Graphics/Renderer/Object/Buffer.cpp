@@ -2,9 +2,9 @@
 
 
 namespace Tiny { namespace Graphics {
-	VertexAttribsDesc::Handle VertexAttribsDesc::_handle = 0;
-
-	VertexAttribsDesc::Handle VertexAttribsDesc::Create() {
-		
-	}
+	// VertexAttribsDesc::Handle VertexAttribsDesc::_handle = 0;
+	//
+	// VertexAttribsDesc::Handle VertexAttribsDesc::Create() {
+	//
+	// }
 } }

@@ -5,15 +5,15 @@
 #include "Tiny/Core/Resource/ResourceManager.h"
 
 namespace Tiny {
-	void Application::StartUp(){
-		PLUGIN::Init();
-		ResourceLoader::Instance().Init();
-
-
-		FileSystem::SetBaseDir(FileSystem::GetExePath() + "../../gl_practice/resource/");
-	}
-
-	void Application::Update(double dt) {
-		Graphics::RenderSystem::Instance().Update(dt);
-	}
+	// void Application::StartUp(){
+	// 	PLUGIN::Init();
+	// 	ResourceLoader::Instance().Init();
+	//
+	//
+	// 	FileSystem::SetBaseDir(FileSystem::GetExePath() + "../../gl_practice/resource/");
+	// }
+	//
+	// void Application::Update(double dt) {
+	// 	Graphics::RenderSystem::Instance().Update(dt);
+	// }
 }

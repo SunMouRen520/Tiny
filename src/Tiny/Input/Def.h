@@ -1,5 +1,4 @@
-#ifndef TINY_INTERFACE_INPUT_DATA_H
-#define TINY_INTERFACE_INPUT_DATA_H
+#pragma once
 
 #include "Tiny/Types.h"
 #include "Tiny/Math/Vector2.h"
@@ -9,7 +8,7 @@ namespace Tiny{
     namespace Input{
         constexpr UnsignedByte MaxTouchCount = 5;
         enum class KEYBOARD: UnsignedByte{
-            None = 0,
+            INVALID = 0,
 
             KEY_A,
             KEY_B,
@@ -38,48 +37,67 @@ namespace Tiny{
             KEY_Y,
             KEY_Z,
 
-            f1,
-            f2,
-            f3,
-            f4,
-            f5,
-            f6,
-            f7,
-            f8,
-            f9,
-            f10,
-            f11,
-            f12,
+            F1,
+            F2,
+            F3,
+            F4,
+            F5,
+            F6,
+            F7,
+            F8,
+            F9,
+            F10,
+            F11,
+            F12,
+
+            KEY_0,
+            KEY_1,
+            KEY_2,
+            KEY_3,
+            KEY_4,
+            KEY_5,
+            KEY_6,
+            KEY_7,
+            KEY_8,
+            KEY_9,
 
             ESC,
-            TILDE,
             TAB,
             CAPSLOCK,
             LEFTSHIFT,
             LEFTCTRL,
+            LEFTALT,
+            RIGHTSHIFT,
+            RIGHTCONTROL,
+            RIGHTALT,
             BACKSPACE,
             ENTER,
             LEFTBRACKET,
             RIGHTBRACKET,
             SEMICOLON,
-            QUOTE,
+            APOSTROPHE,
             COMMA,
             PERIOD,
             SLASH,
             BACKSLASH,
+			SPACE,
+
+            RIGHT,
+            LEFT,
+            DOWN,
+            UP,
 
             COUNT,
         };
 
-        enum class MOUSEBTN{
-            MOUSE_LEFT_BTN,
-            MOUSE_RIGHT_BTN,
-            MOUSE_MIDDLE_BTN,
-            MOUSE_MIDDLE_BTN_SCROLL_UP,
-            MOUSE_MIDDLE_BTN_SCROLL_DOWN,
-            COUNT,
+        enum class MOUSEBTN : UnsignedShort{
+            INVALID = 0,
+
+            MOUSE_LEFT_BTN = 1 << 0,
+            MOUSE_RIGHT_BTN = 1 << 1,
+            MOUSE_MIDDLE_BTN = 1 << 2,
+            MOUSE_MIDDLE_BTN_SCROLL_UP = 1 << 3,
+            MOUSE_MIDDLE_BTN_SCROLL_DOWN = 1 << 4,
         };
     }
 }
-
-#endif
