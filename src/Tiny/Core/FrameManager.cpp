@@ -7,7 +7,7 @@ namespace Tiny{
     FrameManager::FrameManager()
     :_frameCount(0)
     ,_currentFrameBeginTime(0.0)
-    , _frameDropDelta(0.1)
+    , _frameDropDelta(100)
     ,_logicalFrameCount(0){
         _lastFrameDelta = 1 / _targetFps;
         SetLogicalFps(60);
@@ -23,7 +23,7 @@ namespace Tiny{
         _lastFrameDelta = lastFrameDelta;
         _frameCount++;
 
-        _realFps = (1.0 / lastFrameDelta) * 0.9 + _realFps * 0.1;
+        _realFps = (UnsignedByte)((1.0 / lastFrameDelta) * 0.9 + _realFps * 0.1);
     }
 
     void FrameManager::SetLogicalFps(UnsignedByte logicalFps){

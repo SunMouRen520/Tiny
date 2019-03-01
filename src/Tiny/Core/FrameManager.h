@@ -65,7 +65,7 @@ namespace Tiny{
         */
         UnsignedLong GetFrameCount() const { return _frameCount;}
 
-        UnsignedLong GetLoicalFrameCount() const { return _frameCount;}
+        UnsignedLong GetLogicalFrameCount() const { return _logicalFrameCount;}
 
         /*
         @brief set upward frame delta threshold.
@@ -74,7 +74,7 @@ namespace Tiny{
         TODO:
             we should expose some
         */
-        void SetFrameDeltaThreshold(double seconds);
+        // void SetFrameDeltaThreshold(int millisec);
 
 
     protected:
@@ -95,7 +95,7 @@ namespace Tiny{
         double _currentFrameBeginTime;
         double _lastFrameDelta;
 
-        double _frameDropDelta;
+        int _frameDropDelta;
         // IronBranch::Signals<>
     };
 }

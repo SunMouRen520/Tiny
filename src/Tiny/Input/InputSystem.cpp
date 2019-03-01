@@ -92,15 +92,27 @@ namespace Tiny {
 			}
 
 			const std::list<Tiny::Math::Vector2f> &mousePos = _kmModule->GetMousePos();
-			if (_lastMousePos.X() == -1.f)
+			if (_lastMousePos.X() == -1.f) {
 				_lastMousePos = mousePos.front();
+				_posDeltaFrameCount = Service::FrameManager().GetLogicalFrameCount();
+			}
+
 			for (const auto& iter : mousePos) {
 				if (!(iter == _lastMousePos)) {
+					Long newPosFrameCount = Service::FrameManager().GetLogicalFrameCount();
+					double dt = 0;
+					if (newPosFrameCount == _posDeltaFrameCount) {
+						dt = Service::FrameManager().GetLogicalFrameDelta() / mousePos.size();
+					}
+					else {
+						dt = Service::FrameManager().GetLogicalFrameDelta() * (newPosFrameCount - _posDeltaFrameCount);
+						_posDeltaFrameCount = newPosFrameCount;
+					}
 					MouseMoveEvent m;
 					m.position = iter;
 					m.deltaPosition = iter - _lastMousePos;
-					//FIXME::
-					m.deltaTime = Tiny::Service::FrameManager().GetLogicalFrameDelta() / mousePos.size();
+					//FIXME::�޷��ڴ˴��������Ժ�����deltatime��
+					m.deltaTime = (float)dt;
 					Service::Log().V("Input: MouseMove: {}, deltaPosition:{}, dt:{}", m.position, m.deltaPosition, m.deltaTime);
 					_lastMousePos = iter;
 				}

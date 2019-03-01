@@ -14,8 +14,8 @@ namespace Tiny{
         _startTimeMacroSec = duration_cast<microseconds>( system_clock::now().time_since_epoch() );
     }
 
-    double Time::GetTime(TimePrecision p) const{
-         double result;
+    Long Time::GetTime(TimePrecision p) const{
+         Long result;
          switch (p) {
              case TimePrecision::SEC:
              result = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
@@ -30,8 +30,8 @@ namespace Tiny{
          return result;
     }
 
-    double Time::GetTimeSinceLaunch(TimePrecision p) const{
-        double result;
+    Long Time::GetTimeSinceLaunch(TimePrecision p) const{
+		Long result;
         switch (p) {
             case TimePrecision::SEC:
             result = duration_cast<seconds>(system_clock::now().time_since_epoch() - _startTimeSec).count();

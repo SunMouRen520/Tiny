@@ -44,6 +44,7 @@ namespace Tiny {
 			IronBranch::Signals<MouseBtnEvent> _mouseBtnEvent;
 
 			Tiny::Math::Vector2f	_lastMousePos;
+			Long _posDeltaFrameCount;
 		};
 	}
 }

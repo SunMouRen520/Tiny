@@ -47,7 +47,7 @@ namespace Tiny{
     3. http://www.kinematicsoup.com/news/2016/8/9/rrypp5tkubynjwxhxjzd42s3o034o8
     */
 #ifdef TINY_DEBUG
-    constexpr double DebugFrameDelta = 0.5; //if we are in debug mode, and
+    constexpr double DebugFrameDelta = 500;
 #endif
     void Engine::StartUp(){
         if(!_app){
@@ -56,14 +56,12 @@ namespace Tiny{
 			_app->GetAppPath(); //cause crash
         }
 
-        double logicalDelta = Service::FrameManager().GetLogicalFrameDelta();
-        double targetDelta = Service::FrameManager().GetTargetFrameDelta();
-
-        Service::Log().W("MainLoop: logicalDelta {}, targetDelta {}", logicalDelta, targetDelta);
+        double logicalDelta = Service::FrameManager().GetLogicalFrameDelta() * 1000;
+        double targetDelta = Service::FrameManager().GetTargetFrameDelta() * 1000;
 
         LogicalUpdate();
 
-		double lastTime = Service::Time().GetTime(TimePrecision::MILLISEC);
+		double lastTime = Service::Time().GetTime(TimePrecision::MICROSEC) / 1000.0;
         double logicalAccumulator = 0.0;
 
         //test code for total frame rate control
@@ -74,7 +72,7 @@ namespace Tiny{
             if(!_running)
                 break;
 
-            double currentTime = Service::Time().GetTime(TimePrecision::MILLISEC);
+            double currentTime = Service::Time().GetTime(TimePrecision::MICROSEC) / 1000.0;
             double delta = currentTime - lastTime;
             lastTime = currentTime;
 
@@ -90,9 +88,9 @@ namespace Tiny{
             //test code for total frame rate control
             sleepCalibrating += targetDelta - delta;
             if(sleepCalibrating > 0){
-                double beforeSleep = Service::Time().GetTime(TimePrecision::MILLISEC);
-                std::this_thread::sleep_for(std::chrono::milliseconds((int)(sleepCalibrating * 1000)));
-                sleepCalibrating -= Service::Time().GetTime(TimePrecision::MILLISEC) - beforeSleep;
+                double beforeSleep = Service::Time().GetTime(TimePrecision::MICROSEC) / 1000.0;
+                std::this_thread::sleep_for(std::chrono::milliseconds((int)(sleepCalibrating )));
+                sleepCalibrating -= Service::Time().GetTime(TimePrecision::MICROSEC) / 1000.0 - beforeSleep;
             }
 
 			_input.Pool();

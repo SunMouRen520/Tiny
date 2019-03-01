@@ -21,15 +21,17 @@ namespace Tiny{
         void Init();
         /*
             @brief  Get time since unix epoch.
+            @return integer represtation in TimePrecision unit
         */
-        double GetTime(TimePrecision p = TimePrecision::SEC) const;
+        Long GetTime(TimePrecision p = TimePrecision::SEC) const;
 
         /*
             @brief  Get time since start.
+            @return integer represtation in TimePrecision unit
         */
-        double GetTimeSinceLaunch(TimePrecision p = TimePrecision::SEC) const;
+        Long GetTimeSinceLaunch(TimePrecision p = TimePrecision::SEC) const;
 
-        
+
         /*
             @brief  Get the logic number of seconds since start.
         */
