@@ -10,7 +10,9 @@
 #include "Tiny/Math/Angle.h"
 #include "Tiny/Math/Tags.h"
 
-#ifdef TINY_TEST
+#include "Tiny/config.h"
+
+#ifdef TINY_DEBUG
 #include <iostream>
 #endif
 
@@ -291,7 +293,7 @@ namespace Tiny { namespace Math {
 		return out;
 	}
 
-#ifdef TINY_TEST
+#ifdef TINY_DEBUG
 	template<std::size_t size, typename T> std::ostream& operator<<(std::ostream& os, const Vector<size, T>& vector) {
 		os << "[";
 		for (int i = 0; i < size - 1; i++)

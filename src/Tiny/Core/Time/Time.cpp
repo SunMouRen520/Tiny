@@ -9,14 +9,41 @@ namespace Tiny{
     }
 
     void Time::Init(){
-        _startTime = duration_cast< seconds>( system_clock::now().time_since_epoch() );
-    }
-    double Time::GetTime() const{
-        return duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+        _startTimeSec = duration_cast<seconds>( system_clock::now().time_since_epoch() );
+        _startTimeMilliSec = duration_cast<milliseconds>( system_clock::now().time_since_epoch() );
+        _startTimeMacroSec = duration_cast<microseconds>( system_clock::now().time_since_epoch() );
     }
 
-    double Time::GetTimeSinceLaunch() const{
-		return duration_cast<seconds>(system_clock::now().time_since_epoch() - _startTime).count();
+    double Time::GetTime(TimePrecision p) const{
+         double result;
+         switch (p) {
+             case TimePrecision::SEC:
+             result = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+             break;
+             case TimePrecision::MILLISEC:
+             result = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+             break;
+             case TimePrecision::MICROSEC:
+             result = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+             break;
+         }
+         return result;
+    }
+
+    double Time::GetTimeSinceLaunch(TimePrecision p) const{
+        double result;
+        switch (p) {
+            case TimePrecision::SEC:
+            result = duration_cast<seconds>(system_clock::now().time_since_epoch() - _startTimeSec).count();
+            break;
+            case TimePrecision::MILLISEC:
+            result = duration_cast<milliseconds>(system_clock::now().time_since_epoch() - _startTimeMilliSec).count();
+            break;
+            case TimePrecision::MICROSEC:
+            result = duration_cast<microseconds>(system_clock::now().time_since_epoch() - _startTimeMacroSec).count();
+            break;
+        }
+        return result;
     }
 
     double Time::GetLogicTimeSinceLaunch() const{

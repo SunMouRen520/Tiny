@@ -2,15 +2,10 @@
 
 #include "Tiny/Types.h"
 
+#include "Tiny/Core/Time/Time.h"
 #include <unordered_map>
 
 namespace Tiny{
-    enum class TimePrecision{
-        SEC,
-        MILISEC,
-        MACROSEC,
-    };
-
     /*
         @brief  Abstract timeline,  can be used in animation clip, audio clip etc.
     */

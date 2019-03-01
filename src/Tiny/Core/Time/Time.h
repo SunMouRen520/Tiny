@@ -8,6 +8,11 @@ namespace Tiny{
     /*
     TODO: high resolution time
     */
+    enum class TimePrecision{
+        SEC,
+		MILLISEC, //毫秒
+        MICROSEC, //微秒
+    };
 
     class Time{
     public:
@@ -15,15 +20,16 @@ namespace Tiny{
         ~Time() = default;
         void Init();
         /*
-            @brief  Get number of seconds since unix epoch.
+            @brief  Get time since unix epoch.
         */
-        double GetTime() const;
+        double GetTime(TimePrecision p = TimePrecision::SEC) const;
 
         /*
-            @brief  Get Number of seconds since start.
+            @brief  Get time since start.
         */
-        double GetTimeSinceLaunch() const;
+        double GetTimeSinceLaunch(TimePrecision p = TimePrecision::SEC) const;
 
+        
         /*
             @brief  Get the logic number of seconds since start.
         */
@@ -35,7 +41,9 @@ namespace Tiny{
         void Update();
 
     private:
-        std::chrono::seconds _startTime;
+        std::chrono::milliseconds _startTimeMilliSec;
+        std::chrono::seconds _startTimeSec;
+        std::chrono::microseconds _startTimeMacroSec;
         double _logicTime;
     };
 }

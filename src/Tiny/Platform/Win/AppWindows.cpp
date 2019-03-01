@@ -18,7 +18,7 @@ using namespace Tiny;
 class AppWin :public Application{
 public:
     AppWin(){
-
+        std::fill(std::begin(_mouseBtnPress), std::end(_mouseBtnPress), false);
     }
 
     ~AppWin() = default;
@@ -92,10 +92,10 @@ private:
 
     void InitLogger(){
 		std::list<std::unique_ptr<IronBranch::Utility::Output>> list;
-		std::unique_ptr<IronBranch::Utility::Output> output(new IronBranch::Utility::MSVCOutput());
+		std::unique_ptr<IronBranch::Utility::Output> output(new IronBranch::Utility::ConsoleOutput());
 		list.push_back(std::move(output));
 		std::unique_ptr <IronBranch::Utility::Payload> p(new IronBranch::Utility::DefaultPayload());
-		auto logger = std::make_unique<IronBranch::Utility::Logger>(list, std::move(p));
+		auto logger = std::make_unique<IronBranch::Utility::Logger>(list, std::move(p), IronBranch::Utility::LogLevel::VERBOSE);
 		Service::SetLogger(std::move(logger));
     }
 
@@ -191,7 +191,9 @@ private:
         _engine.GetInputSystem().AddInputModule(&_jpModule, false);
 
         glfwSetWindowUserPointer(_window, this);
-        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        //glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
         glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double xPos, double yPos) -> void {
             AppWin *app = (static_cast<AppWin*>(glfwGetWindowUserPointer(window)));

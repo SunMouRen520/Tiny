@@ -107,7 +107,7 @@ MOUSEBTN GLFWMouse2TinyMouse(int glfwMouse){
 	if (iter != mouseMap.end())
 		return iter->second;
 
-	Service::Log().E("");
+	Service::Log().E("Invalid glfw Mouse:{}", glfwMouse);
 
 	return MOUSEBTN::INVALID;
 }

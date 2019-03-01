@@ -22,7 +22,7 @@ namespace Tiny{
 
 		auto fm = std::make_unique<FrameManager>();
 		Service::SetFrameManager(std::move(fm));
-		
+
 		Service::Time().Init();
     }
 
@@ -46,6 +46,9 @@ namespace Tiny{
     2. http://lspiroengine.com/?p=378
     3. http://www.kinematicsoup.com/news/2016/8/9/rrypp5tkubynjwxhxjzd42s3o034o8
     */
+#ifdef TINY_DEBUG
+    constexpr double DebugFrameDelta = 0.5; //if we are in debug mode, and
+#endif
     void Engine::StartUp(){
         if(!_app){
             Service::Log().E("Engine Initialized failed, crash!");
@@ -56,9 +59,11 @@ namespace Tiny{
         double logicalDelta = Service::FrameManager().GetLogicalFrameDelta();
         double targetDelta = Service::FrameManager().GetTargetFrameDelta();
 
+        Service::Log().W("MainLoop: logicalDelta {}, targetDelta {}", logicalDelta, targetDelta);
+
         LogicalUpdate();
 
-		double lastTime = Service::Time().GetTime();
+		double lastTime = Service::Time().GetTime(TimePrecision::MILLISEC);
         double logicalAccumulator = 0.0;
 
         //test code for total frame rate control
@@ -69,22 +74,30 @@ namespace Tiny{
             if(!_running)
                 break;
 
-            double currentTime = Service::Time().GetTime();
+            double currentTime = Service::Time().GetTime(TimePrecision::MILLISEC);
             double delta = currentTime - lastTime;
             lastTime = currentTime;
 
+#ifdef TINY_DEBUG
+            double breakpointCorrection = 0.0;
+            if(delta > DebugFrameDelta){ //当Debug模式开启 且 一帧时间大于DebugFrameDelta时, 认为断点影响了游戏逻辑执行， 在此进行时间修正，以防止断点后逻辑帧在一帧里执行过多次
+                breakpointCorrection = delta - targetDelta;
+                delta = targetDelta;
+            }
+#endif
 			Service::FrameManager().OnFrameBegin(currentTime, delta);
 
             //test code for total frame rate control
             sleepCalibrating += targetDelta - delta;
             if(sleepCalibrating > 0){
-                double beforeSleep = Service::Time().GetTime();
+                double beforeSleep = Service::Time().GetTime(TimePrecision::MILLISEC);
                 std::this_thread::sleep_for(std::chrono::milliseconds((int)(sleepCalibrating * 1000)));
-                sleepCalibrating -= Service::Time().GetTime() - beforeSleep;
+                sleepCalibrating -= Service::Time().GetTime(TimePrecision::MILLISEC) - beforeSleep;
             }
 
 			_input.Pool();
             logicalAccumulator += delta;
+            //Service::Log().W("MainLoop: logicalAccumulator {}f, delta {}f", logicalAccumulator, delta);
             while(logicalAccumulator >= logicalDelta){
                 LogicalUpdate();
                 logicalAccumulator -= logicalDelta;
@@ -100,6 +113,7 @@ namespace Tiny{
     @brief  update logical world.
     */
     void Engine::LogicalUpdate(){
+        Service::FrameManager().OnLogicalFrameBegin();
         //input should be processed befor all logic start.
 		_input.Update();
 

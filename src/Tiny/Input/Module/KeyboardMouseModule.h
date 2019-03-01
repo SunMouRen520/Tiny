@@ -4,16 +4,24 @@
 #include "Tiny/Input/Module/InputModule.h"
 #include "Tiny/Input/Def.h"
 
+#include <ostream>
 #include <functional>
+
+#include <fmt/ostream.h>
 
 namespace Tiny{
     namespace Input{
+
 		class KeyboardMouseModule : public InputModule{
 		public:
             struct KeyboardData{
                 KEYBOARD    key;
                 bool        pressed;
                 bool        holding;
+
+				friend std::ostream& operator<<(std::ostream &os, const KeyboardMouseModule::KeyboardData& d) {
+					return os << "Key:" << (int)d.key << ", pressed:" << d.pressed << ", holding:" << d.holding;
+				}
             };
 
             //当btnMask是SCROLL_UP/SCROLLDOWN时 pressed和pos没有意义
@@ -22,6 +30,10 @@ namespace Tiny{
                 bool        pressed;
                 bool        holding;
                 Math::Vector2f pos; //in screen coordinate, origin in left-bottom
+
+				friend std::ostream& operator<<(std::ostream &os, const KeyboardMouseModule::MouseBtnData& d) {
+					return os << "MouseBtn:" << (int)d.btn << ", Pos:" << d.pos << ", pressed:" << d.pressed << ", holding:" << d.holding;
+				}
             };
 
             KeyboardMouseModule(UnsignedByte maxKeyCacheNum = 100, UnsignedByte maxMouseCacheNum = 10);
@@ -49,9 +61,9 @@ namespace Tiny{
             // const std::list<KeyboardData>& GetLastFrameKeyboardData() const;
 
 		private:
-			InputQueue<KeyboardData> 	_keyboardInput;
-			InputQueue<Tiny::Math::Vector2f> 	 _mousePos;
-			InputQueue<MouseBtnData> 	     _moustBtn;
+			InputQueue<KeyboardData> 	_keyboardInputQueue;
+			InputQueue<Tiny::Math::Vector2f> 	 _mousePosQueue;
+			InputQueue<MouseBtnData> 	     _moustBtnQueue;
 
             std::list<KeyboardData> _curKeyboardData;
             // std::list<KeyboardData> _lastKeyboardData;
@@ -62,5 +74,6 @@ namespace Tiny{
 
 			std::function<void()> 		_pollTrigger;
 		};
+
     }
 }

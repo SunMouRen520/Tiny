@@ -6,9 +6,9 @@ namespace Tiny{
     namespace Input{
         KeyboardMouseModule::KeyboardMouseModule(UnsignedByte maxKeyCacheNum , UnsignedByte maxMouseCacheNum )
         :InputModule(InputModuleType::KEYBOARD_MOUSE)
-        ,_keyboardInput("keyboard", maxKeyCacheNum)
-        ,_moustBtn("mousebtn", maxMouseCacheNum)
-        ,_mousePos("mousepos",maxMouseCacheNum){
+        ,_keyboardInputQueue("keyboard", maxKeyCacheNum)
+        ,_moustBtnQueue("mousebtn", maxMouseCacheNum)
+        ,_mousePosQueue("mousepos",maxMouseCacheNum){
             _curMousePos.push_back(Tiny::Math::Vector2f(0.f, 0.f));
         }
 
@@ -26,9 +26,10 @@ namespace Tiny{
             //_lastKeyboardData = _curKeyboardData;
             _lastMousePos = _curMousePos;
 
-            _curKeyboardData = _keyboardInput.Pop();
+            _curKeyboardData = _keyboardInputQueue.Pop();
+            _curMouseBtn = _moustBtnQueue.Pop();
 
-            _curMousePos = _mousePos.Pop();
+            _curMousePos = _mousePosQueue.Pop();
             if(_curMousePos.empty()){
                 _curMousePos.push_back(_lastMousePos.back());
             }
@@ -59,15 +60,15 @@ namespace Tiny{
         // }
 
         void KeyboardMouseModule::ReceiveKeyboard(const KeyboardData& d){
-            _keyboardInput.Push(d);
+            _keyboardInputQueue.Push(d);
         }
 
         void KeyboardMouseModule::ReceiveMouseBtn(const MouseBtnData &data){
-            _moustBtn.Push(data);
+            _moustBtnQueue.Push(data);
         }
 
         void KeyboardMouseModule::ReceiveMousePos(const Tiny::Math::Vector2f& pos){
-            _mousePos.Push(pos);
+            _mousePosQueue.Push(pos);
         }
     }
 }

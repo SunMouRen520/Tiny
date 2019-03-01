@@ -100,6 +100,17 @@ namespace Tiny { namespace Math {
 		T det = norm_a.X() * norm_b.Y() - norm_a.Y() * norm_b.X();
 		return std::atan2(det, inner);
 	}
+
+#ifdef TINY_DEBUG
+	template<std::size_t size, typename T> std::ostream& operator<<(std::ostream& os, const Vector2<T>& vector) {
+		os << "[";
+		for (int i = 0; i < size - 1; i++)
+			os << vector[i] << ", ";
+
+		os << vector[size - 1] << "]" << std::endl;
+		return os;
+	}
+#endif
 }
 }
 

@@ -38,6 +38,7 @@ namespace Tiny{
             }
 
             void Push(Datum data){
+                //Service::Log().W("InputQueue {0} push, _used:{1}", _tag ,_used);
                 if(_used >= _maxSize){
                     Service::Log().E("InputQueue {0} overflow! MaxQueueSize is {1}", _tag, _maxSize);
                     return;
@@ -52,12 +53,13 @@ namespace Tiny{
             std::list<Datum> Pop(){
                 std::list<Datum> result;
                 auto& iter = _queue.begin();
-                std::size_t count = 0;
-                while(iter != _queue.end() && count <= _used){
-                    result.push_back(std::move(iter->data));
-                    count++;
+                while(iter != _queue.end()){
+                    result.emplace_back(std::move(iter->data));
+                    iter++;
                 }
                 _queue.clear();
+				_used = 0;
+                //Service::Log().W("InputQueue {0} clear, _used:{1}", _tag ,_used);
                 return result;
             }
 
