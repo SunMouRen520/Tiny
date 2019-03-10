@@ -28,18 +28,31 @@ namespace Tiny { namespace Math {
 	}
 
 	/*
+		interpolations.
+		for generic interpolation examples and explainsations, see http://paulbourke.net/miscellaneous/interpolation
+	*/
+	/*
 	  @brief	Generic linear interpolation
 	*/
 	template<typename T, typename U> T Lerp(const T& a, const T&b, const U& t) {
 		return (1 - t) * a + t * b;
 	}
 
-	template<typename T> T RoundDown(T val, T base) {
-		return val - val % base;
+	/*
+		@brief Cubic interpolation
+		just one of many cubic interpolations
+	*/
+	tetmplate<typename T, typename U> T CubicLerp(const T& a, const T& b, const U& t){
+		U v2 = -2 * math::pow(t, 3) + 3 * math::pow(t, 2);
+		return (1 - v2) * a + v2 * b;
 	}
 
-	template<typename T> T RoundUp(T val, T base) {
-		return RoundDown(val + base - 1, base);
+	/*
+		@trigonometric interpolation
+		just one of many trigonometric interpolations
+	*/
+	tetmplate<typename T, typename U> T TriLerp(const T& a, const T& b, const U& radius){
+		return a * math::pow(std::cos(radius), 2) + b * math::pow(std::sin(radius), 2);
 	}
 }}
 
