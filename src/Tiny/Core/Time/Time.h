@@ -6,7 +6,8 @@
 
 namespace Tiny{
     /*
-    TODO: high resolution time
+    TODO:
+    1.是否应该直接使用std::chrono类型作为返回值，而不是使用Long
     */
     enum class TimePrecision{
         SEC,

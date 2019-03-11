@@ -27,7 +27,7 @@ namespace Tiny{
     }
 
     /*
-    @brief  start the game world.
+    @brief  main loop
     @caution:
     游戏主循环采用fixed-stamp模式，逻辑帧以固定间隔更新， 渲染帧以最大帧率更新。
     render world落后logical world一帧， render world采用logical world插值后的结果进行渲染。
@@ -49,6 +49,10 @@ namespace Tiny{
 #ifdef TINY_DEBUG
     constexpr double DebugFrameDelta = 500;
 #endif
+    /*
+        TODO:
+            1. high resolution timer?
+    */
     void Engine::StartUp(){
         if(!_app){
             Service::Log().E("Engine Initialized failed, crash!");

@@ -1,5 +1,4 @@
-#ifndef TINY_MATH_TAGS_H
-#define TINY_MATH_TAGS_H
+#pragma once
 
 namespace Tiny { namespace Math {
 	/*
@@ -14,5 +13,3 @@ namespace Tiny { namespace Math {
 	struct IdentityInitT {};
 	static IdentityInitT IdentityInit;
 } }
-
-#endif // !TINY_MATH_TAGS_H
