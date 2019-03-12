@@ -17,7 +17,7 @@ namespace Tiny {
 
 			void Update();
 
-			void Pool();
+			void Poll();
 
 			void AddInputModule(InputModule *input, bool active = true);
 

@@ -38,7 +38,7 @@ namespace Tiny{
 
             InputModuleType GetType() const {return _type;}
 
-            virtual void Pool() = 0;
+            virtual void Poll() = 0;
         private:
             InputModuleType _type;
         };

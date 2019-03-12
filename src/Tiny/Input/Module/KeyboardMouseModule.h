@@ -39,7 +39,7 @@ namespace Tiny{
             KeyboardMouseModule(UnsignedByte maxKeyCacheNum = 100, UnsignedByte maxMouseCacheNum = 10);
 
             void SetPollTrigger(std::function<void()> pollTrigger);
-            void Pool() override;
+            void Poll() override;
 			void Update();
 
 			void ReceiveKeyboard(const KeyboardData& data);

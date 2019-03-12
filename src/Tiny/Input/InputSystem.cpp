@@ -58,12 +58,12 @@ namespace Tiny {
 				ProcessKeyboardMouse();
 		}
 
-		void InputSystem::Pool() {
+		void InputSystem::Poll() {
 			if ((_currentInput | InputModuleType::KEYBOARD_MOUSE) != InputModuleType::INVLIAD)
-				_kmModule->Pool();
+				_kmModule->Poll();
 
 			if ((_currentInput | InputModuleType::JOYPAD) != InputModuleType::INVLIAD)
-				_jpModule->Pool();
+				_jpModule->Poll();
 		}
 
 		void InputSystem::ProcessKeyboardMouse() {

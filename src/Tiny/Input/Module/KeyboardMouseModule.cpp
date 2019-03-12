@@ -16,7 +16,7 @@ namespace Tiny{
             _pollTrigger = pollTrigger;
         }
 
-        void KeyboardMouseModule::Pool(){
+        void KeyboardMouseModule::Poll(){
             if(_pollTrigger)
                 _pollTrigger();
         }

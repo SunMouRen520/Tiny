@@ -97,7 +97,7 @@ namespace Tiny{
                 sleepCalibrating -= Service::Time().GetTime(TimePrecision::MICROSEC) / 1000.0 - beforeSleep;
             }
 
-			_input.Pool();
+			_input.Poll();
             logicalAccumulator += delta;
             //Service::Log().W("MainLoop: logicalAccumulator {}f, delta {}f", logicalAccumulator, delta);
             while(logicalAccumulator >= logicalDelta){

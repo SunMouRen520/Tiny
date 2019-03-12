@@ -9,7 +9,7 @@ namespace Tiny{
         public:
             JoypadModule();
 
-            void Pool() override {}
+            void Poll() override {}
         private:
 
 
