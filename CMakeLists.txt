@@ -32,9 +32,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(BUILD_TARGET_MSVC ON)
 set(BUILD_TARGET_ANDROID OFF)
 
-if(NOT BOOTSTRAP)
-    find_package(IronBranch REQUIRED)
-endif()
+#if(NOT BOOTSTRAP)
+#    find_package(IronBranch REQUIRED)
+#endif()
 
 find_package(RapidJSON REQUIRED)
 find_package(gl3w REQUIRED)
