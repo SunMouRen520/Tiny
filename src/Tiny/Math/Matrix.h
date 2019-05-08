@@ -172,6 +172,12 @@ namespace Tiny { namespace Math {
 
 		Matrix<size, T> Inverse() const;
 
+	protected:
+		template<std::size_t ...RowSeq> Vector<size, T> DiagonalIner(Implementation::Sequence<RowSeq...>) const
+		{
+			return  Vector<size, T>(((*this)[RowSeq][RowSeq])...);
+		}
+
 	private:
 		template<std::size_t otherSize, std::size_t ...RowSeq> Matrix(Implementation::Sequence<RowSeq...>, const RectangularMatrix<otherSize, otherSize, T>& other)
 			:RectangularMatrix<size, size, T>{( Implementation::CopyOrIdentityColumn<otherSize, size, T>(other, RowSeq))...} {}
@@ -219,7 +225,8 @@ namespace Tiny { namespace Math {
 	}
 
 	template<std::size_t size, typename T>  Vector<size, T> Matrix<size, T>::Diagonal() const {
-		return Vector<size, T>((*this)[0][0], (*this)[1][1], (*this)[2][2]);
+		//return Vector<size, T>((*this)[0][0], (*this)[1][1], (*this)[2][2]);
+		return DiagonalIner(Implementation::GenerateSeq<size>::Type());
 	}
 
 	//The cofactor Cij = (-1) ^ (i + j)detA(ij)
