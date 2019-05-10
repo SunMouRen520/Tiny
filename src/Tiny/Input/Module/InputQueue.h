@@ -30,7 +30,7 @@ namespace Tiny{
                 return *this;
             }
 
-            friend void swap(InputQueue&& a, InputQueue&& b){
+            friend void swap(InputQueue& a, InputQueue& b){
                 std::swap(a._queue, b._queue);
                 std::swap(a._maxSize, b._maxSize);
                 std::swap(a._used, b._used);
