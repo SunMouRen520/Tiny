@@ -129,7 +129,7 @@ namespace Tiny { namespace Math {
 		/*
 			@brief	Generate matrix from Rectangularmatrix.
 		*/
-		explicit Matrix(const RectangularMatrix<size, size, T>& other)
+		Matrix(const RectangularMatrix<size, size, T>& other)
 			:RectangularMatrix<size, size, T>(other) {}
 
 		/*
@@ -142,7 +142,6 @@ namespace Tiny { namespace Math {
 
 		/*default copy constructor*/
 		Matrix(const Matrix<size, T>& other) = default;
-
 
 		/*
 			@brief Get the determinant
@@ -171,6 +170,8 @@ namespace Tiny { namespace Math {
 		Vector<size, T> Diagonal() const;
 
 		Matrix<size, T> Inverse() const;
+
+		template<typename U> typename std::enable_if<U::Size == size, Matrix<size, T>&>::type operator*=(const U& other);
 
 	protected:
 		template<std::size_t ...RowSeq> Vector<size, T> DiagonalIner(Implementation::Sequence<RowSeq...>) const
@@ -239,6 +240,12 @@ namespace Tiny { namespace Math {
 			}
 		}
 		return result;
+	}
+
+	template<std::size_t size, typename T>
+	template<typename U> typename std::enable_if<U::Size == size, Matrix<size, T>&>::type Matrix<size, T>::operator*=(const U& other) {
+		*this = (*this) * other;
+		return *this;
 	}
 } }
 

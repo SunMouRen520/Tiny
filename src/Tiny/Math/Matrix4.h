@@ -212,33 +212,33 @@ namespace Tiny { namespace Math {
 				{T(0), T(0), T(1), T(0)},
 				{tran.X(), tran.Y(), tran.Z(), T(1)}};
 	}
-
+	//in left-hand
 	template<typename T> Matrix4<T> Matrix4<T>::RotationX(const Rad<T>& rad) {
-		const T val = static_cast<float>(rad);
+		const T val = T(rad);
 		const T sin_val = std::sin(val);
 		const T cos_val = std::cos(val);
 		return{ {T(1), T(0), T(0), T(0)},
-				{T(0), cos_val, sin_val, T(0)},
-				{T(0), -sin_val, cos_val, T(0)},
+				{T(0), cos_val, -sin_val, T(0)},
+				{T(0), sin_val, cos_val, T(0)},
 				{T(0), T(0), T(0), T(1)}};
 	}
-
+	//in left-hand
 	template<typename T> Matrix4<T> Matrix4<T>::RotationY(const Rad<T>& rad) {
-		const T val = static_cast<float>(rad);
+		const T val = T(rad);
 		const T sin_val = std::sin(val);
 		const T cos_val = std::cos(val);
-		return{ {cos_val, T(0), -sin_val, T(0)},
+		return{ {cos_val, T(0), sin_val, T(0)},
 				{T(0), T(1), T(0), T(0)},
-				{sin_val, T(0), cos_val, T(0)},
+				{-sin_val, T(0), cos_val, T(0)},
 				{T(0), T(0), T(0), T(1)}};
 	}
-
+	//in left-hand
 	template<typename T> Matrix4<T> Matrix4<T>::RotationZ(const Rad<T>& rad) {
-		const T val = static_cast<float>(rad);
+		const T val = T(rad);
 		const T sin_val = std::sin(val);
 		const T cos_val = std::cos(val);
-		return{ {cos_val, sin_val, T(0), T(0)},
-				{-sin_val, cos_val, T(0), T(0)},
+		return{ {cos_val, -sin_val, T(0), T(0)},
+				{sin_val, cos_val, T(0), T(0)},
 				{T(0), T(0), T(1), T(0)},
 				{T(0), T(0), T(0), T(1)}};
 	}

@@ -82,16 +82,18 @@ namespace Tiny { namespace Math {
 			@brief Vector3 in direction of X-Axis with length,
 		*/
 		static Vector3<T> XAxis(T length) { return{ length, T(0), T(0) }; }
+		static Vector3<T> XAxis() { return{ T(1), T(0), T(0) }; }
 
 		/*
 			@brief Vector3 in direction of Y-Axis with length
 		*/
 		static Vector3<T> YAxis(T length) { return{ T(0), length, T(0) }; }
-
+		static Vector3<T> YAxis() { return{ T(0), T(1), T(0) }; }
 		/*
 			@brief Vector3 in direction of Z-Axis with length
 		*/
 		static Vector3<T> ZAxis(T length) { return{ T(0), T(0), length }; }
+		static Vector3<T> ZAxis() { return{ T(0), T(0), T(1) }; }
 	};
 
 	/*

@@ -45,6 +45,11 @@ namespace Tiny { namespace Math {
 		Matrix3(const Matrix3& other) = default;
 
 		/*
+			@breief Construct from Euler angles, order by z, x, y
+		*/
+		static Matrix3<T> FromEuler(const Vector3<T>& eulerAngles);
+
+		/*
 			@brief	Convinent function to construct scale matrix.
 			@param	v	v.x is the x scale factor, x.y is the y scale factor
 		*/
@@ -92,6 +97,20 @@ namespace Tiny { namespace Math {
 		*/
 		static Matrix3<T> Projection(const Vec2& n);
 	};
+	//in left-hand
+	template<typename T> Matrix3<T> Matrix3<T>::FromEuler(const Vector3<T>& eulerAngles)
+	{
+		T x = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.X())));
+		T y = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.Y())));
+		T z = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.Z())));
+		T sin_x = std::sin(x), cos_x = std::cos(x);
+		T sin_y = std::sin(y), cos_y = std::cos(y);
+		T sin_z = std::sin(z), cos_z = std::cos(z);
+
+		return{ {cos_z*cos_y - sin_z*sin_x*sin_y, -sin_z*cos_x, cos_z*sin_y+sin_z*sin_x*cos_y},
+				{sin_z*cos_y+cos_z*sin_x*sin_y, cos_z*cos_x, sin_z*sin_y - cos_z*sin_x*cos_y},
+				{-cos_x*sin_y, sin_x, cos_x*cos_y}};
+	}
 
 	template<typename T> Matrix3<T> Matrix3<T>::Scale(const Vec2& v) {
 		return{ { v[0], T(0), T(0)},

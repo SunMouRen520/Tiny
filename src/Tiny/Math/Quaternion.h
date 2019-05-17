@@ -153,6 +153,11 @@ namespace Tiny { namespace Math {
 		static Quaternion<T> FromMatrix(const Matrix<3, T>& m);
 
 		/*
+		@brief	Construct rotation quaternion from Euler angles
+		*/
+		static Quaternion<T> FromEuler(const Vector3<T>& eulerAngles);
+
+		/*
 		  @brief	Default identity quaternion.
 		*/
 		/*explicit*/ Quaternion(IdentityInitT = IdentityInit) noexcept
@@ -197,7 +202,10 @@ namespace Tiny { namespace Math {
 		  @brief	Convert to matrix form.
 		*/
 		Matrix<3, T> ToMatrix() const;
-
+		/*
+		  @brief	covert to euler angles
+		*/
+		Vector3<T> ToEuler() const;
 		/*
 		  @brief	Get the norm of quaternion.
 		*/
@@ -261,6 +269,22 @@ namespace Tiny { namespace Math {
 		return Quaternion<T>(w, n * sinVal);
 	}
 
+	template<typename T> Quaternion<T> Quaternion<T>::FromEuler(const Vector3<T>& eulerAngles)
+	{
+		T x = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.X()))) / 2;
+		T y = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.Y()))) / 2;
+		T z = T(Math::Rad<T>(Math::Deg<T>(eulerAngles.Z()))) / 2;
+		T sin_x = std::sin(x), cos_x = std::cos(x);
+		T sin_y = std::sin(y), cos_y = std::cos(y);
+		T sin_z = std::sin(z), cos_z = std::cos(z);
+		T q0 = cos_x * cos_y*cos_z - sin_x * sin_y*sin_z;
+		T q1 = sin_x * cos_y*cos_z - cos_x * sin_y*sin_z;
+		T q2 = cos_x * sin_y*cos_z + sin_x * cos_y*sin_z;
+		T q3 = cos_x * cos_y*sin_z + sin_x * sin_y*cos_z;
+
+		return Quaternion<T>(q0, Math::Vector3<T>(q1, q2, q3));
+	}
+
 	template<typename T> Quaternion<T> Quaternion<T>::FromMatrix(const Matrix < 3, T> &m) {
 		T vals[] = { m[0][0] + m[1][1] + m[2][2], m[0][0] - m[1][1] - m[2][2], m[1][1] - m[0][0] - m[2][2], m[2][2] - m[0][0] - m[1][1] };
 
@@ -307,9 +331,29 @@ namespace Tiny { namespace Math {
 	template<typename T> Matrix<3, T> Quaternion<T>::ToMatrix() const {
 		T w = _w, x = _v.X(), y = _v.Y(), z = _v.Z();
 		T one(1), two(2);
-		return {Math::Vector<3, T>(one - two * y * y - two * z * z, two * x * y + two * w * z, two * x * z - two * w * y),
-				Math::Vector<3, T>(two * x * y - two * w * z, one - two * x * x - two * z * z, two * y * z + two * w * x),
-				Math::Vector<3, T>(two * x * z + two * w * y, two * y * z - two * w * x, one - two * x * x - two * y * y)};
+		return {Math::Vector<3, T>(one - two * y * y - two * z * z,two * x * y - two * w * z , two * x * z + two * w * y),
+				Math::Vector<3, T>(two * x * y + two * w * z, one - two * x * x - two * z * z, two * y * z - two * w * x),
+				Math::Vector<3, T>(two * x * z - two * w * y,two * y * z + two * w * x, one - two * x * x - two * y * y)};
+	}
+
+	template<typename T> Vector3<T> Quaternion<T>::ToEuler() const {
+		T w = _w, x = _v.X(), y = _v.Y(), z = _v.Z();
+		T one(1), two(2);
+		T sin_pitch = two * (y*z + w * x);
+		T pitch = std::asin(sin_pitch);
+		T yaw, roll;
+		if (equals(sin_pitch, T(1)))
+		{
+			yaw = atan2(two * (x*z + w * y), one - two * y*y - two * z*z);
+			roll = T(0);
+		}
+		else
+		{
+			yaw = atan2(two*(w * y - x*z), one - two * y*y - two * x*x);
+			roll = atan2(two*(w * z - x*y), one - two * x*x - two * z*z);
+		}
+
+		return { T(Deg<T>(Rad<T>(pitch))), T(Deg<T>(Rad<T>(yaw))), T(Deg<T>(Rad<T>(roll))) };
 	}
 
 	template<typename T> T Quaternion<T>::Norm() const {
@@ -327,7 +371,7 @@ namespace Tiny { namespace Math {
 	template<typename T> Quaternion<T>& Quaternion<T>::operator *=(const Quaternion<T>& other) {
 		T _wBackup = _w;
 		_w = _w * other._w - _v * other._v;
-		_v = _wBackup * other._v + other._w * _v + Cross(other._v, _v);
+		_v = _wBackup * other._v + other._w * _v + Cross(_v, other._v);
 		return *this;
 	}
 

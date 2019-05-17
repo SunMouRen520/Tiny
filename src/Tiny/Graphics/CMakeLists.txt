@@ -36,6 +36,24 @@ set(Renderer_FILES
   Renderer/Object/Buffer.cpp
 )
 
+set(Mesh_FILES
+  Mesh/Mesh.h
+  Mesh/Mesh.cpp
+  Mesh/Model.h
+  Mesh/Model.cpp
+)
+
+set(Object_FILES
+  Object/Object.h
+  Object/Object.cpp
+  Object/Transform.h
+)
+
+set(Shader_FILES
+  Shader/Shader.h
+  Shader/Shader.cpp
+)
+
 set(SCENE_FILES
     Scene/Camera.h
     Scene/Camera.cpp
@@ -49,6 +67,9 @@ set(Graphics_SRC
     ${GL_FILES}
     ${SCENE_FILES}
     ${Renderer_FILES}
+    ${Mesh_FILES}
+    ${Object_FILES}
+    ${Shader_FILES}
 )
 
 add_library(Graphics ${Graphics_SRC})
@@ -70,3 +91,6 @@ source_group("Texture" FILES ${Texture_FILES})
 source_group("RenderSystem" FILES ${Graphics_RenderSystem_SRC})
 source_group("Scene" FILES ${SCENE_FILES})
 source_group("Renderer" FILES ${Renderer_FILES})
+source_group("Mesh" FILES ${Mesh_FILES})
+source_group("Object" FILES ${Object_FILES})
+source_group("Shader" FILES ${Shader_FILES})
