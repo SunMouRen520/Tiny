@@ -95,7 +95,7 @@ private:
 		std::unique_ptr<IronBranch::Utility::Output> output(new IronBranch::Utility::ConsoleOutput());
 		list.push_back(std::move(output));
 		std::unique_ptr <IronBranch::Utility::Payload> p(new IronBranch::Utility::DefaultPayload());
-		auto logger = std::make_unique<IronBranch::Utility::Logger>(list, std::move(p), IronBranch::Utility::LogLevel::VERBOSE);
+		auto logger = std::make_unique<IronBranch::Utility::Logger>(std::move(list), std::move(p), IronBranch::Utility::LogLevel::VERBOSE);
 		Service::SetLogger(std::move(logger));
     }
 
