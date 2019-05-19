@@ -47,6 +47,7 @@ set(Object_FILES
   Object/Object.h
   Object/Object.cpp
   Object/Transform.h
+  Object/Component.h
 )
 
 set(Shader_FILES

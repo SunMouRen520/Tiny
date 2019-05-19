@@ -4,20 +4,22 @@
 #include "Tiny/Math/Vector4.h"
 #include "Tiny/Math/Matrix4.h"
 #include "Tiny/Math/Quaternion.h"
+#include "Component.h"
+
 /*
   Transform, same as unity transfom component
   rotate, order by z, x, y
 */
 
-
 namespace Tiny {
 	namespace Graphics {
-
 		template <typename T>
-		class Transform
+		class Transform:public Component
 		{
+			template<typename T> friend class Transform;
 		public:
-			Transform() :Pos(), Rot(), Scale(1), parent(nullptr) {};
+			Transform() :Component(ComponentType::Transform), Pos(), Rot(), Scale(1), parent(nullptr) {};
+			Transform(Object* objptr) :Component(ComponentType::Transform, objptr), Pos(), Rot(), Scale(1), parent(nullptr) {};
 			~Transform() = default;
 			//Set Position
 			void setPosition(const Math::Vector3<T>& pos) { Pos = pos; }
@@ -54,7 +56,7 @@ namespace Tiny {
 			//Matrix that transforms a point from world space into local space
 			Math::Matrix4<T> worldToLocalMatrix() const;
 			//set parent
-			bool SetParent(Transform* ptr) { parent = (ptr != nullptr) ? ptr : nullptr; return (ptr != nullptr) }
+			bool SetParent(Transform* ptr) { parent = (ptr != nullptr) ? ptr : nullptr; return (ptr != nullptr); }
 			//get parent
 			Transform* Parent() const { return parent; }
 			//get root
@@ -66,6 +68,8 @@ namespace Tiny {
 			void Rotate(Math::Vector3<T> eulerAngles) { Rot += eulerAngles };
 			//Rotates the transform around axis by angle degrees
 			void Rotate(Math::Vector3<T> axis, Math::Deg<T> angle);
+		public:
+			Transform & operator=(const Transform& src) { Pos = src.Pos; Rot = src.Rot; Scale = src.Scale; };
 		private:
 			Math::Vector3<T> Pos;
 			Math::Vector3<T> Rot; //EulerAngles,order by zxy, same as unity
