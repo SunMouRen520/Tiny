@@ -22,6 +22,7 @@ namespace Tiny { namespace Input {
 		bool		pressed; //press/release event
 		MOUSEBTN 	button; //left/right btn
 		Math::Vector2f position; //in screen space coordinate
-	};
+		Math::Vector2f deltaPosition; //the delta pos of mouse moved in holding state
+ 	};
 }
 }

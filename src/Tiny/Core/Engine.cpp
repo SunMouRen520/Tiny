@@ -2,6 +2,8 @@
 #include "Tiny/Core/Service.h"
 #include "Tiny/Core/Time/Time.h"
 #include "Tiny/Application.h"
+#include "Tiny/Graphics/Scene/Scene.h"
+#include "Tiny/Graphics/Mesh/Model.h"
 
 #include <chrono>
 #include <thread>
@@ -59,6 +61,38 @@ namespace Tiny{
 
 			_app->GetAppPath(); //cause crash
         }
+
+		//debug test
+		Tiny::Graphics::Scene::Instance().CreateMainCamera();
+		_input.RegisterMouseBtn(Tiny::Graphics::CameraRotate);
+		_input.RegisterKeyboard(Tiny::Graphics::ProcessKeyBoard);
+
+
+		std::string vpath = "E:\\MyProject\\Bootstrap\\Tiny\\content\\Shader\\default.vshader";
+		std::string fpath = "E:\\MyProject\\Bootstrap\\Tiny\\content\\Shader\\default.fshader";
+		std::string modelPath = "E:\\MyProject\\Bootstrap\\Tiny\\content\\Models\\nanosuit\\nanosuit.obj";
+
+		std::shared_ptr<Tiny::Graphics::Shader> shader = Tiny::ResourceLoader::Instance().LoadShader(vpath, fpath);
+		static Tiny::Graphics::Model* TestModel = Tiny::Graphics::Model::New("TestModel", modelPath, shader);
+		TestModel->Load();
+		Tiny::Graphics::Object* model = Tiny::Graphics::Scene::Instance().FindObject("TestModel");
+		model->Transform().setPosition({ 30.f,-10.f,10.f });
+		model->Transform().setEulerAngles({ 0.f, 180.f,0.f });
+		model->Transform().setScale({ 5.f, 5.f, 5.f });
+
+		std::string vSpath = "E:\\MyProject\\Bootstrap\\Tiny\\content\\Shader\\skinedmesh.vshader";
+		std::string fSpath = "E:\\MyProject\\Bootstrap\\Tiny\\content\\Shader\\default.fshader";
+		std::string modelSPath = "C:\\Users\\Administrator\\Desktop\\extern\\ogldev-source\\Content\\boblampclean.md5mesh";
+
+		std::shared_ptr<Tiny::Graphics::Shader> shaderS = Tiny::ResourceLoader::Instance().LoadShader(vSpath, fSpath);
+		static Tiny::Graphics::Model* SkinedModel = Tiny::Graphics::Model::New("SkinedModel", modelSPath, shaderS);
+		SkinedModel->Load();
+		Tiny::Graphics::Object* modelS = Tiny::Graphics::Scene::Instance().FindObject("SkinedModel");
+		modelS->Transform().setPosition({ 0.f,-10.f,10.f });
+		modelS->Transform().setEulerAngles({ 90.f, 0.f,180.f });
+		modelS->PlayAnim(0, Tiny::Graphics::comSkinedMesh::AnimMode::LOOP);
+		std::string exepath = Tiny::FileSystem::GetExePath();
+		//debug test
 
         double logicalDelta = Service::FrameManager().GetLogicalFrameDelta() * 1000;
         double targetDelta = Service::FrameManager().GetTargetFrameDelta() * 1000;

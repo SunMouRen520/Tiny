@@ -1,6 +1,8 @@
 #ifndef TINY_GRAPHICS_TEXTURE_H
 #define TINY_GRAPHICS_TEXTURE_H
 
+#include "gl3w/GL/gl3w.h"
+
 #include "Tiny/Types.h"
 #include "Tiny/Graphics/Texture/Definition.h"
 #include "Tiny/Graphics/Texture/ImageData.h"
@@ -22,37 +24,41 @@ namespace Tiny { namespace Graphics {
 	using TextureHandler = UnsignedInt;
 	using Memory = UnsignedByte;
 
-	struct TextureDesc {
+	class Texture {
+	public:
+		~Texture() { if (ID != 0) glDeleteTextures(1, &ID); }
+		UnsignedInt ID; //GL texture obj
+
 		UnsignedInt	_width;
 		UnsignedInt _height;
 		UnsignedInt _depth;
 
 		PixelFormat	_format;
-
+		TextureType _type;
 		FilterMode	_filter;
 		WrapMode	_wrap;
 		UnsignedByte _mipNumber;
 
 		bool _cubeMap;
 
-		std::unique_ptr<ImageData> _img;
+		std::shared_ptr<ImageData> _img;
 
-		explicit TextureDesc(IronBranch::DefaultInitT = IronBranch::DefaultInit) {
-			_width = _img->Size().X();
-			_height = _img->Size().Y();
+		explicit Texture(IronBranch::DefaultInitT = IronBranch::DefaultInit) {
+			_width = 0;
+			_height = 0;
 			_depth = 1;
-			_format = PixelFormat::RGB888;
+			_format = PixelFormat::UNKNOWN;
+			_type = TextureType::Unknown;
 			_filter = FilterMode::Linear;
 			_wrap = WrapMode::Clamp;
 			_mipNumber = 0;
 			_cubeMap = false;
 		}
+
+		static std::shared_ptr<Texture> Texture2D(const std::string& resPath, TextureType type);
 	};
 
-	TextureHandler CreateTexture(const TextureDesc& info, const Memory *data);
-	void UpdateTexture(TextureHandler tex, const Memory *data);
-	void DestroyTexture(TextureHandler tex);
-
+	
 } }
 
 #endif // !TINY_GRAPHICS_TEXTURE_H

@@ -18,7 +18,7 @@ namespace Tiny { namespace PLUGIN{
 	public:
 		virtual Graphics::ImageData Image(const std::string& path){
 			assert(false);
-			return Tiny::Graphics::ImageData(NULL, Tiny::Graphics::PixelFormat::RBG332, { 0, 0 });
+			return Tiny::Graphics::ImageData(NULL, Tiny::Graphics::PixelFormat::RGB332, { 0, 0 });
 		}
 
 		

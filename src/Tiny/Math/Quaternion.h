@@ -6,7 +6,6 @@
 #include "Tiny/Math/Tags.h"
 #include "Tiny/Math/Matrix.h"
 #include "Tiny/Math/Tools.h"
-
 #include <cmath>
 
 #ifdef TINY_TEST
@@ -340,9 +339,17 @@ namespace Tiny { namespace Math {
 		T w = _w, x = _v.X(), y = _v.Y(), z = _v.Z();
 		T one(1), two(2);
 		T sin_pitch = two * (y*z + w * x);
-		T pitch = std::asin(sin_pitch);
+		T pitch;
+		//sometimes sin_pitch == 1, but asin may return nan, for precision problem
+		if (sin_pitch <= -one)
+			pitch = M_PI / 2;
+		else if(sin_pitch >= one)
+			pitch = M_PI / 2;
+		else
+			pitch = std::asin(sin_pitch);
+
 		T yaw, roll;
-		if (equals(sin_pitch, T(1)))
+		if (equals(std::fabs(sin_pitch), T(1)))
 		{
 			yaw = atan2(two * (x*z + w * y), one - two * y*y - two * z*z);
 			roll = T(0);

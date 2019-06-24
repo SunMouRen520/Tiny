@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 namespace Tiny {
 	namespace FileSystem {
@@ -12,7 +13,7 @@ namespace Tiny {
 
 		void SetBaseDir(const std::string& baseDir);
 		std::string ReadChar(const std::string& filename);
-
+		std::ifstream OpenFile(const std::string& filename, std::ios_base::openmode mode);
 		std::string GetResourceFullPath(const std::string& path);
 	}
 }

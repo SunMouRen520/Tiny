@@ -21,6 +21,7 @@ namespace Tiny { namespace Math {
 	template<typename> class Matrix3;
 	template<typename> class Matrix4;
 
+	using Matrix2f = Matrix22<Float>;
 	using Matrix3f = Matrix3<Float>;
 	using Matrix4f = Matrix4<Float>;
 
@@ -34,6 +35,8 @@ namespace Tiny { namespace Math {
 	using Vector4f = Vector4<Float>;
 
 	using Vector2i = Vector2<Int>;
+	using Vector3i = Vector3<Int>;
+	using Vector4i = Vector4<Int>;
 
 	template<template<typename> class, typename> class MeasurementUnit;
 	template<typename> class Rad;

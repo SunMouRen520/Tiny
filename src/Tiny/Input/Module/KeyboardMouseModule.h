@@ -30,6 +30,7 @@ namespace Tiny{
                 bool        pressed;
                 bool        holding;
                 Math::Vector2f pos; //in screen coordinate, origin in left-bottom
+				Math::Vector2f deltaPos; //mouse's delta pos in holding state
 
 				friend std::ostream& operator<<(std::ostream &os, const KeyboardMouseModule::MouseBtnData& d) {
 					return os << "MouseBtn:" << (int)d.btn << ", Pos:" << d.pos << ", pressed:" << d.pressed << ", holding:" << d.holding;
@@ -59,7 +60,10 @@ namespace Tiny{
 
             const std::list<KeyboardData>& GetCurFrameKeyboardData() const;
             // const std::list<KeyboardData>& GetLastFrameKeyboardData() const;
-
+			/*
+				@brief Record the last mouse's pos in holding state
+			*/
+			Tiny::Math::Vector2f _lastPressedPos;
 		private:
 			InputQueue<KeyboardData> 	_keyboardInputQueue;
 			InputQueue<Tiny::Math::Vector2f> 	 _mousePosQueue;

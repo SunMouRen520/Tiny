@@ -76,7 +76,7 @@ namespace Tiny {
 				e.pressed = iter.pressed;
 				e.key = iter.key;
 
-				Service::Log().V("Input: {}", iter);
+				//Service::Log().V("Input: {}", iter);
 				_keyboardEvent.Emit(e);
 			}
 
@@ -87,7 +87,8 @@ namespace Tiny {
 				m.pressed = iter.pressed;
 				m.button = iter.btn;
 				m.position = iter.pos;
-				Service::Log().V("Input: {}", iter);
+				m.deltaPosition = iter.deltaPos;
+				//Service::Log().V("Input: {}", iter);
 				_mouseBtnEvent.Emit(m);
 			}
 
@@ -113,7 +114,7 @@ namespace Tiny {
 					m.deltaPosition = iter - _lastMousePos;
 					//FIXME::�޷��ڴ˴��������Ժ�����deltatime��
 					m.deltaTime = (float)dt;
-					Service::Log().V("Input: MouseMove: {}, deltaPosition:{}, dt:{}", m.position, m.deltaPosition, m.deltaTime);
+					//Service::Log().V("Input: MouseMove: {}, deltaPosition:{}, dt:{}", m.position, m.deltaPosition, m.deltaTime);
 					_lastMousePos = iter;
 				}
 			}

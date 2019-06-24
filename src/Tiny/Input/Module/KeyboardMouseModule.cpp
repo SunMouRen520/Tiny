@@ -1,5 +1,6 @@
 #include "Tiny/Input/Module/KeyboardMouseModule.h"
-
+#include "Tiny/Graphics/Scene/Scene.h"
+#include "Tiny/Core/Service.h"
 #include <assert.h>
 
 namespace Tiny{

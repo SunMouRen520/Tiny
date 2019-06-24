@@ -259,10 +259,10 @@ namespace Tiny { namespace Math {
 	template<typename T> Matrix4<T> Matrix4<T>::Perspective(const Vec2& rect, const T& n, const T& f) {
 		assert(n > 0 && f > 0 && f > n);
 		const Vec2 xyScale = T(2) * n / rect;
-		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (n + f) / (n - f), v32 = T(2) * f * n / (n - f);
+		const T v00 = xyScale.X(), v11 = xyScale.Y(), v22 = (f + n) / (f - n), v32 = T(2) * f * n / (n - f);
 		return{	{v00	, T(0)	, T(0)	, T(0)},
 				{T(0)	, v11, T(0)	, T(0)},
-				{T(0)	, T(0)	, v22, T(-1)},
+				{T(0)	, T(0)	, v22, T(1)},
 				{T(0)	, T(0)	, v32, T(0)}};
 	}
 
@@ -274,17 +274,17 @@ namespace Tiny { namespace Math {
 		//const T height = width / aspectRatio;
 		//return Perspective(Vec2(width, height), n, f);
 		T const tanHalfFov = std::tan(static_cast<T>(fieldOfView) / T(2));
-		const T v00 = T(1) / tanHalfFov, v11 = aspectRatio / tanHalfFov, v22 = (n + f) / (n - f), v32 = T(2) * f * n / (n - f);
+		const T v00 = T(1) / tanHalfFov, v11 = aspectRatio / tanHalfFov, v22 = (f + n) / (f - n), v32 = T(2) * f * n / (n - f);
 		return{	{T(v00)	, T(0)	, T(0)	, T(0)},
 				{T(0)	, T(v11), T(0)	, T(0)},
-				{T(0)	, T(0)	, T(v22), -1},
+				{T(0)	, T(0)	, T(v22), T(1)},
 				{T(0)	, T(0)	, v32, T(0)}};
 	}
 
 	template<typename T> Matrix4<T> Matrix4<T>::Orthographic(const Vec2& rect, const T& n, const T& f) {
 		assert(n > 0 && f > 0 && f > n);
 		const Vec2 xyScale = T(2) / rect;
-		const T v22 = T(2) / (n - f);
+		const T v22 = T(2) / (f - n);
 		const T v00 = xyScale.X(), v11 = xyScale.Y(), v32 = (n + f) / (n - f);
 		return{ {v00	, T(0)	, T(0), T(0)},
 				{T(0)	, v11	, T(0), T(0)},

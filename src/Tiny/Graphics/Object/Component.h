@@ -7,6 +7,7 @@ namespace Tiny {
 		{
 			Transform,
 			Mesh,
+			SkinedMesh,
 			Camera,
 			Light,
 		};
@@ -15,7 +16,15 @@ namespace Tiny {
 		{
 		public:
 			Component(ComponentType comtype, Object* objptr = nullptr) :type(comtype), object(objptr) {};
-			~Component() = default;
+			virtual ~Component() = default;
+
+			static void Destroy(Component* com)
+			{
+				if (!com)
+					return;
+
+				delete com;
+			}
 
 			ComponentType Type() const { return type; };
 			Object* GameObject() const { return object; };

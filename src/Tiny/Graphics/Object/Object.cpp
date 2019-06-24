@@ -1,13 +1,19 @@
+#include <stack>
+
 #include "Object.h"
 #include "Tiny/Core/Service.h"
+#include "Tiny/Graphics/Scene/Scene.h"
+
 
 namespace Tiny {
 	namespace Graphics {
-		std::size_t Object::uniqueID = 0;
 
 		Object* Object::New(std::string name)
 		{
-			return new Object(name);
+			Object* obj = new Object(name);
+			Scene::Instance().insertObject(obj);
+			obj->scene = &Scene::Instance();
+			return obj;
 		}
 
 		bool Object::Destroy(Object* object)
@@ -18,8 +24,9 @@ namespace Tiny {
 			if (object->parent)
 				object->parent->RemoveChild(object);
 			//remove form scene
-			else
+			if (object->scene)
 			{
+				object->scene->removeObject(object);
 			}
 			//destroy child recursively
 			object->Destroy();
@@ -68,8 +75,10 @@ namespace Tiny {
 				child->parent = nullptr;
 			}
 			//if child object has not parent, it should remove from scene
-			else 
+			if (child->scene)
 			{
+				child->scene->removeObject(child);
+				child->scene = nullptr;
 			}
 
 			children[child->GetInstanceID()] = child;
@@ -85,6 +94,28 @@ namespace Tiny {
 				children.erase(child->GetInstanceID());
 		}
 
+		Object* Object::FindChild(std::string name)
+		{
+			std::stack<Object*> objStack;
+			objStack.push(this);
+
+			while (!objStack.empty())
+			{
+				Object* obj = objStack.top();
+				if (obj->Name() == name)
+					return obj;
+
+				objStack.pop();
+				//push children
+				for (auto item : obj->children)
+				{
+					objStack.push(item.second);
+				}
+			}
+
+			return nullptr;
+		}
+
 		bool Object::AttachToParent(Object* parentptr)
 		{
 			if (!parentptr)
@@ -96,6 +127,16 @@ namespace Tiny {
 			return parentptr->AddChild(this);
 		}
 
+		void Object::RemoveAllComponents()
+		{
+			for (auto b = coms.begin(); b != coms.end(); b++)
+			{
+				Component::Destroy(*b);
+			}
+
+			coms.clear();
+		}
+
 		void Object::Destroy()
 		{
 			for (std::pair<std::size_t, Object*> child : children)
@@ -103,8 +144,51 @@ namespace Tiny {
 				if (child.second)
 					child.second->Destroy();
 			}
-
+			//remove all components
+			RemoveAllComponents();
 			delete this;
+		}
+
+		void Object::PlayAnim(std::string anim, comSkinedMesh::AnimMode mode)
+		{
+			std::stack<Object*> objStack;
+			objStack.push(this);
+
+			while (!objStack.empty())
+			{
+				Object* obj = objStack.top();
+				comSkinedMesh* mesh = obj->GetComponent<comSkinedMesh>();
+				if(mesh)
+					mesh->PlayAnim(anim, mode);
+
+				objStack.pop();
+				//push children
+				for (auto item : obj->children)
+				{
+					objStack.push(item.second);
+				}
+			}
+		}
+
+		void Object::PlayAnim(std::size_t anim, comSkinedMesh::AnimMode mode)
+		{
+			std::stack<Object*> objStack;
+			objStack.push(this);
+
+			while (!objStack.empty())
+			{
+				Object* obj = objStack.top();
+				comSkinedMesh* mesh = obj->GetComponent<comSkinedMesh>();
+				if(mesh)
+					mesh->PlayAnim(anim, mode);
+
+				objStack.pop();
+				//push children
+				for (auto item : obj->children)
+				{
+					objStack.push(item.second);
+				}
+			}
 		}
 	}
 }

@@ -15,13 +15,5 @@ namespace Tiny {
 
 			return new comLight(obj);
 		}
-
-		void comLight::Destroy(comLight* light)
-		{
-			if (!light)
-				return;
-
-			delete light;
-		}
 	}
 }

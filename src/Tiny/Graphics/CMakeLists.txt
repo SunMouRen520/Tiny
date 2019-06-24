@@ -8,6 +8,7 @@ set(Graphics_RenderSystem_SRC
     RenderSystem.h
     RenderSystem.cpp
     Memory.h
+    UniqueID.h
 )
 
 set(Texture_FILES
@@ -39,6 +40,8 @@ set(Renderer_FILES
 set(Mesh_FILES
   Mesh/Mesh.h
   Mesh/Mesh.cpp
+  Mesh/SkinedMesh.h
+  Mesh/SkinedMesh.cpp
   Mesh/Model.h
   Mesh/Model.cpp
 )
@@ -53,6 +56,8 @@ set(Object_FILES
 set(Shader_FILES
   Shader/Shader.h
   Shader/Shader.cpp
+  Shader/Material.h
+  Shader/Material.cpp
 )
 
 set(SCENE_FILES
@@ -60,6 +65,8 @@ set(SCENE_FILES
     Scene/Camera.cpp
     Scene/Light.h
     Scene/Light.cpp
+    Scene/Scene.h
+    Scene/Scene.cpp
 )
 
 set(Graphics_SRC

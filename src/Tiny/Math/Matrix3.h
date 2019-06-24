@@ -50,6 +50,10 @@ namespace Tiny { namespace Math {
 		static Matrix3<T> FromEuler(const Vector3<T>& eulerAngles);
 
 		/*
+			@breief Matrix to Euler, order by z, x, y
+		*/
+		static Vector3<T> ToEuler(const Matrix3<T>& matrix);
+		/*
 			@brief	Convinent function to construct scale matrix.
 			@param	v	v.x is the x scale factor, x.y is the y scale factor
 		*/
@@ -70,10 +74,10 @@ namespace Tiny { namespace Math {
 		static Matrix3<T> Rotate(const Rad<T>& rad);
 
 		/*
-			@brief	Transponse matrix by vec2(x, y)
+			@brief	Translation matrix by vec2(x, y)
 			@pram	v	Transpose matrix by v.x, v.y
 		*/
-		static Matrix3<T> Transpose(const Vec2& v);
+		static Matrix3<T> Translation(const Vec2& v);
 
 		/*
 			@brief	2D relection about arbitrary normalized vector n
@@ -111,6 +115,31 @@ namespace Tiny { namespace Math {
 				{sin_z*cos_y+cos_z*sin_x*sin_y, cos_z*cos_x, sin_z*sin_y - cos_z*sin_x*cos_y},
 				{-cos_x*sin_y, sin_x, cos_x*cos_y}};
 	}
+	//in left-hand
+	template<typename T> Vector3<T> Matrix3<T>::ToEuler(const Matrix3<T>& matrix)
+	{
+		T sp = matrix[2][1];
+
+		if (sp >= T(1))
+			sp = T(1);
+		else if (sp <= -1)
+			sp = T(-1);
+
+		T pitch = std::asin(sp);
+		T yaw, roll;
+		if (equals(std::fabs(sp), T(1)))
+		{
+			yaw = std::atan2(matrix[0][2], matrix[0][0]);
+			roll = T(0);
+		}
+		else
+		{
+			yaw = std::atan2(-matrix[2][0], matrix[2][2]);
+			roll = std::atan2(-matrix[0][1], matrix[1][1]);
+		}
+
+		return { T(Deg<T>(Rad<T>(pitch))), T(Deg<T>(Rad<T>(yaw))), T(Deg<T>(Rad<T>(roll))) };
+	}
 
 	template<typename T> Matrix3<T> Matrix3<T>::Scale(const Vec2& v) {
 		return{ { v[0], T(0), T(0)},
@@ -133,7 +162,7 @@ namespace Tiny { namespace Math {
 				{ T(0), T(0), T(1) } };
 	}
 
-	template<typename T> Matrix3<T> Matrix3<T>::Transpose(const Vec2& t) {
+	template<typename T> Matrix3<T> Matrix3<T>::Translation(const Vec2& t) {
 		return{ { T(1), T(0), T(0) },
 				{ T(0), T(1), T(0) },
 				{ t.X(), t.Y(), T(1)} };

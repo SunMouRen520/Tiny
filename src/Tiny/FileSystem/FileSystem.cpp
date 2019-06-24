@@ -2,8 +2,6 @@
 
 #include "Tiny/Core/Service.h"
 
-#include <fstream>
-
 namespace Tiny { namespace FileSystem {
 	static std::string _baseDir = "";
 
@@ -61,7 +59,7 @@ namespace Tiny { namespace FileSystem {
 			file.close();
 		}
 		catch(std::exception e){
-			Tiny::Service::Log(). E("Binary Read failed:{}", e.what());
+			Tiny::Service::Log().E("Binary Read failed:{}", e.what());
 		}
 		return content;
 	}

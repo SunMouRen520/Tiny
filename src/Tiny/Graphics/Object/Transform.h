@@ -116,7 +116,7 @@ namespace Tiny {
 
 		template <typename T> Math::Quaternion<T> Transform<T>::rotation() const
 		{
-			return parent ? parent->rotation() * localRotation() : localRotation();
+			return parent ? localRotation() * parent->rotation() : localRotation();
 		}
 
 		template <typename T> Math::Vector3<T> Transform<T>::right() const
@@ -141,9 +141,9 @@ namespace Tiny {
 
 		template <typename T> Math::Matrix4<T> Transform<T>::localToWorldMatrix() const
 		{
-			Math::Vector3<T> _pos = position();
-			Math::Vector3<T> _scale = scale();
-			Math::Matrix3<T> _rotMat = rotation().ToMatrix();
+			Math::Vector3<T> _pos = localPosition();
+			Math::Vector3<T> _scale = localScale();
+			Math::Matrix3<T> _rotMat = localRotation().ToMatrix();
 
 			Math::Matrix4<T> _matRes(_rotMat);
 			_matRes[0][0] *= _scale[0];
@@ -153,24 +153,12 @@ namespace Tiny {
 			_matRes[3][1] += _pos[1];
 			_matRes[3][2] += _pos[2];
 
-			return _matRes;
+			return parent ? _matRes *  parent->localToWorldMatrix() : _matRes;
 		}
 
 		template <typename T> Math::Matrix4<T> Transform<T>::worldToLocalMatrix() const
 		{
-			Math::Vector3<T> _pos = position();
-			Math::Vector3<T> _scale = scale();
-			Math::Matrix3<T> _rotMat = rotation().Conjugate().ToMatrix();
-
-			Math::Matrix4<T> _matRes(_rotMat);
-			_matRes[0][0] *= T(1) / _scale[0];
-			_matRes[1][1] *= T(1) / _scale[1];
-			_matRes[2][2] *= T(1) / _scale[2];
-			_matRes[3][0] += -_pos[0];
-			_matRes[3][1] += -_pos[1];
-			_matRes[3][2] += -_pos[2];
-
-			return _matRes;
+			return localToWorldMatrix().Inverse();
 		}
 
 		template <typename T> void Transform<T>::Rotate(Math::Vector3<T> axis, Math::Deg<T> angle)

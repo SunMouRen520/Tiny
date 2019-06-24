@@ -8,9 +8,11 @@
 #include "Tiny/Input/Module/JoypadModule.h"
 #include "Tiny/Platform/Win/GLFWKeyMap.h"
 #include "Tiny/Application.h"
+#include "Tiny/Graphics/Scene/Scene.h"
+#include "Tiny/Graphics/Mesh/Model.h";
 
-const int DEFAULT_WIDTH = 640;
-const int DEFAULT_HEIGHT = 480;
+const int DEFAULT_WIDTH = 800;
+const int DEFAULT_HEIGHT = 600;
 const char DEFAULT_TITLE[] = "GL";
 
 using namespace Tiny;
@@ -77,6 +79,13 @@ private:
     }
 
     void OnRenderFrameDone() override{
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//debugtest
+		Tiny::Graphics::Scene::Instance().Draw();
+		//debugtest
+
         glfwSwapBuffers(_window);
     }
 
@@ -136,7 +145,9 @@ private:
         }
 
         LogGLInfo();
-    }
+
+		glEnable(GL_DEPTH_TEST);
+	}
 
     void LogGLInfo(){
         Service::Log().I("OpenGL Info:\n");
@@ -181,6 +192,9 @@ private:
                     data.pressed = true;
                     data.holding = true;
                     data.pos = Math::Vector2f((float)x, _resolution.Y() - (float)y);
+					data.deltaPos = data.pos - _kmModule._lastPressedPos;
+
+					_kmModule._lastPressedPos = data.pos;
 
 					_kmModule.ReceiveMouseBtn(data);
                 }
@@ -255,6 +269,9 @@ private:
         data.pressed = press;
         data.holding = false;
         data.pos = Math::Vector2f((float)x, _resolution.Y() - (float)y);
+		data.deltaPos = Math::Vector2f(0.f, 0.f);
+
+		_kmModule._lastPressedPos = data.pos;
 		_kmModule.ReceiveMouseBtn(data);
 
         _mouseBtnPress[localIndex] = press;
@@ -280,9 +297,15 @@ private:
     TODO:
     1.parse arg
 */
+
+struct BoneInfo {
+	Math::Matrix4f BoneOffset;
+	Math::Matrix4f FinalTrans;
+};
+
 void main(int argc, char **argv){
     AppWin app;
 
-    app.OnCreate();
+	app.OnCreate();
     app.OnQuit();
 }

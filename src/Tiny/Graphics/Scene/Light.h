@@ -1,7 +1,7 @@
 #ifndef _TINY_LIGHT_H
 #define _TINY_LIGHT_H
 
-#include "../Object/Component.h"
+#include "Tiny/Graphics/Object/Component.h"
 
 namespace Tiny {
 	namespace Graphics {
@@ -15,7 +15,6 @@ namespace Tiny {
 		private:
 			//only called by Object
 			static comLight* New(Object*);
-			static void Destroy(comLight*);
 			comLight(Object* obj) :Component(ComponentType::Light, obj) {}
 		};
 	}

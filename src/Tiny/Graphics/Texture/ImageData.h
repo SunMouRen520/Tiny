@@ -9,7 +9,9 @@
 #include <array>
 #include <memory>
 
-namespace Tiny { namespace Graphics {
+namespace Tiny { 
+	class ResourceLoader;
+	namespace Graphics {
 
 	/*
 		@brief	ImageData
@@ -24,27 +26,25 @@ namespace Tiny { namespace Graphics {
 			1. We shall use engine-managed memory, not the raw UnsignedByte pointer.
 	*/
 	class ImageData {
+		friend class ResourceLoader;
 	public:
 		/*
 			@pararm	p	Raw memory pointer
 		*/
-		explicit ImageData(UnsignedByte* p, PixelFormat f, Math::Vector2i size)
+		ImageData(std::shared_ptr<UnsignedByte> p, PixelFormat f, Math::Vector2i size)
 			:_data(p), _pixelDesc(f), _size(size) {
 
 		}
 
 		~ImageData() = default;
 
-		ImageData(const ImageData&) = delete;
-		ImageData& operator = (const ImageData&) = delete;
-
-		ImageData(ImageData&& other) { swap(*this, other); }
-		ImageData& operator = (ImageData&& other) { swap(*this, other); return *this; }
+		ImageData(const ImageData&) = default;
+		ImageData& operator = (const ImageData&) = default;
 
 		/*
 			@brief	Get the raw data.
 		*/
-		const UnsignedByte *Get() const { return _data.get(); }
+		const std::shared_ptr<UnsignedByte> Data() const { return _data; }
 
 		/*
 			@brief Get the size info.
@@ -55,24 +55,11 @@ namespace Tiny { namespace Graphics {
 			@brief	Get the pixel format.
 		*/
 		PixelFormat PixelDesc() const { return _pixelDesc; }
-
-		friend void swap(ImageData& first, ImageData& second); // nothrow
-
 	private:
 		PixelFormat	_pixelDesc;
 		Math::Vector2i _size;
-		std::unique_ptr<UnsignedByte> _data;
+		std::shared_ptr<UnsignedByte> _data;
 	};
-
-	inline void swap(ImageData& first, ImageData& second)// nothrow
-	{
-		// enable ADL (not necessary in our case, but good practice)
-		// by swapping the members of two objects,
-		// the two objects are effectively swapped
-		std::swap(first._size, second._size);
-		std::swap(first._pixelDesc, second._pixelDesc);
-		first._data.swap(second._data);
-	}
 
 }
 }

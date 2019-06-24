@@ -12,7 +12,7 @@ namespace Tiny { namespace Graphics {
 		UNKNOWN,
 
 		RGB888,
-		RBG332,
+		RGB332,
 		RGB565,
 		RGBA8888,
 		RGBA4444,
@@ -28,7 +28,9 @@ namespace Tiny { namespace Graphics {
 	};
 
 	enum class TextureType {
-		
+		Unknown,
+		Diffuse,
+		Specular,
 	};
 } }
 

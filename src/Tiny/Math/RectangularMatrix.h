@@ -229,6 +229,7 @@ namespace Tiny { namespace Math {
 			@brief Matrix compare
 		*/
 		bool operator == (const RectangularMatrix<rows, cols, T>& other) const;
+		bool operator != (const RectangularMatrix<rows, cols, T>& other) const;
 
 	protected:
 		/*
@@ -314,6 +315,10 @@ namespace Tiny { namespace Math {
 				return false;
 		}
 		return true;
+	}
+
+	template<std::size_t rows, std::size_t cols, typename T> bool RectangularMatrix<rows, cols, T>::operator !=(const RectangularMatrix<rows, cols, T>& other) const{
+		return !(*this == other);
 	}
 
 	//template<std::size_t rows, std::size_t cols, typename T>
