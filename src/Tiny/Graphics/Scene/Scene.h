@@ -18,6 +18,7 @@ namespace Tiny {
 			void removeObject(Object*);
 			Object* FindObject(const std::string& name);
 			std::map<std::size_t, Object*> ObjMap() { return objMap; }
+			void Load();
 		private:
 			comCamera* mainCam;
 			std::map<std::size_t, Object*> objMap;

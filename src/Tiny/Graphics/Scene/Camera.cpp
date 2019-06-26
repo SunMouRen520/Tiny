@@ -53,11 +53,14 @@ namespace Tiny {
 			target = tar;
 
 			Object* obj = GameObject();
-			Transformf transform = obj->Transform();
+			Transformf& transform = obj->Transform();
 
-			float x = distance * std::sin(float(Math::Degf(theta))) * std::cos(float(Math::Degf(alpha)));
+			alpha = Math::Degf(alpha);
+			theta = Math::Degf(theta);
+
+			float x = distance * std::sin(float(Math::Radf(theta))) * std::cos(float(Math::Radf(alpha)));
 			float y = distance * std::cos(float(Math::Radf(theta)));
-			float z = distance * std::sin(float(Math::Degf(theta))) * std::sin(float(Math::Degf(alpha)));
+			float z = distance * std::sin(float(Math::Radf(theta))) * std::sin(float(Math::Radf(alpha)));
 
 			transform.setPosition(target->Transform().position() + Math::Vector3f(x, y, z));
 
@@ -93,7 +96,7 @@ namespace Tiny {
 				float speed = 0.2f;
 				float degalpha = float(alpha);
 				float degtheta = float(theta);
-				degalpha = fmod(float(degalpha) + x * speed, 360.f);
+				degalpha = fmod(float(degalpha) + -x * speed, 360.f);
 				degtheta = degtheta + y * speed;
 
 				if (degtheta <= 1)

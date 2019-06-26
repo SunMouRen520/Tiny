@@ -1,0 +1,29 @@
+{
+    "scene":{
+        "respath":"content\\Models\\scene\\scene.obj",
+        "vpath":"content\\Shader\\default.vshader",
+        "fpath":"content\\Shader\\default.fshader",
+        "position":[0.0, 0.0, 0.0],
+        "rotation":[0.0, 0.0, 0.0],
+        "scale":[100.0, 100.0, 100.0],
+        "bPlayAnim":false
+    },
+    "libai":{
+        "respath":"content\\Models\\libai\\libai.FBX",
+        "vpath":"content\\Shader\\skinedmesh.vshader",
+        "fpath":"content\\Shader\\default.fshader",
+        "position":[100.0, 290.0, 0.0],
+        "rotation":[0.0, 0.0, 180.0],
+        "scale":[0.1, 0.1, 0.1],
+        "bPlayAnim":true
+    },
+    "wangzhaojun":{
+        "respath":"content\\Models\\wangzhaojun\\wangzhaojun.FBX",
+        "vpath":"content\\Shader\\skinedmesh.vshader",
+        "fpath":"content\\Shader\\default.fshader",
+        "position":[-200.0, 290.0, 0.0],
+        "rotation":[0.0, 0.0, 180.0],
+        "scale":[0.1, 0.1, 0.1],
+        "bPlayAnim":true
+    }
+}

@@ -93,13 +93,25 @@ namespace Tiny {
 
 			glBindBuffer(GL_ARRAY_BUFFER, BVBO);
 			glBufferData(GL_ARRAY_BUFFER, bones.size() * sizeof(VertexBoneData), &bones[0], GL_STATIC_DRAW);
-			
+				
 			glEnableVertexAttribArray(3);
 			glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexBoneData), (void*)0);
-			int a = offsetof(VertexBoneData, Weights);
 			glEnableVertexAttribArray(4);
-			glVertexAttribPointer(4, 4, GL_FLOAT,false, sizeof(VertexBoneData), (void*)offsetof(VertexBoneData, Weights));
-			
+			glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (void*)16);
+			glEnableVertexAttribArray(5);
+			glVertexAttribIPointer(5, 4, GL_INT, sizeof(VertexBoneData), (void*)32);
+			glEnableVertexAttribArray(6);
+			glVertexAttribIPointer(6, 4, GL_INT, sizeof(VertexBoneData), (void*)48);
+
+			glEnableVertexAttribArray(7);
+			glVertexAttribPointer(7, 4, GL_FLOAT, false, sizeof(VertexBoneData), (void*)offsetof(VertexBoneData, Weights));
+			glEnableVertexAttribArray(8);
+			glVertexAttribPointer(8, 4, GL_FLOAT, false, sizeof(VertexBoneData), (void*)(offsetof(VertexBoneData, Weights) + 16));
+			glEnableVertexAttribArray(9);
+			glVertexAttribPointer(9, 4, GL_FLOAT, false, sizeof(VertexBoneData), (void*)(offsetof(VertexBoneData, Weights) + 32));
+			glEnableVertexAttribArray(10);
+			glVertexAttribPointer(10, 4, GL_FLOAT, false, sizeof(VertexBoneData), (void*)(offsetof(VertexBoneData, Weights) + 48));
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, polys.size() * sizeof(Poly), &polys[0], GL_STATIC_DRAW);
 

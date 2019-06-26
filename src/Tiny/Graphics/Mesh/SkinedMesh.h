@@ -14,7 +14,7 @@ namespace Tiny {
 		{
 			friend class Object;
 		public:
-			static const int num_bones = 4;
+			static const int num_bones = 16;
 			const int no_anim = -1;
 
 			struct BoneInfo {
@@ -23,8 +23,13 @@ namespace Tiny {
 			};
 
 			struct VertexBoneData {
-				Math::Vector4i IDs;
-				Math::Vector4f Weights;
+				int IDs[num_bones];
+				float Weights[num_bones];
+
+				VertexBoneData() {
+					memset(IDs, 0, sizeof(IDs));
+					memset(Weights, 0, sizeof(Weights));
+				};
 
 				void AddBoneData(int id, float weight);
 			};

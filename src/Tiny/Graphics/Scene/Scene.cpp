@@ -1,7 +1,8 @@
 #include <stack>
 #include "Scene.h"
 #include "Tiny/Graphics/Scene/Camera.h"
-#include "Tiny/Graphics/Mesh/SkinedMesh.h"
+#include "Tiny/Graphics/Mesh/Model.h"
+#include "rapidjson/document.h"
 
 namespace Tiny {
 	namespace Graphics {
@@ -91,7 +92,7 @@ namespace Tiny {
 				{
 					if (cam->type() == comCamera::CAM_TYPE::FREE_3D)
 					{
-						Object* target = Scene::Instance().FindObject("TestModel");
+						Object* target = Scene::Instance().FindObject("scene");
 						cam->setSimpleMode(target);
 					}
 					else
@@ -99,17 +100,12 @@ namespace Tiny {
 						cam->setFree3DMode();
 					}
 				}
-				else if (data.key == Tiny::Input::KEYBOARD::F2)
-				{
-					//Object* model = Scene::Instance().FindObject("SkinedModel");
-					//model->PlayAnim(0, comSkinedMesh::AnimMode::LOOP);
-				}
 			}
 		}
 
 		void CameraMove(const Input::KeyboardEvent& data)
 		{
-			float speed = 1.f;
+			float speed = 10.f;
 			if (data.pressed)
 			{
 				comCamera* cam = Scene::Instance().GetMainCamera();
@@ -139,15 +135,94 @@ namespace Tiny {
 			if (data.button == Tiny::Input::MOUSEBTN::MOUSE_MIDDLE_BTN_SCROLL_DOWN)
 			{
 				comCamera* cam = Scene::Instance().GetMainCamera();
-				cam->distance = cam->distance <= 1.f ? 1.f : cam->distance - 1.f;
+				cam->distance = cam->distance <= 10.f ? 10.f : cam->distance - 10.f;
 				cam->Rotate(0.f, 0.f);
 			}
 
 			if (data.button == Tiny::Input::MOUSEBTN::MOUSE_MIDDLE_BTN_SCROLL_UP)
 			{
 				comCamera* cam = Scene::Instance().GetMainCamera();
-				cam->distance = cam->distance >= 20.f ? 20.f : cam->distance + 1.f;
+				cam->distance = cam->distance >= 1000.f ? 1000.f : cam->distance + 10.f;
 				cam->Rotate(0.f, 0.f);
+			}
+		}
+
+		void Scene::Load()
+		{
+			std::string basedir = Tiny::FileSystem::GetExePath();
+			std::string cfgpath = basedir + "content\\Configs\\scene.json";
+
+			rapidjson::Document cfg;
+			std::string data = FileSystem::ReadChar(cfgpath);
+
+			if (cfg.Parse(data.c_str()).HasParseError()) {
+				Service::Log().E("scene.json parse error!");
+				rapidjson::ParseErrorCode code = cfg.GetParseError();
+				return;
+			}
+
+			for (auto& member : cfg.GetObject())
+			{
+				std::string modelname = member.name.GetString();
+				auto& subcfg = member.value.GetObject();
+
+				std::string respath = basedir;
+				auto& rit = subcfg.FindMember("respath");
+				if (rit != subcfg.MemberEnd())
+				{
+					respath += rit->value.GetString();
+				}
+
+				std::string vpath = basedir;
+				auto& vit = subcfg.FindMember("vpath");
+				if (vit != subcfg.MemberEnd())
+				{
+					vpath += vit->value.GetString();
+				}
+				
+				std::string fpath = basedir;
+				auto& fit = subcfg.FindMember("fpath");
+				if (fit != subcfg.MemberEnd())
+				{
+					fpath += fit->value.GetString();
+				}
+
+				Math::Vector3f pos;
+				auto& posit = subcfg.FindMember("position");
+				for (unsigned int i = 0; i < posit->value.Size(); i++)
+				{
+					pos[i] = posit->value[i].GetFloat();
+				}
+
+				Math::Vector3f rot;
+				auto& rotit = subcfg.FindMember("rotation");
+				for (unsigned int i = 0; i < rotit->value.Size(); i++)
+				{
+					rot[i] = rotit->value[i].GetFloat();
+				}
+
+				Math::Vector3f scale;
+				auto& scaleit = subcfg.FindMember("scale");
+				for (unsigned int i = 0; i < scaleit->value.Size(); i++)
+				{
+					scale[i] = scaleit->value[i].GetFloat();
+				}
+
+				bool bPlayAnim = false;
+				auto& bplayit = subcfg.FindMember("bPlayAnim");
+				bPlayAnim = bplayit->value.GetBool();
+
+				std::shared_ptr<Tiny::Graphics::Shader> shader = Tiny::ResourceLoader::Instance().LoadShader(vpath, fpath);
+				Tiny::Graphics::Model* model = Tiny::Graphics::Model::New(modelname, respath, shader);
+				model->Load();
+
+				Object* obj = Tiny::Graphics::Scene::Instance().FindObject(modelname);
+				obj->Transform().setPosition(pos);
+				obj->Transform().setEulerAngles(rot);
+				obj->Transform().setScale(scale);
+
+				if (bPlayAnim)
+					obj->PlayAnim(0, Tiny::Graphics::comSkinedMesh::AnimMode::LOOP);
 			}
 		}
 	}

@@ -10,9 +10,9 @@ namespace Tiny {
 	namespace Graphics {
 		class comCamera :public Component
 		{
-			const float dis_init = 20.f;
-			const float theta_init = 90.f;
-			const float alpha_init = 0.f;
+			const float dis_init = 1000.f;
+			const float theta_init = 46.f;
+			const float alpha_init = -94.f;
 
 			friend class Object;
 		public:
