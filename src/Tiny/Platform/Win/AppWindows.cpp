@@ -13,7 +13,7 @@
 
 const int DEFAULT_WIDTH = 800;
 const int DEFAULT_HEIGHT = 600;
-const char DEFAULT_TITLE[] = "GL";
+const char DEFAULT_TITLE[] = "Tiny";
 
 using namespace Tiny;
 
@@ -79,7 +79,7 @@ private:
     }
 
     void OnRenderFrameDone() override{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.149f, 0.65f, 0.949f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//debugtest
