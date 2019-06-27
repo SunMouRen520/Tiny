@@ -9,9 +9,9 @@ namespace Tiny{
     ,_currentFrameBeginTime(0.0)
     , _frameDropDelta(100)
     ,_logicalFrameCount(0){
-        _lastFrameDelta = 1 / _targetFps;
         SetLogicalFps(60);
         SetTargetFps(60);
+		_lastFrameDelta = 1 / _targetFps;
     }
 
     void FrameManager::OnFrameBegin(double currentFrameBeginTime, double lastFrameDelta){

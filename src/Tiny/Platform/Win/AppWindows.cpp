@@ -132,6 +132,25 @@ private:
             glViewport(0, 0, width, height);
         });
 
+		//set window pos
+		int cx = GetSystemMetrics(SM_CXFULLSCREEN);
+		int cy = GetSystemMetrics(SM_CYFULLSCREEN);
+		int posx = cx / 2 - _resolution.X() / 2;
+		int posy = cy / 2 - _resolution.Y() / 2;
+		glfwSetWindowPos(_window, posx, posy);
+
+		//set window icon
+		std::string basedir = Tiny::FileSystem::GetExePath();
+		std::string iconpath = basedir + "content\\Icon\\icon.png";
+		std::shared_ptr<Tiny::Graphics::ImageData> icon = Tiny::ResourceLoader::Instance().LoadImageData(iconpath);
+		GLFWimage glfwicon[2];
+		glfwicon[0].pixels = icon->Data().get();
+		glfwicon[0].width = icon->Size().X();
+		glfwicon[0].height = icon->Size().Y();
+		glfwicon[1] = glfwicon[0];
+		glfwSetWindowIcon(_window, 2, glfwicon);
+
+
 		glfwMakeContextCurrent(_window);
 
         if (gl3wInit()) {
@@ -305,7 +324,7 @@ struct BoneInfo {
 
 void main(int argc, char **argv){
     AppWin app;
-
+	
 	app.OnCreate();
     app.OnQuit();
 }

@@ -12,7 +12,7 @@ namespace Tiny{
     class FrameManager{
         friend class Engine;
     public:
-        FrameManager();
+		FrameManager();
         ~FrameManager() = default;
         /*
         @brief  set logical fps as target fps, which may not be the real fps due to many circumstance, such as render tick may cost too much time and so on.

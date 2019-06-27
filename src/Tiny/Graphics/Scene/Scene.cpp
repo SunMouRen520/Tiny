@@ -223,6 +223,11 @@ namespace Tiny {
 
 				if (bPlayAnim)
 					obj->PlayAnim(0, Tiny::Graphics::comSkinedMesh::AnimMode::LOOP);
+
+				Scene::Instance().CreateMainCamera();
+
+				Object* target = Scene::Instance().FindObject("scene");
+				Scene::Instance().GetMainCamera()->setSimpleMode(target);
 			}
 		}
 	}

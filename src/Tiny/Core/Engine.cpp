@@ -60,15 +60,10 @@ namespace Tiny{
 
 			_app->GetAppPath(); //cause crash
         }
-
-		Tiny::Graphics::Scene::Instance().CreateMainCamera();
+		
 		_input.RegisterMouseBtn(Tiny::Graphics::CameraRotate);
 		_input.RegisterKeyboard(Tiny::Graphics::ProcessKeyBoard);
-		
 		Tiny::Graphics::Scene::Instance().Load();
-
-		Tiny::Graphics::Object* target = Tiny::Graphics::Scene::Instance().FindObject("scene");
-		Tiny::Graphics::Scene::Instance().GetMainCamera()->setSimpleMode(target);
 
         double logicalDelta = Service::FrameManager().GetLogicalFrameDelta() * 1000;
         double targetDelta = Service::FrameManager().GetTargetFrameDelta() * 1000;

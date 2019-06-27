@@ -282,7 +282,7 @@ namespace Tiny {
 			unsigned int nextScaleIndex = scaleIndex + 1;
 			
 			float deltaTime = (float)(nodeAnim->mScalingKeys[nextScaleIndex].mTime - nodeAnim->mScalingKeys[scaleIndex].mTime);
-			float factor = (tick - (float)nodeAnim->mScalingKeys[scaleIndex].mTime) / deltaTime;
+			float factor = (deltaTime == 0.f) ? 0.f : (tick - (float)nodeAnim->mScalingKeys[scaleIndex].mTime) / deltaTime;
 			const aiVector3D& start = nodeAnim->mScalingKeys[scaleIndex].mValue;
 			const aiVector3D& end = nodeAnim->mScalingKeys[nextScaleIndex].mValue;
 			out = start + (end - start) * factor;
@@ -310,7 +310,7 @@ namespace Tiny {
 			unsigned int nextRotationIndex = rotationIndex + 1;
 
 			float deltaTime = (float)(nodeAnim->mRotationKeys[nextRotationIndex].mTime - nodeAnim->mRotationKeys[rotationIndex].mTime);
-			float factor = (tick - (float)nodeAnim->mRotationKeys[rotationIndex].mTime) / deltaTime;
+			float factor = (deltaTime == 0.f) ? 0.f : (tick - (float)nodeAnim->mRotationKeys[rotationIndex].mTime) / deltaTime;
 			const aiQuaternion& start = nodeAnim->mRotationKeys[rotationIndex].mValue;
 			const aiQuaternion& end = nodeAnim->mRotationKeys[nextRotationIndex].mValue;
 			aiQuaternion::Interpolate(out, start, end, factor);
@@ -339,7 +339,7 @@ namespace Tiny {
 			unsigned int nextPositionIndex = positionIndex + 1;
 
 			float deltaTime = (float)(nodeAnim->mPositionKeys[nextPositionIndex].mTime - nodeAnim->mPositionKeys[positionIndex].mTime);
-			float factor = (tick - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / deltaTime;
+			float factor = (deltaTime == 0.f) ? 0.f : (tick - (float)nodeAnim->mPositionKeys[positionIndex].mTime) / deltaTime;
 			const aiVector3D& start = nodeAnim->mPositionKeys[positionIndex].mValue;
 			const aiVector3D& end = nodeAnim->mPositionKeys[nextPositionIndex].mValue;
 			out = start + (end - start) * factor;
