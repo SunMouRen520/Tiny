@@ -12,7 +12,7 @@
         "respath":"content\\Models\\libai\\libai.FBX",
         "vpath":"content\\Shader\\skinedmesh.vshader",
         "fpath":"content\\Shader\\default.fshader",
-        "position":[100.0, 290.0, 0.0],
+        "position":[-200.0, 290.0, 0.0],
         "rotation":[0.0, 0.0, 180.0],
         "scale":[0.1, 0.1, 0.1],
         "bPlayAnim":true
@@ -21,7 +21,7 @@
         "respath":"content\\Models\\wangzhaojun\\wangzhaojun.FBX",
         "vpath":"content\\Shader\\skinedmesh.vshader",
         "fpath":"content\\Shader\\default.fshader",
-        "position":[-200.0, 290.0, 0.0],
+        "position":[100, 290.0, 0.0],
         "rotation":[0.0, 0.0, 180.0],
         "scale":[0.1, 0.1, 0.1],
         "bPlayAnim":true

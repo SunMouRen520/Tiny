@@ -11,8 +11,8 @@ namespace Tiny {
 		class comCamera :public Component
 		{
 			const float dis_init = 1000.f;
-			const float theta_init = 46.f;
-			const float alpha_init = -94.f;
+			const float theta_init = 45.f;
+			const float alpha_init = 90.f;
 
 			friend class Object;
 		public:
