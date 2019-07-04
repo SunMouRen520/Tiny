@@ -221,7 +221,7 @@ namespace Tiny {
 
 			const aiAnimation* anim = scene->mAnimations[activeAnim];
 
-			Math::Matrix4f nodeTransformation = Math::RectangularMatrix<4, 4, float>::From(&node->mTransformation.a1);
+			Math::Matrix4f nodeTransformation = Math::RectangularMatrix<4, 4, float>::From(&node->mTransformation.a1).Transpose();
 			
 			const aiNodeAnim* nodeAnim = FindNodeAnim(anim, nodeName);
 			
